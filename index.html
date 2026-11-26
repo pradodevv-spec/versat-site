@@ -615,13 +615,27 @@ async function runVersatFreeAITest(button){
    if (/^https?:/i.test(value)) {
     const u = new URL(value);
     if (!/(^|\\.)versatstudio\\.netlify\\.app$/i.test(u.hostname)) return null;
-    value = u.pathname + u.search + u.hash;
+    value = u.hash && u.hash.startsWith("#/") ? u.hash : (u.pathname + u.search + u.hash);
    }
   } catch (_) { return null; }
   if (value.startsWith("#") || value.startsWith("?")) return null;
+  if (value.startsWith("#/")) return value.slice(1);
   const path = value.split(/[?#]/)[0].replace(/^\\.\\//, "").replace(/^\\/+/, "").replace(/\\.html?$/i, "").replace(/\\/+$/, "");
   return "#/" + (path && path !== "index" ? path : "inicio");
  };
+ const normalizeInternalLinks = () => {
+  document.querySelectorAll("a[href]").forEach(link => {
+   const raw = (link.getAttribute("href") || "").trim();
+   const route = routeFrom(raw);
+   if (route && raw !== route && !/^(mailto:|tel:|sms:)/i.test(raw)) {
+    link.setAttribute("href", route);
+    link.removeAttribute("target");
+   }
+  });
+ };
+ if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", normalizeInternalLinks, {once:true});
+ else normalizeInternalLinks();
+ new MutationObserver(normalizeInternalLinks).observe(document.documentElement, {childList:true,subtree:true});
  document.addEventListener("click", event => {
   const control = event.target.closest && event.target.closest("a[href],button,[role='button'],input[type='button'],input[type='submit']");
   if (!control) return;
