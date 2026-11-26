@@ -653,8 +653,9 @@ async function verifyLogoAdmin(){
 async function prepareHeaderLogo(input){
  const file=input.files&&input.files[0];if(!file)return;
  const notice=document.getElementById("settingsNotice"),allowed={"image/png":"png","image/jpeg":"jpg","image/webp":"webp"};
- pendingHeaderLogoOriginal=null;pendingHeaderLogoProcessed=null;
- document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.add("hidden");
+ pendingHeaderLogoOriginal=file;pendingHeaderLogoProcessed=null;
+ document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.remove("hidden");
+ notice.textContent="Imagem selecionada. Preparando a remoção automática do fundo; aguarde esta etapa terminar.";
  if(!allowed[file.type]){notice.textContent="Formato não permitido. Escolha PNG, JPG ou WEBP.";input.value="";return}
  if(file.size>3*1024*1024){notice.textContent="A imagem ultrapassa o limite de 3 MB.";input.value="";return}
  try{
@@ -680,7 +681,7 @@ async function usePreparedHeaderLogo(processed){
  if(!source){notice.textContent="Escolha uma imagem primeiro.";return}
  try{
   await verifyLogoAdmin();
-  const mime=processed?"image/webp":source.type,ext=processed?"webp":({"image/png":"png","image/jpeg":"jpg","image/webp":"webp"}[mime]||"png");
+  const mime=processed?"image/png":source.type,ext=processed?"png":({"image/png":"png","image/jpeg":"jpg","image/webp":"webp"}[mime]||"png");
   notice.textContent="Enviando logo...";
   const path="header/logo-"+Date.now()+"."+ext;
   const {error}=await sb.storage.from("versat-brand-assets").upload(path,source,{cacheControl:"31536000",contentType:mime,upsert:false});
