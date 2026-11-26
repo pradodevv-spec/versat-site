@@ -634,8 +634,20 @@ async function runVersatFreeAITest(button){
    }
    return;
   }
+  // Em iframe srcdoc, links relativos herdariam o domínio da VERSAT.
+  // Converta-os para rotas hash locais antes de qualquer bloqueio.
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(href) && href.charAt(0) !== "?") {
+   const path = href.split(/[?#]/)[0]
+    .replace(/^\.\//, "").replace(/^\/+/, "")
+    .replace(/\.html?$/i, "").replace(/\/+$/, "");
+   const route = path && path !== "index" ? path : "inicio";
+   event.preventDefault(); event.stopImmediatePropagation();
+   link.setAttribute("href", "#/" + route);
+   window.location.hash = "/" + route;
+   return;
+  }
   event.preventDefault(); event.stopImmediatePropagation();
-  showDemoNotice("Navegação para outra página desativada na prévia. Os links internos da página continuam disponíveis.");
+  showDemoNotice("Este tipo de link não está disponível na prévia.");
  }, true);
  document.addEventListener("submit", event => {
   event.preventDefault(); event.stopImmediatePropagation();
