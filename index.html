@@ -218,5 +218,10 @@ function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;",
 function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de WhatsApp no campo WHATSAPP_NUMBER dentro do index.html para ativar este botão.");return}window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent("Olá, VERSAT! Gostaria de solicitar um orçamento."),"_blank")}
 window.addEventListener("DOMContentLoaded",async()=>{updateAccountHeader(null);if(sb){const {data}=await sb.auth.getSession();if(data.session){currentUser=data.session.user;updateAccountHeader(currentUser);openDashboard()}sb.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAccountHeader(currentUser);if(!currentUser){document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block"}})}});
 document.addEventListener("click",(event)=>{const wrap=document.getElementById("profileWrap");if(wrap&&!wrap.contains(event.target)){document.getElementById("profileMenu").classList.add("hidden");document.getElementById("profileButton").setAttribute("aria-expanded","false")}});
+function requestPlan(plan){
+  const numero = String(WHATSAPP_NUMBER || "5511984681861").replace(/\D/g,"");
+  const mensagem = "Olá, VERSAT! Tenho interesse no plano " + plan + ". Gostaria de receber um orçamento, conhecer os recursos incluídos, os valores e o prazo de entrega. Como podemos começar?";
+  window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem), "_blank");
+}
 </script>
 </body></html>
