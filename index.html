@@ -612,6 +612,7 @@ async function runVersatFreeAITest(button){
   const href = (link.getAttribute("href") || "").trim();
   if (!href) { event.preventDefault(); event.stopImmediatePropagation(); return; }
   if (/^(mailto:|tel:|sms:)/i.test(href)) return;
+  if (href.startsWith("#/")) return; // Permite rotas internas multipágina da SPA gerada.
   if (href.startsWith("#")) {
    event.preventDefault(); event.stopImmediatePropagation();
    const id = decodeURIComponent(href.slice(1));
