@@ -272,7 +272,7 @@ async function loadAdmin(){
 
 
 function moneyBR(value){return Number(value||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
-async function loadFinanceEntries(){
+async async function loadFinanceEntries(){
  const list=document.getElementById("financeEntries");if(!list)return;
  document.getElementById("financeDate").value=new Date().toISOString().slice(0,10);
  const {data,error}=await sb.from("finance_entries").select("*").order("entry_date",{ascending:false}).order("created_at",{ascending:false});
