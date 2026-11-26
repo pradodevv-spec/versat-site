@@ -642,7 +642,7 @@ async function loadPublicSiteSettings(){
 }
 let pendingHeaderLogoOriginal=null,pendingHeaderLogoProcessed=null,backgroundRemovalModulePromise=null;
 async function loadBackgroundRemoval(){
- if(!backgroundRemovalModulePromise)backgroundRemovalModulePromise=import("https://esm.sh/@imgly/background-removal@1.7.0?bundle&deps=onnxruntime-web@1.21.0-dev.20250206-d981b153d3").then(module=>module.default);
+ if(!backgroundRemovalModulePromise)backgroundRemovalModulePromise=import("https://esm.sh/@imgly/background-removal@1.7.0?bundle&deps=onnxruntime-web@1.21.0-dev.20250206-d981b153d3").then(module=>{const fn=module.removeBackground||module.default?.removeBackground||module.default;if(typeof fn!=="function")throw new Error("A biblioteca de remoção foi carregada, mas a função não foi encontrada.");return fn;});
  return backgroundRemovalModulePromise;
 }
 async function verifyLogoAdmin(){
@@ -656,13 +656,13 @@ async function prepareHeaderLogo(input){
  pendingHeaderLogoOriginal=file;pendingHeaderLogoProcessed=null;
  document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.remove("hidden");
  if(notice)notice.textContent="Imagem selecionada. Preparando a remoção automática do fundo; aguarde esta etapa terminar.";
- if(!allowed[file.type]){notice.textContent="Formato não permitido. Escolha PNG, JPG ou WEBP.";input.value="";return}
- if(file.size>3*1024*1024){notice.textContent="A imagem ultrapassa o limite de 3 MB.";input.value="";return}
+ if(!allowed[file.type]){if(notice)notice.textContent="Formato não permitido. Escolha PNG, JPG ou WEBP.";input.value="";return}
+ if(file.size>3*1024*1024){if(notice)notice.textContent="A imagem ultrapassa o limite de 3 MB.";input.value="";return}
  try{
   await verifyLogoAdmin();pendingHeaderLogoOriginal=file;
-  notice.textContent="Preparando a IA. Na primeira utilização, o navegador baixa os modelos (cerca de 40 MB).";
+  if(notice)notice.textContent="Preparando a IA. Na primeira utilização, o navegador baixa os modelos (cerca de 40 MB).";
   const removeBackground=await loadBackgroundRemoval();
-  notice.textContent="Removendo o fundo... Aguarde um pouco.";
+  if(notice)notice.textContent="Removendo o fundo... Aguarde um pouco.";
   const result=await removeBackground(file,{model:"isnet_quint8",device:"cpu",debug:true,publicPath:"https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/",output:{format:"image/png",type:"foreground"}});
   if(result.size>3*1024*1024)throw new Error("A imagem processada ficou maior que 3 MB. Tente uma imagem menor.");
   pendingHeaderLogoProcessed=result;
@@ -670,10 +670,10 @@ async function prepareHeaderLogo(input){
   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
   const objectUrl=URL.createObjectURL(result);preview.dataset.objectUrl=objectUrl;preview.src=objectUrl;preview.classList.remove("hidden");label.classList.add("hidden");
   document.getElementById("useProcessedLogo")?.classList.remove("hidden");document.getElementById("useOriginalLogo")?.classList.remove("hidden");
-  notice.textContent="Prévia pronta! Escolha usar a logo sem fundo ou manter a imagem original.";
+  if(notice)notice.textContent="Prévia pronta! Escolha usar a logo sem fundo ou manter a imagem original.";
  }catch(error){
   pendingHeaderLogoProcessed=null;document.getElementById("useOriginalLogo")?.classList.remove("hidden");
-  notice.textContent="Não consegui remover o fundo automaticamente: "+(error?.message||"erro inesperado")+". Você ainda pode manter a imagem original.";
+  if(notice)notice.textContent="Não consegui remover o fundo automaticamente: "+(error?.message||"erro inesperado")+". Você ainda pode manter a imagem original.";
  }
 }
 document.addEventListener("change",event=>{const input=event.target;if(input&&input.id==="editHeaderLogoFile")prepareHeaderLogo(input);});
