@@ -5,7 +5,21 @@
 <meta name="google" content="notranslate"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a0a0d">
 <meta name="description" content="VERSAT — criação de sites modernos, lojas virtuais e soluções digitais.">
-<title>VERSAT — Sites & Soluções Digitais</title>
+<title>VERSAT | Criação de Sites e Soluções Digitais</title>
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="VERSAT">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="VERSAT">
+<meta property="og:title" content="VERSAT | Criação de Sites e Soluções Digitais">
+<meta property="og:description" content="Criamos sites modernos, landing pages, lojas virtuais e soluções digitais para destacar seu negócio. Solicite seu orçamento.">
+<meta property="og:url" content="https://versatstudio.netlify.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VERSAT | Criação de Sites e Soluções Digitais">
+<meta name="twitter:description" content="Sites modernos, lojas virtuais e soluções digitais para seu negócio.">
+<link rel="canonical" href="https://versatstudio.netlify.app/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"VERSAT","url":"https://versatstudio.netlify.app/","description":"Criação de sites modernos, landing pages, lojas virtuais e soluções digitais.","areaServed":{"@type":"Country","name":"Brasil"},"email":"pradodevv@gmail.com","telephone":"+55 11 98468-1861","priceRange":"Sob consulta","knowsLanguage":"pt-BR"}</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -39,6 +53,16 @@ footer{border-top:1px solid var(--line);padding:34px 0;color:#92929d;font-size:1
 /* Aviso de cookies e preferências */
 .cookie-banner{position:fixed;z-index:10050;left:18px;right:18px;bottom:18px;max-width:760px;margin:auto;background:#111;color:#fff;border:1px solid #444;border-radius:16px;padding:20px;box-shadow:0 18px 55px #0008;display:none}
 .cookie-banner.show{display:block}.cookie-banner h3{margin:0 0 8px;font-size:19px}.cookie-banner p{margin:0;color:#ddd;font-size:14px;line-height:1.55}.cookie-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.cookie-actions button,.cookie-settings button{border:1px solid #666;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer;background:#242424;color:#fff}.cookie-actions .cookie-primary,.cookie-settings .cookie-primary{background:#e33;border-color:#e33}.cookie-settings{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #444}.cookie-settings.open{display:block}.cookie-settings label{display:flex;gap:10px;align-items:center;margin:10px 0;color:#eee;font-size:14px}.cookie-settings input{width:18px;height:18px;accent-color:#e33}.cookie-banner a{color:#fff;text-decoration:underline}@media(max-width:520px){.cookie-banner{left:10px;right:10px;bottom:10px;padding:16px}.cookie-actions button{flex:1}}
+
+.finance-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.finance-card{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:16px}
+.finance-card span{display:block;color:var(--muted);font-size:13px}.finance-card strong{display:block;font-size:23px;margin-top:7px}
+.finance-form{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end;margin:16px 0}
+.finance-form label{display:grid;gap:6px;color:var(--muted);font-size:13px}.finance-form input,.finance-form select{width:100%;min-width:0;background:#17171e;color:#fff;border:1px solid var(--line);border-radius:9px;padding:11px}
+.finance-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.finance-row small{display:block;color:var(--muted);margin-top:4px}.finance-income{color:#5bd69a}.finance-expense{color:#ff7884}
+.finance-delete{background:transparent;color:#ff7884;border:1px solid #74343a;border-radius:8px;padding:7px 10px}
+@media(max-width:760px){.finance-form{grid-template-columns:1fr 1fr}.finance-form label:first-child{grid-column:1/-1}.finance-form button{grid-column:1/-1}.finance-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -231,7 +255,7 @@ async function loadAdmin(){
  const {data:settings,error:settingsError}=await sb.from("site_settings").select("content").eq("id",1).single();
  if(settingsError){box.innerHTML='<div class="notice">'+escapeHtml(settingsError.message)+'</div>';return}
  const c=settings.content||{};
- box.innerHTML='<h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div><h3>Editar site VERSAT</h3><label>Título principal</label><input id="editTitle" value="'+escapeHtml(c.title||'')+'"><label>Descrição principal</label><textarea id="editDescription">'+escapeHtml(c.description||'')+'</textarea><label>WhatsApp (somente números)</label><input id="editWhatsapp" value="'+escapeHtml(c.whatsapp||'5511984681861')+'"><label>E-mail de contato</label><input id="editEmail" value="'+escapeHtml(c.email||'Pradodevv@gmail.com')+'"><button onclick="saveSiteSettings()">Salvar alterações</button><div id="settingsNotice"></div><hr><h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>';
+ box.innerHTML='<h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div><h3>Editar site VERSAT</h3><label>Título principal</label><input id="editTitle" value="'+escapeHtml(c.title||'')+'"><label>Descrição principal</label><textarea id="editDescription">'+escapeHtml(c.description||'')+'</textarea><label>WhatsApp (somente números)</label><input id="editWhatsapp" value="'+escapeHtml(c.whatsapp||'5511984681861')+'"><label>E-mail de contato</label><input id="editEmail" value="'+escapeHtml(c.email||'Pradodevv@gmail.com')+'"><button onclick="saveSiteSettings()">Salvar alterações</button><div id="settingsNotice"></div><hr><h3>Financeiro VERSAT</h3><p class="small">Área privada para registrar entradas e despesas. Os dados financeiros são visíveis somente à administração.</p><div class="finance-grid"><div class="finance-card"><span>Entradas</span><strong id="financeIncome">R$ 0,00</strong></div><div class="finance-card"><span>Despesas</span><strong id="financeExpenses">R$ 0,00</strong></div><div class="finance-card"><span>Saldo</span><strong id="financeBalance">R$ 0,00</strong></div></div><form class="finance-form" onsubmit="addFinanceEntry(event)"><label>Descrição<input id="financeDescription" maxlength="180" required placeholder="Ex.: criação de landing page"></label><label>Tipo<select id="financeType"><option value="income">Entrada</option><option value="expense">Despesa</option></select></label><label>Valor (R$)<input id="financeAmount" type="number" min="0.01" step="0.01" required placeholder="0,00"></label><label>Data<input id="financeDate" type="date" required></label><button class="btn red" type="submit">Adicionar</button></form><div id="financeNotice" class="small"></div><div id="financeEntries">Carregando lançamentos...</div><hr><h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>';
  const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
  if(projectError){document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';return}
  const all=projects||[];
@@ -244,6 +268,31 @@ async function loadAdmin(){
  if(reviewsError){document.getElementById("adminReviews").innerHTML='<div class="notice">Não foi possível carregar avaliações: '+escapeHtml(reviewsError.message)+'</div>';return}
  const projectMap={};all.forEach(p=>projectMap[p.id]=p);
  document.getElementById("adminReviews").innerHTML=(reviews||[]).length?(reviews||[]).map(r=>'<div class="project"><b>'+escapeHtml(projectMap[r.project_id]?.project_name||"Projeto")+'</b><div class="small">'+("★".repeat(r.rating))+("☆".repeat(5-r.rating))+' • '+new Date(r.created_at).toLocaleDateString("pt-BR")+'</div><p>'+escapeHtml(r.comment||"Sem comentário.")+'</p></div>').join(""):'<div class="empty">Ainda não há avaliações.</div>';
+}
+
+
+function moneyBR(value){return Number(value||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+async function loadFinanceEntries(){
+ const list=document.getElementById("financeEntries");if(!list)return;
+ document.getElementById("financeDate").value=new Date().toISOString().slice(0,10);
+ const {data,error}=await sb.from("finance_entries").select("*").order("entry_date",{ascending:false}).order("created_at",{ascending:false});
+ if(error){list.innerHTML='<div class="notice">Não foi possível carregar o financeiro: '+escapeHtml(error.message)+'</div>';return}
+ const rows=data||[];const income=rows.filter(x=>x.entry_type==="income").reduce((a,x)=>a+Number(x.amount),0);const expenses=rows.filter(x=>x.entry_type==="expense").reduce((a,x)=>a+Number(x.amount),0);
+ document.getElementById("financeIncome").textContent=moneyBR(income);document.getElementById("financeExpenses").textContent=moneyBR(expenses);document.getElementById("financeBalance").textContent=moneyBR(income-expenses);
+ list.innerHTML=rows.length?rows.map(x=>'<div class="finance-row"><div><b>'+escapeHtml(x.description)+'</b><small>'+new Date(x.entry_date+"T12:00:00").toLocaleDateString("pt-BR")+'</small></div><div style="text-align:right"><b class="'+(x.entry_type==="income"?"finance-income":"finance-expense")+'">'+(x.entry_type==="income"?"+ ":"− ")+moneyBR(x.amount)+'</b><br><button class="finance-delete" type="button" onclick="deleteFinanceEntry(\''+x.id+'\')">Excluir</button></div></div>').join(""):'<div class="empty">Nenhum lançamento financeiro ainda.</div>';
+}
+async function addFinanceEntry(event){
+ event.preventDefault();const notice=document.getElementById("financeNotice");notice.textContent="Salvando...";
+ const payload={description:document.getElementById("financeDescription").value.trim(),entry_type:document.getElementById("financeType").value,amount:Number(document.getElementById("financeAmount").value),entry_date:document.getElementById("financeDate").value};
+ const {error}=await sb.from("finance_entries").insert(payload);
+ if(error){notice.textContent="Não foi possível salvar: "+error.message;return}
+ document.getElementById("financeDescription").value="";document.getElementById("financeAmount").value="";notice.textContent="Lançamento registrado.";await loadFinanceEntries();
+}
+async function deleteFinanceEntry(id){
+ if(!confirm("Deseja excluir este lançamento?"))return;
+ const {error}=await sb.from("finance_entries").delete().eq("id",id);
+ if(error){document.getElementById("financeNotice").textContent="Não foi possível excluir: "+error.message;return}
+ document.getElementById("financeNotice").textContent="Lançamento excluído.";await loadFinanceEntries();
 }
 
 async function saveSiteSettings(){
