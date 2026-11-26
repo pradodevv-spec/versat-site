@@ -170,6 +170,17 @@ async function loadAdmin(){
   return;
  }
 
+ async function loadAdmin(){
+ const box=document.getElementById("dashContent");
+ box.innerHTML='<div class="empty">Carregando editor...</div>';
+
+ const {data:profile,error:pe}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
+
+ if(pe||profile?.role!=="admin"){
+  box.innerHTML='<div class="notice">Área exclusiva do administrador.</div>';
+  return;
+ }
+
  const {data,error}=await sb.from("site_settings").select("content").eq("id",1).single();
 
  if(error){
@@ -198,9 +209,20 @@ async function loadAdmin(){
 
  const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
 
+ if(projectError){
+  document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';
+  return;
+ }
+
  const pendentes=(projects||[]).filter(p=>
   String(p.status||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()!=="concluido"
  );
+
+ document.getElementById("adminProjects").innerHTML=
+  pendentes.length
+  ? pendentes.map(p=>projectCard(p,true)).join("")
+  : '<div class="empty">Não há pedidos pendentes.</div>';
+}
 
  document.getElementById("adminProjects").innerHTML=projectError
  ? '<div class="notice">'+escapeHtml(projectError.message)+'</div>'
