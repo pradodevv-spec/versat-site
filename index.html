@@ -155,7 +155,64 @@ function requestPlan(plan){pendingPlan=plan;if(!currentUser){openAuth("login");s
 async function submitRequest(e){e.preventDefault();if(!sb||!currentUser){showNotice("requestNotice","Conecte o banco de dados e entre na sua conta para enviar.");return}const payload={user_id:currentUser.id,project_type:document.getElementById("reqType").value,project_name:document.getElementById("reqName").value.trim(),details:document.getElementById("reqDetails").value.trim(),status:"Recebido"};const {error}=await sb.from("projects").insert(payload);if(error){showNotice("requestNotice","Não foi possível enviar: "+error.message);return}closeRequest();loadProjects();dashTab("projects",document.querySelector(".side button"));alert("Solicitação enviada! Você poderá acompanhar as atualizações na sua área.")}
 async function loadProjects(){const box=document.getElementById("dashContent");box.innerHTML='<div class="empty">Carregando...</div>';if(!sb||!currentUser){box.innerHTML='<div class="empty">Configure o banco de dados para visualizar seus projetos.</div>';return}const {data,error}=await sb.from("projects").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="notice">Erro ao carregar projetos: '+escapeHtml(error.message)+'</div>';return}if(!data.length){box.innerHTML='<div class="empty"><div style="font-size:35px">⌁</div><h3>Seus projetos aparecerão aqui.</h3><p>Quando você enviar uma solicitação, poderá acompanhar cada atualização nesta área.</p><button class="btn red" onclick="openRequest()">Solicitar projeto</button></div>';return}box.innerHTML='<h3>Meus projetos</h3>'+data.map(p=>projectCard(p,false)).join("")}
 function projectCard(p,admin){let cls=p.status==="Concluído"?"done":p.status==="Em desenvolvimento"||p.status==="Em revisão"?"progress":"";return '<div class="project"><div class="projecttop"><div><b>'+escapeHtml(p.project_name)+'</b><div class="small">'+escapeHtml(p.project_type)+' • '+new Date(p.created_at).toLocaleDateString("pt-BR")+'</div></div><span class="status '+cls+'">'+escapeHtml(p.status)+'</span></div><p style="color:#aaa;font-size:13px;margin:12px 0 0">'+escapeHtml(p.details||"Sem detalhes adicionais.")+'</p>'+(admin?'<div class="small" style="margin-top:10px">Cliente: '+escapeHtml(p.user_id)+'</div><div class="adminrow"><select id="status-'+p.id+'"><option>Recebido</option><option>Em desenvolvimento</option><option>Em revisão</option><option>Aguardando cliente</option><option>Concluído</option></select><button class="btn" onclick="updateStatus(\''+p.id+'\')">Atualizar status</button></div>':'')+'</div>'}
-async function loadAdmin(){const box=document.getElementById("dashContent");box.innerHTML='<div class="empty">Verificando permissões...</div>';const {data:profile,error:pe}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();if(pe||profile?.role!=="admin"){box.innerHTML='<div class="notice">Esta área é exclusiva do administrador da VERSAT.</div>';return}const {data,error}=await sb.from("projects").select("*").order("created_at",{ascending:false});if(error){box.innerHTML='<div class="notice">'+escapeHtml(error.message)+'</div>';return}box.innerHTML='<h3>Todos os pedidos</h3>'+(data.length?data.map(p=>projectCard(p,true)).join(""):'<div class="empty">Ainda não há solicitações.</div>')}
+async function loadAdmin(){
+ const box=document.getElementById("dashContent");
+ box.innerHTML='<div class="empty">Carregando editor...</div>';
+
+ const {data:profile,error:pe}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
+
+ if(pe||profile?.role!=="admin"){
+  box.innerHTML='<div class="notice">Área exclusiva do administrador.</div>';
+  return;
+ }
+
+ const {data,error}=await sb.from("site_settings").select("content").eq("id",1).single();
+
+ if(error){
+  box.innerHTML='<div class="notice">'+escapeHtml(error.message)+'</div>';
+  return;
+ }
+
+ const c=data.content||{};
+
+ box.innerHTML=`
+ <h3>Editar site VERSAT</h3>
+ <label>Título principal</label>
+ <input id="editTitle" value="${escapeHtml(c.title||'')}">
+ <label>Descrição principal</label>
+ <textarea id="editDescription">${escapeHtml(c.description||'')}</textarea>
+ <label>WhatsApp (somente números)</label>
+ <input id="editWhatsapp" value="${escapeHtml(c.whatsapp||'5511984681861')}">
+ <label>E-mail de contato</label>
+ <input id="editEmail" value="${escapeHtml(c.email||'Pradodevv@gmail.com')}">
+ <button onclick="saveSiteSettings()">Salvar alterações</button>
+ <div id="settingsNotice"></div>
+ <hr>
+ <h3>Pedidos recebidos</h3>
+ <div id="adminProjects">Carregando pedidos...</div>
+ `;
+
+ const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
+
+ document.getElementById("adminProjects").innerHTML=projectError
+ ? '<div class="notice">'+escapeHtml(projectError.message)+'</div>'
+ : (projects.length?projects.map(p=>projectCard(p,true)).join(""):'<div class="empty">Ainda não há solicitações.</div>');
+}
+
+async function saveSiteSettings(){
+ const content={
+  title:document.getElementById("editTitle").value,
+  description:document.getElementById("editDescription").value,
+  whatsapp:document.getElementById("editWhatsapp").value,
+  email:document.getElementById("editEmail").value
+ };
+
+ const {error}=await sb.from("site_settings").update({content,updated_at:new Date().toISOString()}).eq("id",1);
+
+ document.getElementById("settingsNotice").innerHTML=error
+ ? '<div class="notice">'+escapeHtml(error.message)+'</div>'
+ : '<div class="notice">Alterações salvas!</div>';
+}
 async function updateStatus(id){const status=document.getElementById("status-"+id).value;const {error}=await sb.from("projects").update({status,updated_at:new Date().toISOString()}).eq("id",id);if(error){alert("Erro: "+error.message);return}loadAdmin()}
 function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de WhatsApp no campo WHATSAPP_NUMBER dentro do index.html para ativar este botão.");return}window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent("Olá, VERSAT! Gostaria de solicitar um orçamento."),"_blank")}
