@@ -626,7 +626,10 @@ async function runVersatFreeAITest(button){
    const host = destination.hostname.toLowerCase();
    if (host === "versatstudio.netlify.app" || host.endsWith(".versatstudio.netlify.app")) {
     event.preventDefault(); event.stopImmediatePropagation();
-    showDemoNotice("Este link aponta para a VERSAT e foi bloqueado nesta prévia.");
+    const sectionId = destination.hash ? decodeURIComponent(destination.hash.slice(1)) : "";
+    const localTarget = sectionId ? document.getElementById(sectionId) : null;
+    if (localTarget) localTarget.scrollIntoView({behavior:"smooth",block:"start"});
+    else showDemoNotice("Este botão ainda aponta para a VERSAT. O link foi bloqueado para manter você no site gerado.");
    }
    return;
   }
@@ -644,7 +647,7 @@ async function runVersatFreeAITest(button){
   const guardedHtml = /<head\b[^>]*>/i.test(cleanHtml) ? cleanHtml.replace(/<head\b[^>]*>/i, match => match + previewGuard) : previewGuard + cleanHtml;
   frame.srcdoc=guardedHtml;
   result.append(heading,frame);
-  const note=document.createElement("div");note.className="small";note.style.marginTop="9px";note.textContent="Prévia isolada: links internos não abrem a VERSAT e formulários aparecem apenas como demonstração. Nada foi cobrado ou publicado.";
+  const note=document.createElement("div");note.className="small";note.style.marginTop="9px";note.textContent="Prévia isolada: links internos permanecem no site gerado; links para a VERSAT são bloqueados ou direcionados à seção correspondente. Formulários são demonstrativos. Nada foi publicado.";
   result.append(note);
  }catch(error){console.error("Teste grátis da IA:",error);let detail=error?.message||"erro inesperado";try{const payload=await error?.context?.json();if(payload?.error)detail=payload.error}catch(_){}result.textContent="Não foi possível gerar: "+detail}
  finally{button.disabled=false;button.textContent=old}
