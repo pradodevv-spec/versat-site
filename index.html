@@ -189,14 +189,16 @@ async function loadAdmin(){
  <div id="settingsNotice"></div>
  <hr>
  <h3>Pedidos recebidos</h3>
- <div id="adminProjects">Carregando pedidos...</div>
- `;
+<div id="adminProjects">Carregando pedidos...</div>
+`;
 
- const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
+const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
 
- document.getElementById("adminProjects").innerHTML=projectError
+document.getElementById("adminProjects").innerHTML=projectError
  ? '<div class="notice">'+escapeHtml(projectError.message)+'</div>'
- : (projects.length?projects.map(p=>projectCard(p,true)).join(""):'<div class="empty">Ainda não há solicitações.</div>');
+ : (projects.filter(p=>p.status!=="Concluído").length
+    ? projects.filter(p=>p.status!=="Concluído").map(p=>projectCard(p,true)).join("")
+    : '<div class="empty">Não há pedidos pendentes.</div>');
 }
 
 async function saveSiteSettings(){
