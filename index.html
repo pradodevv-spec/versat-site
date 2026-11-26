@@ -584,7 +584,7 @@ async function runVersatFreeAITest(button){
   const heading=document.createElement("div");
   heading.style.cssText="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0";
   const label=document.createElement("b");label.textContent="Prévia visual do site";
-  const meta=document.createElement("span");meta.className="small";meta.textContent=Math.round((data.bytes||0)/1024)+" KB • demonstração privada";
+  const meta=document.createElement("span");meta.className="small";const qa=data.audit||{};meta.textContent=Math.round((data.bytes||0)/1024)+" KB • "+(qa.routeCount||0)+" rotas • "+(qa.anchorCount||0)+" links • "+(qa.formCount||0)+" formulários • auditoria estática aprovada";
   heading.append(label,meta);
   const frame=document.createElement("iframe");
   frame.title="Site criado pela IA VERSAT";
