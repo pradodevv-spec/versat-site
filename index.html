@@ -77,6 +77,78 @@ body.versat-high-contrast{background:#000!important;color:#fff!important}body.ve
 .accessibility-font-controls button{min-width:42px}
 .accessibility-panel .accessibility-hint{font-size:11px;color:#aaa;line-height:1.45;margin:10px 0 0}
 @media(max-width:520px){.accessibility-widget{right:14px;bottom:16px}.accessibility-trigger{width:54px;height:54px}.accessibility-panel{bottom:65px}}
+
+/* Tema claro: troca também textos e superfícies, preservando o vermelho da marca */
+body.versat-light-theme{
+ --bg:#f5f5f7;--panel:#ffffff;--panel2:#eeeeF2;--line:#d9d9e0;
+ --text:#19191f;--muted:#62626d;--white:#ffffff;
+ background:var(--bg)!important;color:var(--text)!important
+}
+body.versat-light-theme header{background:rgba(255,255,255,.94);border-bottom-color:#dedee5}
+body.versat-light-theme .navlinks{color:#454550}
+body.versat-light-theme .navlinks a:hover{color:#17171c}
+body.versat-light-theme .brand-word{color:#202027;text-shadow:none}
+body.versat-light-theme .btn:not(.red){color:#202027;border-color:#d0d0d8}
+body.versat-light-theme .menu{color:#202027}
+body.versat-light-theme .profile-menu,body.versat-light-theme .accessibility-panel{background:#fff;color:#202027;border-color:#d8d8df;box-shadow:0 18px 45px #0002}
+body.versat-light-theme .profile-menu>button{color:#33333c}
+body.versat-light-theme .profile-menu>button:hover{background:#f0f0f4}
+body.versat-light-theme .profile-menu-identity small,body.versat-light-theme .accessibility-row span{color:#555560}
+body.versat-light-theme .hero:before{opacity:.55}
+body.versat-light-theme .lead,body.versat-light-theme .trust,body.versat-light-theme .section-head p,
+body.versat-light-theme .card p,body.versat-light-theme .step p,body.versat-light-theme .cta p,
+body.versat-light-theme .about-copy p,body.versat-light-theme .about-value p,
+body.versat-light-theme .faq-item p,body.versat-light-theme .legal-dialog p,
+body.versat-light-theme .legal-dialog li{color:#555560}
+body.versat-light-theme .showcase{background:linear-gradient(145deg,#fff,#ececf1);border-color:#dedee5;box-shadow:0 24px 65px #0002}
+body.versat-light-theme .browser{background:#fff;border-color:#d8d8df}
+body.versat-light-theme .browserbar{background:#e8e8ed}
+body.versat-light-theme .mock{background:radial-gradient(circle at 90% 20%,#ed26381a,transparent 35%),#f5f5f7;color:#202027}
+body.versat-light-theme .mocktop{color:#333}
+body.versat-light-theme .mock p{color:#62626d}
+body.versat-light-theme .mockcards div{background:linear-gradient(135deg,#e4e4e9,#f7f7f9);border-color:#d8d8df}
+body.versat-light-theme .card,body.versat-light-theme .pricecard{background:#fff;border-color:#dedee5}
+body.versat-light-theme .features{color:#44444e}
+body.versat-light-theme .small,body.versat-light-theme .step,body.versat-light-theme footer{color:#62626d}
+body.versat-light-theme .step{border-top-color:#d8d8df}
+body.versat-light-theme .cta{background:radial-gradient(circle at 100% 0,#ed263817,transparent 40%),#fff;border-color:#ed26384d}
+body.versat-light-theme .footlogo{color:#202027}
+body.versat-light-theme footer{border-top-color:#dedee5}
+body.versat-light-theme .dialog{background:#fff;color:#202027;border-color:#d8d8df;box-shadow:0 25px 80px #0002}
+body.versat-light-theme .dialog p,body.versat-light-theme .switchline{color:#62626d}
+body.versat-light-theme .close{color:#555}
+body.versat-light-theme .field span{color:#44444e}
+body.versat-light-theme .field input,body.versat-light-theme .field textarea,body.versat-light-theme .field select,
+body.versat-light-theme .adminrow select,body.versat-light-theme .finance-form input,body.versat-light-theme .finance-form select{
+ background:#fff;color:#202027;border-color:#d0d0d8
+}
+body.versat-light-theme .side,body.versat-light-theme .dashmain,
+body.versat-light-theme .project,body.versat-light-theme .metric,
+body.versat-light-theme .review-form,body.versat-light-theme .review-display,
+body.versat-light-theme .about-copy,body.versat-light-theme .about-values,
+body.versat-light-theme .faq-item,body.versat-light-theme .finance-card,
+body.versat-light-theme .sim-fields,body.versat-light-theme .sim-result{
+ background:#fff;color:#202027;border-color:#dedee5
+}
+body.versat-light-theme .side button{color:#4d4d58}
+body.versat-light-theme .side button.active,body.versat-light-theme .side button:hover{background:#ed263814;color:#c91d2d}
+body.versat-light-theme .project p,body.versat-light-theme .review-display p{color:#44444e}
+body.versat-light-theme .empty{color:#62626d}
+body.versat-light-theme .status{background:#ededf1;color:#44444e}
+body.versat-light-theme .compare-scroll{border-color:#dedee5}
+body.versat-light-theme .compare-table{background:#fff;color:#202027}
+body.versat-light-theme .compare-table th{background:#ededf2}
+body.versat-light-theme .compare-table th,body.versat-light-theme .compare-table td{border-bottom-color:#dedee5}
+body.versat-light-theme .accessibility-row button,body.versat-light-theme .accessibility-row select{background:#f1f1f5;color:#202027;border-color:#d0d0d8}
+body.versat-light-theme .accessibility-panel .accessibility-hint{color:#62626d}
+body.versat-light-theme .cookie-banner{background:#fff;color:#202027;border-color:#d8d8df;box-shadow:0 18px 55px #0002}
+body.versat-light-theme .cookie-banner p,body.versat-light-theme .cookie-settings label{color:#555560}
+body.versat-light-theme .cookie-actions button,body.versat-light-theme .cookie-settings button:not(.cookie-primary){background:#f0f0f4;color:#202027;border-color:#d0d0d8}
+body.versat-light-theme .cookie-banner a{color:#c91d2d}
+body.versat-light-theme .sim-options label,body.versat-light-theme .sim-disclaimer{color:#555560}
+body.versat-light-theme .finance-row{border-bottom-color:#dedee5}
+body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
+
 </style>
 </head>
 <body>
@@ -155,7 +227,7 @@ body.versat-high-contrast{background:#000!important;color:#fff!important}body.ve
 <div class="accessibility-widget" id="accessibilityWidget">
   <div class="accessibility-panel hidden" id="accessibilityPanel" role="dialog" aria-label="Configurações de aparência e acessibilidade">
     <h3>Configurações</h3>
-    <div class="accessibility-row"><span>Alto contraste</span><button type="button" onclick="toggleContrast()" aria-label="Alternar alto contraste">◐</button></div>
+    <div class="accessibility-row"><span>Tema claro / escuro</span><button type="button" onclick="toggleContrast()" aria-label="Alternar tema claro e escuro">◐</button></div>
     <div class="accessibility-row"><span>Tamanho da letra</span><div class="accessibility-font-controls"><button type="button" onclick="changeFont(-1)" aria-label="Diminuir letra">A−</button><button type="button" onclick="changeFont(1)" aria-label="Aumentar letra">A+</button></div></div>
     <div class="accessibility-row"><span>Idioma</span><select id="languageSelect" aria-label="Idioma" onchange="setLanguage(this.value)"><option value="pt">Português</option><option value="en">English</option></select></div>
     <p class="accessibility-hint">As preferências de contraste e tamanho da letra ficam salvas neste dispositivo.</p>
@@ -503,12 +575,12 @@ async function saveCRMContact(userId){
 }
 async function updateStatus(id){const status=document.getElementById("status-"+id).value;const {error}=await sb.from("projects").update({status,updated_at:new Date().toISOString()}).eq("id",id);if(error){alert("Erro: "+error.message);return}loadAdmin()}
 function toggleAccessibilityPanel(){const panel=document.getElementById("accessibilityPanel"),button=document.querySelector(".accessibility-trigger");const opening=panel.classList.contains("hidden");panel.classList.toggle("hidden",!opening);button.setAttribute("aria-expanded",String(opening))}
-function toggleContrast(){document.body.classList.toggle("versat-high-contrast");localStorage.setItem("versat_high_contrast",document.body.classList.contains("versat-high-contrast")?"1":"0")}
+function toggleContrast(){const light=document.body.classList.toggle("versat-light-theme");localStorage.setItem("versat_theme",light?"light":"dark")}
 function changeFont(delta){const root=document.documentElement;const current=Number(root.dataset.fontScale||100);const next=Math.max(85,Math.min(125,current+(delta*5)));root.dataset.fontScale=String(next);root.style.fontSize=next+"%";localStorage.setItem("versat_font_scale",String(next))}
 function setLanguage(language){if(language!=="pt"){alert("A versão em inglês ainda está em preparação. O site continuará em português.");document.getElementById("languageSelect").value="pt";return}}
 function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de WhatsApp no campo WHATSAPP_NUMBER dentro do index.html para ativar este botão.");return}window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent("Olá, VERSAT! Gostaria de solicitar um orçamento."),"_blank")}
-window.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("versat_high_contrast")==="1")document.body.classList.add("versat-high-contrast");const savedFont=Number(localStorage.getItem("versat_font_scale")||100);if(savedFont>=85&&savedFont<=125){document.documentElement.dataset.fontScale=String(savedFont);document.documentElement.style.fontSize=savedFont+"%"}updateAccountHeader(null);if(sb){const {data}=await sb.auth.getSession();if(data.session){currentUser=data.session.user;updateAccountHeader(currentUser);openDashboard()}sb.auth.onAuthStateChange((_event,session)=>{if(_event==="PASSWORD_RECOVERY"){authMode="recovery";updateAuthMode();document.getElementById("authModal").classList.add("open")}currentUser=session?.user||null;updateAccountHeader(currentUser);if(!currentUser){document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block"}})}});
+window.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("versat_theme")==="light")document.body.classList.add("versat-light-theme");const savedFont=Number(localStorage.getItem("versat_font_scale")||100);if(savedFont>=85&&savedFont<=125){document.documentElement.dataset.fontScale=String(savedFont);document.documentElement.style.fontSize=savedFont+"%"}updateAccountHeader(null);if(sb){const {data}=await sb.auth.getSession();if(data.session){currentUser=data.session.user;updateAccountHeader(currentUser);openDashboard()}sb.auth.onAuthStateChange((_event,session)=>{if(_event==="PASSWORD_RECOVERY"){authMode="recovery";updateAuthMode();document.getElementById("authModal").classList.add("open")}currentUser=session?.user||null;updateAccountHeader(currentUser);if(!currentUser){document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block"}})}});
 document.addEventListener("click",(event)=>{const widget=document.getElementById("accessibilityWidget");if(widget&&!widget.contains(event.target)){document.getElementById("accessibilityPanel")?.classList.add("hidden");document.querySelector(".accessibility-trigger")?.setAttribute("aria-expanded","false")}const wrap=document.getElementById("profileWrap");if(wrap&&!wrap.contains(event.target)){document.getElementById("profileMenu").classList.add("hidden");document.getElementById("profileButton").setAttribute("aria-expanded","false")}});
 function requestPlan(plan){
   const numero = String(WHATSAPP_NUMBER || "5511984681861").replace(/\D/g,"");
