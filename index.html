@@ -215,9 +215,12 @@ async function loadDevelopment(){
  box.innerHTML='<div class="empty">Carregando Central de Desenvolvimento...</div>';
  const {data:profile,error:profileError}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
  if(profileError||profile?.role!=="admin"){box.innerHTML='<div class="notice">Área exclusiva do administrador.</div>';return}
- const {data:projects,error}=await sb.from("projects").select("id,project_name,project_type,details,brief,status,created_at,github_repo_url,preview_url,dev_notes,development_started_at,dev_updated_at").order("created_at",{ascending:false});
+ const {data:projects,error}=await sb.from("projects").select("id,project_name,project_type,details,brief,status,created_at,layout_url").order("created_at",{ascending:false});
  if(error){box.innerHTML='<div class="notice">Erro ao carregar: '+escapeHtml(error.message)+'</div>';return}
- const rows=projects||[],active=rows.filter(p=>p.status!=="Concluído"),done=rows.filter(p=>p.status==="Concluído");
+ const {data:devRows,error:devError}=await sb.from("project_development").select("*");
+ if(devError){box.innerHTML='<div class="notice">Não foi possível carregar os dados internos: '+escapeHtml(devError.message)+'</div>';return}
+ const devMap={};(devRows||[]).forEach(row=>devMap[row.project_id]=row);
+ const rows=(projects||[]).map(p=>({...p,...(devMap[p.id]||{})})),active=rows.filter(p=>p.status!=="Concluído"),done=rows.filter(p=>p.status==="Concluído");
  const card=p=>'<article class="project" data-project="'+p.id+'" style="margin:14px 0"><div class="projecttop"><div><b>'+escapeHtml(p.project_name||"Projeto")+'</b><div class="small">'+escapeHtml(p.project_type||"")+' • '+new Date(p.created_at).toLocaleDateString("pt-BR")+'</div></div><span class="status">'+escapeHtml(p.status||"Recebido")+'</span></div><details style="margin:12px 0"><summary style="cursor:pointer">Ver briefing do cliente</summary><p class="small" style="white-space:pre-line">'+escapeHtml(p.details||"Sem descrição")+'</p><pre class="small" style="white-space:pre-wrap;font:inherit">'+escapeHtml(JSON.stringify(p.brief||{},null,2))+'</pre></details><label class="field"><span>Etapa do projeto</span><select class="dev-status"><option value="Recebido" '+(p.status==="Recebido"?"selected":"")+'>Recebido</option><option value="Em desenvolvimento" '+(p.status==="Em desenvolvimento"?"selected":"")+'>Em desenvolvimento</option><option value="Em revisão" '+(p.status==="Em revisão"?"selected":"")+'>Em revisão</option><option value="Aguardando cliente" '+(p.status==="Aguardando cliente"?"selected":"")+'>Aguardando cliente</option><option value="Concluído" '+(p.status==="Concluído"?"selected":"")+'>Concluído</option></select></label><label class="field"><span>Repositório GitHub</span><input class="dev-repo" type="url" value="'+escapeHtml(p.github_repo_url||"")+'" placeholder="https://github.com/..."></label><label class="field"><span>Link de prévia</span><input class="dev-preview" type="url" value="'+escapeHtml(p.preview_url||p.layout_url||"")+'" placeholder="https://..."></label><label class="field"><span>Notas internas</span><textarea class="dev-notes" rows="3" maxlength="5000" placeholder="Tarefas e decisões técnicas...">'+escapeHtml(p.dev_notes||"")+'</textarea></label><button class="btn red" type="button" onclick="saveDevelopmentProject(this)">Salvar andamento</button><div class="dev-notice small"></div><div class="small">Atualizado: '+(p.dev_updated_at?new Date(p.dev_updated_at).toLocaleString("pt-BR"):"Ainda não")+'</div></article>';
  box.innerHTML='<h3>Central de Desenvolvimento</h3><p class="small">Organize os pedidos, acompanhe etapas e registre repositórios, prévias e notas internas. Somente a administração acessa esta área.</p><div class="admin-metrics"><div class="metric"><span>Na fila</span><strong>'+active.filter(p=>p.status==="Recebido").length+'</strong></div><div class="metric"><span>Em andamento</span><strong>'+active.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length+'</strong></div><div class="metric"><span>Entregues</span><strong>'+done.length+'</strong></div></div><h3>Projetos ativos</h3>'+(active.length?active.map(card).join(""):'<div class="empty">Nenhum projeto ativo.</div>')+'<details style="margin-top:18px"><summary style="cursor:pointer">Projetos concluídos ('+done.length+')</summary>'+(done.length?done.map(card).join(""):'<p class="small">Nenhum projeto concluído.</p>')+'</details>';
 }
@@ -227,11 +230,13 @@ async function saveDevelopmentProject(button){
  const valid=v=>!v||v.startsWith("https://")||v.startsWith("http://");
  if(!valid(repo)||!valid(preview)){notice.textContent="Informe links válidos começando com https://";return}
  const now=new Date().toISOString();
- const {data:current}=await sb.from("projects").select("development_started_at").eq("id",id).single();
- const update={status,github_repo_url:repo||null,preview_url:preview||null,dev_notes:notes,dev_updated_at:now,updated_at:now};
- if(status==="Em desenvolvimento"&&!current?.development_started_at)update.development_started_at=now;
- const {error}=await sb.from("projects").update(update).eq("id",id);
- notice.textContent=error?"Erro ao salvar: "+error.message:"Andamento salvo.";
+ const {data:current}=await sb.from("project_development").select("development_started_at").eq("project_id",id).maybeSingle();
+ const internal={project_id:id,github_repo_url:repo||null,preview_url:preview||null,dev_notes:notes,dev_updated_at:now};
+ if(status==="Em desenvolvimento"&&!current?.development_started_at)internal.development_started_at=now;
+ const {error:devError}=await sb.from("project_development").upsert(internal,{onConflict:"project_id"});
+ if(devError){notice.textContent="Erro ao salvar dados internos: "+devError.message;return}
+ const {error}=await sb.from("projects").update({status,updated_at:now}).eq("id",id);
+ notice.textContent=error?"Erro ao atualizar etapa: "+error.message:"Andamento salvo.";
  if(!error)await loadDevelopment();
 }
 function renderNewRequest(){document.getElementById("dashContent").innerHTML='<h3>Solicitar um novo projeto</h3><p style="color:#aaa">Conte o que você precisa e acompanhe o andamento por aqui.</p><button class="btn red" onclick="openRequest()">Começar solicitação</button>'}
