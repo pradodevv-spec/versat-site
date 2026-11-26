@@ -597,7 +597,11 @@ async function runVersatFreeAITest(button){
   const link = event.target.closest && event.target.closest("a[href]");
   if (!link) return;
   const href = (link.getAttribute("href") || "").trim();
-  if (!href || href.startsWith("#") || /^(https?:|mailto:|tel:|sms:)/i.test(href)) return;
+  if (!href || href.startsWith("#") || /^(mailto:|tel:|sms:)/i.test(href)) return;
+  if (/^https?:/i.test(href)) {
+   try { if (new URL(href).hostname === "versatstudio.netlify.app") { event.preventDefault(); event.stopImmediatePropagation(); return; } } catch (_) {}
+   return;
+  }
   event.preventDefault();
   event.stopImmediatePropagation();
   if (href === "/" || href === "./" || href === "index.html") window.scrollTo({top:0,behavior:"smooth"});
