@@ -96,7 +96,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;color:#92929d;font-size:1
 /* CONFIGURE ESTES 2 CAMPOS DEPOIS DE CRIAR SEU PROJETO NO SUPABASE */
 const SUPABASE_URL = "https://pmnpifvdypmbtoirdugp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable__EPP_PrOB_fqnJcCfhHCKQ_vWf47com";
-const WHATSAPP_NUMBER = "5511984681861";
+let WHATSAPP_NUMBER = "5511984681861";
 let sb=null, currentUser=null, authMode="login", pendingPlan="";
 const configured = SUPABASE_URL.startsWith("https://") && (SUPABASE_ANON_KEY.startsWith("eyJ") || SUPABASE_ANON_KEY.startsWith("sb_publishable_"));
 if(configured && window.supabase) sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
