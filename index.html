@@ -194,10 +194,18 @@ async function loadAdmin(){
 
 const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
 
+const pedidosPendentes=(projects||[]).filter(p=>
+ String(p.status||"")
+ .normalize("NFD")
+ .replace(/[\u0300-\u036f]/g,"")
+ .trim()
+ .toLowerCase()!=="concluido"
+);
+
 document.getElementById("adminProjects").innerHTML=projectError
  ? '<div class="notice">'+escapeHtml(projectError.message)+'</div>'
- : (projects.filter(p=>p.status!=="Concluído").length
-    ? projects.filter(p=>p.status!=="Concluído").map(p=>projectCard(p,true)).join("")
+ : (pedidosPendentes.length
+    ? pedidosPendentes.map(p=>projectCard(p,true)).join("")
     : '<div class="empty">Não há pedidos pendentes.</div>');
 }
 
