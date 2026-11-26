@@ -591,7 +591,7 @@ async function runVersatFreeAITest(button){
   frame.setAttribute("sandbox","allow-scripts allow-forms");
   frame.setAttribute("referrerpolicy","no-referrer");
   frame.style.cssText="display:block;width:100%;height:720px;background:#fff;border:1px solid #454550;border-radius:14px";
-  const previewGuard = `<meta http-equiv="Content-Security-Policy" content="navigate-to 'none'; form-action 'none'; base-uri 'none'">
+  const previewGuard = \`<meta http-equiv="Content-Security-Policy" content="navigate-to 'none'; form-action 'none'; base-uri 'none'">
 <script>
 (()=> {
  const showDemoNotice = (message) => {
@@ -606,13 +606,29 @@ async function runVersatFreeAITest(button){
   clearTimeout(notice._hideTimer);
   notice._hideTimer = setTimeout(()=>notice.remove(),4500);
  };
+ const routeFrom = raw => {
+  if (!raw) return null;
+  let value = String(raw).trim();
+  if (!value || /^(mailto:|tel:|sms:|javascript:)/i.test(value)) return null;
+  if (value.startsWith("#/")) return value.slice(1);
+  try {
+   if (/^https?:/i.test(value)) {
+    const u = new URL(value);
+    if (!/(^|\\.)versatstudio\\.netlify\\.app$/i.test(u.hostname)) return null;
+    value = u.pathname + u.search + u.hash;
+   }
+  } catch (_) { return null; }
+  if (value.startsWith("#") || value.startsWith("?")) return null;
+  const path = value.split(/[?#]/)[0].replace(/^\\.\\//, "").replace(/^\\/+/, "").replace(/\\.html?$/i, "").replace(/\\/+$/, "");
+  return "#/" + (path && path !== "index" ? path : "inicio");
+ };
  document.addEventListener("click", event => {
-  const link = event.target.closest && event.target.closest("a[href]");
-  if (!link) return;
-  const href = (link.getAttribute("href") || "").trim();
-  if (!href) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+  const control = event.target.closest && event.target.closest("a[href],button,[role='button'],input[type='button'],input[type='submit']");
+  if (!control) return;
+  const link = control.closest("a[href]");
+  const href = link ? (link.getAttribute("href") || "").trim() : "";
+  if (href.startsWith("#/")) return;
   if (/^(mailto:|tel:|sms:)/i.test(href)) return;
-  if (href.startsWith("#/")) return; // Permite rotas internas multipágina da SPA gerada.
   if (href.startsWith("#")) {
    event.preventDefault(); event.stopImmediatePropagation();
    const id = decodeURIComponent(href.slice(1));
@@ -621,41 +637,36 @@ async function runVersatFreeAITest(button){
    else if (!id) window.scrollTo({top:0,behavior:"smooth"});
    return;
   }
-  if (/^https?:/i.test(href)) {
-   let destination;
-   try { destination = new URL(href); } catch (_) { event.preventDefault(); event.stopImmediatePropagation(); return; }
-   const host = destination.hostname.toLowerCase();
-   if (host === "versatstudio.netlify.app" || host.endsWith(".versatstudio.netlify.app")) {
-    event.preventDefault(); event.stopImmediatePropagation();
-    const sectionId = destination.hash ? decodeURIComponent(destination.hash.slice(1)) : "";
-    const localTarget = sectionId ? document.getElementById(sectionId) : null;
-    if (localTarget) localTarget.scrollIntoView({behavior:"smooth",block:"start"});
-    else showDemoNotice("Este botão ainda aponta para a VERSAT. O link foi bloqueado para manter você no site gerado.");
+  const inline = [control.getAttribute("onclick"), control.getAttribute("formaction"), control.getAttribute("data-href"), control.getAttribute("data-url"), link && link.getAttribute("onclick")].filter(Boolean).join(" ");
+  let target = routeFrom(href);
+  if (!target && inline) {
+   const patterns = [
+    /(?:window\\.)?location(?:\\.href)?\\s*=\\s*['"]([^'"]+)['"]/i,
+    /window\\.open\\s*\\(\\s*['"]([^'"]+)['"]/i,
+    /(?:href|url|route)\\s*[:=]\\s*['"]([^'"]+)['"]/i
+   ];
+   for (const pattern of patterns) {
+    const match = inline.match(pattern);
+    if (match) { target = routeFrom(match[1]); if (target) break; }
    }
-   return;
   }
-  // Em iframe srcdoc, links relativos herdariam o domínio da VERSAT.
-  // Converta-os para rotas hash locais antes de qualquer bloqueio.
-  if (!/^[a-z][a-z0-9+.-]*:/i.test(href) && href.charAt(0) !== "?") {
-   const path = href.split(/[?#]/)[0]
-    .replace(/^\.\//, "").replace(/^\/+/, "")
-    .replace(/\.html?$/i, "").replace(/\/+$/, "");
-   const route = path && path !== "index" ? path : "inicio";
+  if (target) {
    event.preventDefault(); event.stopImmediatePropagation();
-   link.setAttribute("href", "#/" + route);
-   window.location.hash = "/" + route;
+   window.location.hash = target.slice(1);
    return;
   }
-  event.preventDefault(); event.stopImmediatePropagation();
-  showDemoNotice("Este tipo de link não está disponível na prévia.");
+  if (href || inline) {
+   event.preventDefault(); event.stopImmediatePropagation();
+   showDemoNotice("Navegação externa bloqueada na prévia. As páginas internas continuam dentro do site gerado.");
+  }
  }, true);
  document.addEventListener("submit", event => {
   event.preventDefault(); event.stopImmediatePropagation();
   showDemoNotice("Demonstração: este formulário ainda não está conectado a um sistema de envio.");
  }, true);
- try { window.open = () => null; } catch (_) {}
+ try { window.open = (url) => { const route = routeFrom(url); if (route) window.location.hash = route.slice(1); return null; }; } catch (_) {}
 })();
-<\/script>`;
+<\\/script>\`;
   const cleanHtml = html.replace(/<base\b[^>]*>/gi, "");
   const guardedHtml = /<head\b[^>]*>/i.test(cleanHtml) ? cleanHtml.replace(/<head\b[^>]*>/i, match => match + previewGuard) : previewGuard + cleanHtml;
   frame.srcdoc=guardedHtml;
