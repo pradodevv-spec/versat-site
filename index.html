@@ -569,7 +569,7 @@ async function loadAdmin(){
  const {data:settings,error:settingsError}=await sb.from("site_settings").select("content").eq("id",1).single();
  if(settingsError){box.innerHTML='<div class="notice">'+escapeHtml(settingsError.message)+'</div>';return}
  const c=settings.content||{};
- box.innerHTML='<h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div><section class="admin-settings-card"><div class="admin-settings-heading"><div><span class="admin-settings-kicker">PERSONALIZAÇÃO</span><h3>Editar site VERSAT</h3><p>Atualize as informações que aparecem para seus visitantes.</p></div><span class="admin-settings-icon" aria-hidden="true">✦</span></div><div class="admin-settings-grid"><label class="admin-setting-field admin-setting-wide"><span>Título da página</span><small>Nome exibido na aba do navegador e ao compartilhar o site.</small><input id="editTitle" maxlength="120" value="'+escapeHtml(c.title||'')+'" placeholder="Ex.: VERSAT — Seu próximo projeto começa aqui"></label><label class="admin-setting-field admin-setting-wide"><span>Descrição do site</span><small>Uma frase curta para apresentar a VERSAT aos visitantes.</small><textarea id="editDescription" maxlength="300" rows="3" placeholder="Desenvolvemos sites e sistemas modernos para sua empresa.">'+escapeHtml(c.description||'')+'</textarea></label><label class="admin-setting-field"><span>WhatsApp de atendimento</span><small>Inclua DDD e código do país, somente números.</small><input id="editWhatsapp" inputmode="numeric" maxlength="13" value="'+escapeHtml(c.whatsapp||'5511984681861')+'" placeholder="5511999999999"></label><label class="admin-setting-field"><span>E-mail de contato</span><small>Endereço usado para contato público.</small><input id="editEmail" type="email" maxlength="160" value="'+escapeHtml(c.email||'versatweb@gmail.com')+'" placeholder="contato@versat.com.br"></label><label class="admin-setting-field admin-setting-wide"><span>Logo do cabeçalho</span><small>Escolha uma imagem da galeria. PNG, JPG ou WEBP, até 3 MB. A IA processa no navegador; primeira utilização baixa cerca de 40 MB. Biblioteca AGPL-3.0.</small><input id="editHeaderLogoFile" type="file" accept="image/png,image/jpeg,image/webp"><div id="logoProcessingNotice" class="logo-processing-notice" role="status" aria-live="polite">Selecione uma imagem para preparar a remoção do fundo.</div><input id="editHeaderLogoUrl" type="hidden" value='+escapeHtml(c.header_logo_url||'')+'><div class="header-logo-preview"><img id="headerLogoPreview" alt="Prévia da logo" class="'+(c.header_logo_url?'':'hidden')+'" src="'+escapeHtml(c.header_logo_url||'')+'"><span id="headerLogoPreviewText" class="'+(c.header_logo_url?'hidden':'')+'">Logo original da VERSAT</span></div><div class="logo-bg-actions"><button id="useProcessedLogo" class="btn red hidden" type="button" onclick="usePreparedHeaderLogo(true)">Usar logo sem fundo</button><button id="useOriginalLogo" class="btn hidden" type="button" onclick="usePreparedHeaderLogo(false)">Manter imagem original</button></div><button class="btn" type="button" onclick="restoreHeaderLogo()">Restaurar logo original</button></label></div><div class="admin-settings-footer"><div id="settingsNotice" class="admin-settings-notice" role="status" aria-live="polite"></div><button class="btn red admin-settings-save" type="button" onclick="saveSiteSettings()"><span aria-hidden="true">✓</span> Salvar alterações</button></div></section><h3 class="admin-section-title">Financeiro VERSAT</h3><p class="small">Área privada para registrar entradas e despesas. Os dados financeiros são visíveis somente à administração.</p><div class="finance-grid"><div class="finance-card"><span>Entradas</span><strong id="financeIncome">R$ 0,00</strong></div><div class="finance-card"><span>Despesas</span><strong id="financeExpenses">R$ 0,00</strong></div><div class="finance-card"><span>Saldo</span><strong id="financeBalance">R$ 0,00</strong></div></div><form class="finance-form" onsubmit="addFinanceEntry(event)"><label>Descrição<input id="financeDescription" maxlength="180" required placeholder="Ex.: criação de landing page"></label><label>Tipo<select id="financeType"><option value="income">Entrada</option><option value="expense">Despesa</option></select></label><label>Valor (R$)<input id="financeAmount" type="number" min="0.01" step="0.01" required placeholder="0,00"></label><label>Data<input id="financeDate" type="date" required></label><button class="btn red" type="submit">Adicionar</button></form><div id="financeNotice" class="small"></div><div id="financeEntries">Carregando lançamentos...</div><hr><h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Retornos de aprovação / alterações</h3><div id="adminResponses">Carregando retornos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>';
+ box.innerHTML='<h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div><section class="admin-settings-card"><div class="admin-settings-heading"><div><span class="admin-settings-kicker">PERSONALIZAÇÃO</span><h3>Editar site VERSAT</h3><p>Atualize as informações que aparecem para seus visitantes.</p></div><span class="admin-settings-icon" aria-hidden="true">✦</span></div><div class="admin-settings-grid"><label class="admin-setting-field admin-setting-wide"><span>Título da página</span><small>Nome exibido na aba do navegador e ao compartilhar o site.</small><input id="editTitle" maxlength="120" value="'+escapeHtml(c.title||'')+'" placeholder="Ex.: VERSAT — Seu próximo projeto começa aqui"></label><label class="admin-setting-field admin-setting-wide"><span>Descrição do site</span><small>Uma frase curta para apresentar a VERSAT aos visitantes.</small><textarea id="editDescription" maxlength="300" rows="3" placeholder="Desenvolvemos sites e sistemas modernos para sua empresa.">'+escapeHtml(c.description||'')+'</textarea></label><label class="admin-setting-field"><span>WhatsApp de atendimento</span><small>Inclua DDD e código do país, somente números.</small><input id="editWhatsapp" inputmode="numeric" maxlength="13" value="'+escapeHtml(c.whatsapp||'5511984681861')+'" placeholder="5511999999999"></label><label class="admin-setting-field"><span>E-mail de contato</span><small>Endereço usado para contato público.</small><input id="editEmail" type="email" maxlength="160" value="'+escapeHtml(c.email||'versatweb@gmail.com')+'" placeholder="contato@versat.com.br"></label><label class="admin-setting-field admin-setting-wide"><span>Logo do cabeçalho</span><small>Escolha uma imagem da galeria do celular ou computador. PNG, JPG ou WEBP, até 3 MB.</small><input id="editHeaderLogoFile" type="file" accept="image/png,image/jpeg,image/webp"><input id="editHeaderLogoUrl" type="hidden" value='+escapeHtml(c.header_logo_url||'')+'><div class="header-logo-preview"><img id="headerLogoPreview" alt="Prévia da logo" class="'+(c.header_logo_url?'':'hidden')+'" src="'+escapeHtml(c.header_logo_url||'')+'"><span id="headerLogoPreviewText" class="'+(c.header_logo_url?'hidden':'')+'">Logo original da VERSAT</span></div><button class="btn" type="button" onclick="restoreHeaderLogo()">Restaurar logo original</button></label></div><div class="admin-settings-footer"><div id="settingsNotice" class="admin-settings-notice" role="status" aria-live="polite"></div><button class="btn red admin-settings-save" type="button" onclick="saveSiteSettings()"><span aria-hidden="true">✓</span> Salvar alterações</button></div></section><h3 class="admin-section-title">Financeiro VERSAT</h3><p class="small">Área privada para registrar entradas e despesas. Os dados financeiros são visíveis somente à administração.</p><div class="finance-grid"><div class="finance-card"><span>Entradas</span><strong id="financeIncome">R$ 0,00</strong></div><div class="finance-card"><span>Despesas</span><strong id="financeExpenses">R$ 0,00</strong></div><div class="finance-card"><span>Saldo</span><strong id="financeBalance">R$ 0,00</strong></div></div><form class="finance-form" onsubmit="addFinanceEntry(event)"><label>Descrição<input id="financeDescription" maxlength="180" required placeholder="Ex.: criação de landing page"></label><label>Tipo<select id="financeType"><option value="income">Entrada</option><option value="expense">Despesa</option></select></label><label>Valor (R$)<input id="financeAmount" type="number" min="0.01" step="0.01" required placeholder="0,00"></label><label>Data<input id="financeDate" type="date" required></label><button class="btn red" type="submit">Adicionar</button></form><div id="financeNotice" class="small"></div><div id="financeEntries">Carregando lançamentos...</div><hr><h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Retornos de aprovação / alterações</h3><div id="adminResponses">Carregando retornos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>';
  const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
  if(projectError){document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';return}
  const {data:devRows}=await sb.from("project_development").select("project_id,github_repo_url,preview_url,dev_notes");
@@ -640,11 +640,6 @@ async function loadPublicSiteSettings(){
  const {data,error}=await sb.from("site_settings").select("content").eq("id",1).maybeSingle();
  if(!error&&data?.content)applySiteSettings(data.content);
 }
-let pendingHeaderLogoOriginal=null,pendingHeaderLogoProcessed=null,backgroundRemovalModulePromise=null;
-async function loadBackgroundRemoval(){
- if(!backgroundRemovalModulePromise)backgroundRemovalModulePromise=import("https://esm.sh/@imgly/background-removal@1.7.0?bundle").then(module=>{const fn=module.removeBackground;if(typeof fn!=="function")throw new Error("A biblioteca IMG.LY abriu, mas não entregou a exportação removeBackground. Recarregue a página e tente novamente.");return fn;});
- return backgroundRemovalModulePromise;
-}
 async function verifyLogoAdmin(){
  if(!sb||!currentUser)throw new Error("Entre como administrador para trocar a logo.");
  const {data:profile,error}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
@@ -652,57 +647,32 @@ async function verifyLogoAdmin(){
 }
 async function prepareHeaderLogo(input){
  const file=input.files&&input.files[0];if(!file)return;
- const notice=document.getElementById("logoProcessingNotice")||document.getElementById("settingsNotice"),allowed={"image/png":"png","image/jpeg":"jpg","image/webp":"webp"};
- pendingHeaderLogoOriginal=file;pendingHeaderLogoProcessed=null;
- document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.remove("hidden");
- if(notice)notice.textContent="Imagem selecionada. Preparando a remoção automática do fundo; aguarde esta etapa terminar.";
+ const notice=document.getElementById("settingsNotice"),allowed={"image/png":"png","image/jpeg":"jpg","image/webp":"webp"};
  if(!allowed[file.type]){if(notice)notice.textContent="Formato não permitido. Escolha PNG, JPG ou WEBP.";input.value="";return}
  if(file.size>3*1024*1024){if(notice)notice.textContent="A imagem ultrapassa o limite de 3 MB.";input.value="";return}
  try{
-  await verifyLogoAdmin();pendingHeaderLogoOriginal=file;
-  if(notice)notice.textContent="Preparando a IA. Na primeira utilização, o navegador baixa os modelos (cerca de 40 MB).";
-  const removeBackground=await loadBackgroundRemoval();
-  if(notice)notice.textContent="Removendo o fundo... Aguarde um pouco.";
-  const result=await removeBackground(file,{model:"isnet_quint8",device:"cpu",debug:true,publicPath:"https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/",output:{format:"image/png",type:"foreground"}});
-  if(result.size>3*1024*1024)throw new Error("A imagem processada ficou maior que 3 MB. Tente uma imagem menor.");
-  pendingHeaderLogoProcessed=result;
+  await verifyLogoAdmin();
   const preview=document.getElementById("headerLogoPreview"),label=document.getElementById("headerLogoPreviewText");
   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
-  const objectUrl=URL.createObjectURL(result);preview.dataset.objectUrl=objectUrl;preview.src=objectUrl;preview.classList.remove("hidden");label.classList.add("hidden");
-  document.getElementById("useProcessedLogo")?.classList.remove("hidden");document.getElementById("useOriginalLogo")?.classList.remove("hidden");
-  if(notice)notice.textContent="Prévia pronta! Escolha usar a logo sem fundo ou manter a imagem original.";
- }catch(error){
-  pendingHeaderLogoProcessed=null;document.getElementById("useOriginalLogo")?.classList.remove("hidden");
-  if(notice)notice.textContent="Não consegui remover o fundo automaticamente: "+(error?.message||"erro inesperado")+". Você ainda pode manter a imagem original.";
- }
-}
-document.addEventListener("change",event=>{const input=event.target;if(input&&input.id==="editHeaderLogoFile")prepareHeaderLogo(input);});
-window.prepareHeaderLogo=prepareHeaderLogo;
-async function usePreparedHeaderLogo(processed){
- const notice=document.getElementById("settingsNotice"),source=processed?pendingHeaderLogoProcessed:pendingHeaderLogoOriginal;
- if(!source){notice.textContent="Escolha uma imagem primeiro.";return}
- try{
-  await verifyLogoAdmin();
-  const mime=processed?"image/png":source.type,ext=processed?"png":({"image/png":"png","image/jpeg":"jpg","image/webp":"webp"}[mime]||"png");
-  notice.textContent="Enviando logo...";
-  const path="header/logo-"+Date.now()+"."+ext;
-  const {error}=await sb.storage.from("versat-brand-assets").upload(path,source,{cacheControl:"31536000",contentType:mime,upsert:false});
+  const objectUrl=URL.createObjectURL(file);preview.dataset.objectUrl=objectUrl;preview.src=objectUrl;preview.classList.remove("hidden");label.classList.add("hidden");
+  if(notice)notice.textContent="Imagem selecionada. Enviando logo...";
+  const ext=allowed[file.type],path="header/logo-"+Date.now()+"."+ext;
+  const {error}=await sb.storage.from("versat-brand-assets").upload(path,file,{cacheControl:"31536000",contentType:file.type,upsert:false});
   if(error)throw error;
   const {data}=sb.storage.from("versat-brand-assets").getPublicUrl(path);
   document.getElementById("editHeaderLogoUrl").value=data.publicUrl;
-  const preview=document.getElementById("headerLogoPreview"),label=document.getElementById("headerLogoPreviewText");
-  if(preview.dataset.objectUrl){URL.revokeObjectURL(preview.dataset.objectUrl);delete preview.dataset.objectUrl}
-  preview.src=data.publicUrl;preview.classList.remove("hidden");label.classList.add("hidden");
-  document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.add("hidden");
-  notice.textContent="Logo enviada. Toque em “Salvar alterações” para aplicar no site.";
- }catch(error){notice.textContent="Não foi possível enviar a logo: "+(error?.message||"erro inesperado")}
+  preview.src=data.publicUrl;delete preview.dataset.objectUrl;URL.revokeObjectURL(objectUrl);
+  if(notice)notice.textContent="Logo enviada. Toque em “Salvar alterações” para aplicar no site.";
+ }catch(error){if(notice)notice.textContent="Não foi possível enviar a logo: "+(error?.message||"erro inesperado");}
 }
+document.addEventListener("change",event=>{const input=event.target;if(input&&input.id==="editHeaderLogoFile")prepareHeaderLogo(input);});
+window.prepareHeaderLogo=prepareHeaderLogo;
 function restoreHeaderLogo(){
  const url=document.getElementById("editHeaderLogoUrl");if(url)url.value="";
  const preview=document.getElementById("headerLogoPreview"),label=document.getElementById("headerLogoPreviewText"),file=document.getElementById("editHeaderLogoFile");
  if(preview){if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);delete preview.dataset.objectUrl;preview.removeAttribute("src");preview.classList.add("hidden")}
  if(label)label.classList.remove("hidden");if(file)file.value="";
- pendingHeaderLogoOriginal=null;pendingHeaderLogoProcessed=null;
+ 
  document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.add("hidden");
  const notice=document.getElementById("settingsNotice");if(notice)notice.textContent="Logo original selecionada. Toque em “Salvar alterações” para aplicar.";
 }
