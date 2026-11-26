@@ -640,8 +640,8 @@ async function runVersatFreeAITest(button){
  try { window.open = () => null; } catch (_) {}
 })();
 <\/script>`;
-  const cleanHtml = html.replace(/<base\\b[^>]*>/gi, "");
-  const guardedHtml = /<head\\b[^>]*>/i.test(cleanHtml) ? cleanHtml.replace(/<head\\b[^>]*>/i, match => match + previewGuard) : previewGuard + cleanHtml;
+  const cleanHtml = html.replace(/<base\b[^>]*>/gi, "");
+  const guardedHtml = /<head\b[^>]*>/i.test(cleanHtml) ? cleanHtml.replace(/<head\b[^>]*>/i, match => match + previewGuard) : previewGuard + cleanHtml;
   frame.srcdoc=guardedHtml;
   result.append(heading,frame);
   const note=document.createElement("div");note.className="small";note.style.marginTop="9px";note.textContent="Prévia isolada: links internos não abrem a VERSAT e formulários aparecem apenas como demonstração. Nada foi cobrado ou publicado.";
