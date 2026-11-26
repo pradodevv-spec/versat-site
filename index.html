@@ -188,47 +188,25 @@ async function submitProjectReview(event,projectId){
 }
 async function loadAdmin(){
  const box=document.getElementById("dashContent");
- box.innerHTML='<div class="empty">Carregando editor...</div>';
- const {data:profile,error:pe}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
- if(pe||profile?.role!=="admin"){
-  box.innerHTML='<div class="notice">Área exclusiva do administrador.</div>';
-  return;
- }
- const {data,error}=await sb.from("site_settings").select("content").eq("id",1).single();
- if(error){
-  box.innerHTML='<div class="notice">'+escapeHtml(error.message)+'</div>';
-  return;
- }
- const c=data.content||{};
- box.innerHTML=\`
- <h3>Editar site VERSAT</h3>
- <label>Título principal</label>
- <input id="editTitle" value="\${escapeHtml(c.title||'')}">
- <label>Descrição principal</label>
- <textarea id="editDescription">\${escapeHtml(c.description||'')}</textarea>
- <label>WhatsApp (somente números)</label>
- <input id="editWhatsapp" value="\${escapeHtml(c.whatsapp||'5511984681861')}">
- <label>E-mail de contato</label>
- <input id="editEmail" value="\${escapeHtml(c.email||'Pradodevv@gmail.com')}">
- <button onclick="saveSiteSettings()">Salvar alterações</button>
- <div id="settingsNotice"></div>
- <hr>
- <h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div>
- <h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>
- \`;
+ box.innerHTML='<div class="empty">Carregando painel...</div>';
+ const {data:profile,error:profileError}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();
+ if(profileError||profile?.role!=="admin"){box.innerHTML='<div class="notice">Área exclusiva do administrador.</div>';return}
+ const {data:settings,error:settingsError}=await sb.from("site_settings").select("content").eq("id",1).single();
+ if(settingsError){box.innerHTML='<div class="notice">'+escapeHtml(settingsError.message)+'</div>';return}
+ const c=settings.content||{};
+ box.innerHTML='<h3>Painel administrativo</h3><div class="admin-metrics"><div class="metric"><span>Recebidos</span><strong id="metricReceived">—</strong></div><div class="metric"><span>Em andamento</span><strong id="metricProgress">—</strong></div><div class="metric"><span>Concluídos</span><strong id="metricDone">—</strong></div></div><h3>Editar site VERSAT</h3><label>Título principal</label><input id="editTitle" value="'+escapeHtml(c.title||'')+'"><label>Descrição principal</label><textarea id="editDescription">'+escapeHtml(c.description||'')+'</textarea><label>WhatsApp (somente números)</label><input id="editWhatsapp" value="'+escapeHtml(c.whatsapp||'5511984681861')+'"><label>E-mail de contato</label><input id="editEmail" value="'+escapeHtml(c.email||'Pradodevv@gmail.com')+'"><button onclick="saveSiteSettings()">Salvar alterações</button><div id="settingsNotice"></div><hr><h3>Pedidos recebidos</h3><div id="adminProjects">Carregando pedidos...</div><hr><h3>Avaliações dos clientes</h3><div id="adminReviews">Carregando avaliações...</div>';
  const {data:projects,error:projectError}=await sb.from("projects").select("*").order("created_at",{ascending:false});
- if(projectError){
-  document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';
-  return;
- }
- document.getElementById("metricReceived").textContent=(projects||[]).filter(p=>p.status==="Recebido").length;
- document.getElementById("metricProgress").textContent=(projects||[]).filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length;
- document.getElementById("metricDone").textContent=(projects||[]).filter(p=>p.status==="Concluído").length;
+ if(projectError){document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';return}
+ const all=projects||[];
+ document.getElementById("metricReceived").textContent=all.filter(p=>p.status==="Recebido").length;
+ document.getElementById("metricProgress").textContent=all.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length;
+ document.getElementById("metricDone").textContent=all.filter(p=>p.status==="Concluído").length;
+ const pending=all.filter(p=>String(p.status||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()!=="concluido");
+ document.getElementById("adminProjects").innerHTML=pending.length?pending.map(p=>projectCard(p,true)).join(""):'<div class="empty">Não há pedidos pendentes.</div>';
  const {data:reviews,error:reviewsError}=await sb.from("project_reviews").select("*").order("created_at",{ascending:false});
- const projectMap={};(projects||[]).forEach(p=>projectMap[p.id]=p);
- document.getElementById("adminReviews").innerHTML=reviewsError?'<div class="notice">Não foi possível carregar avaliações: '+escapeHtml(reviewsError.message)+'</div>':(reviews||[]).length?(reviews||[]).map(r=>'<div class="project"><b>'+escapeHtml(projectMap[r.project_id]?.project_name||"Projeto")+'</b><div class="small">'+("★".repeat(r.rating))+("☆".repeat(5-r.rating))+' • '+new Date(r.created_at).toLocaleDateString("pt-BR")+'</div><p>'+escapeHtml(r.comment||"Sem comentário.")+'</p></div>').join(""):'<div class="empty">Ainda não há avaliações.</div>';
- const pendentes=(projects||[]).filter(p=>String(p.status||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()!=="concluido");
- document.getElementById("adminProjects").innerHTML=pendentes.length?pendentes.map(p=>projectCard(p,true)).join(""):'<div class="empty">Não há pedidos pendentes.</div>';
+ if(reviewsError){document.getElementById("adminReviews").innerHTML='<div class="notice">Não foi possível carregar avaliações: '+escapeHtml(reviewsError.message)+'</div>';return}
+ const projectMap={};all.forEach(p=>projectMap[p.id]=p);
+ document.getElementById("adminReviews").innerHTML=(reviews||[]).length?(reviews||[]).map(r=>'<div class="project"><b>'+escapeHtml(projectMap[r.project_id]?.project_name||"Projeto")+'</b><div class="small">'+("★".repeat(r.rating))+("☆".repeat(5-r.rating))+' • '+new Date(r.created_at).toLocaleDateString("pt-BR")+'</div><p>'+escapeHtml(r.comment||"Sem comentário.")+'</p></div>').join(""):'<div class="empty">Ainda não há avaliações.</div>';
 }
 
 async function saveSiteSettings(){
