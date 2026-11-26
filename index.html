@@ -386,8 +386,10 @@ async function submitRequest(e){
   const payload={user_id:currentUser.id,project_type:tipo,project_name:empresa,details:detalhes,brief,status:"Recebido"};
   const {error}=await sb.from("projects").insert(payload);
   if(error)throw error;
-  const mensagem="Olá, VERSAT! Enviei meu briefing de projeto.\n\nEmpresa: "+empresa+"\nTipo: "+tipo+"\nCliente: "+nome+"\nE-mail: "+email+"\nTelefone: "+telefone+"\n\n"+resumo;
-  closeRequest();await loadProjects();window.location.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(mensagem);
+  closeRequest();
+  await loadProjects();
+  openDashboard();
+  alert("Sua solicitação foi enviada para a VERSAT! Você poderá acompanhar o andamento pela sua área de cliente. Nossa equipe analisará o briefing e retornará por seus dados de contato.");
  }catch(error){console.error(error);showNotice("requestNotice",error.message||"Não foi possível concluir sua solicitação. Tente novamente.");submit.disabled=false;submit.textContent=oldText}
 }async function loadProjects(){
  const box=document.getElementById("dashContent");box.innerHTML='<div class="empty">Carregando...</div>';
