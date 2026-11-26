@@ -613,9 +613,15 @@ function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de W
 window.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("versat_theme")==="light")document.body.classList.add("versat-light-theme");const savedFont=Number(localStorage.getItem("versat_font_scale")||100);if(savedFont>=85&&savedFont<=125){document.documentElement.dataset.fontScale=String(savedFont);document.documentElement.style.fontSize=savedFont+"%"}updateAccountHeader(null);if(sb){const {data}=await sb.auth.getSession();if(data.session){currentUser=data.session.user;updateAccountHeader(currentUser);openDashboard()}sb.auth.onAuthStateChange((_event,session)=>{if(_event==="PASSWORD_RECOVERY"){authMode="recovery";updateAuthMode();document.getElementById("authModal").classList.add("open")}currentUser=session?.user||null;updateAccountHeader(currentUser);if(!currentUser){document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block"}})}});
 document.addEventListener("click",(event)=>{const widget=document.getElementById("accessibilityWidget");if(widget&&!widget.contains(event.target)){document.getElementById("accessibilityPanel")?.classList.add("hidden");document.querySelector(".accessibility-trigger")?.setAttribute("aria-expanded","false")}const wrap=document.getElementById("profileWrap");if(wrap&&!wrap.contains(event.target)){document.getElementById("profileMenu").classList.add("hidden");document.getElementById("profileButton").setAttribute("aria-expanded","false")}});
 function requestPlan(plan){
-  const numero = String(WHATSAPP_NUMBER || "5511984681861").replace(/\D/g,"");
-  const mensagem = "Olá, VERSAT! Tenho interesse no plano " + plan + ". Gostaria de receber um orçamento, conhecer os recursos incluídos, os valores e o prazo de entrega. Como podemos começar?";
-  window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensagem), "_blank");
+  pendingPlan=plan;
+  if(!currentUser){
+    openAuth("login");
+    showNotice("authNotice","Entre ou crie uma conta para continuar com o plano "+plan+". Se ainda não tiver cadastro, toque em Criar conta.");
+    return;
+  }
+  openRequest();
+  document.getElementById("reqType").value=plan==="Essencial"?"Landing page":plan==="Profissional"?"Site institucional":"Sistema web";
+  document.getElementById("reqDetails").value="Tenho interesse no plano "+plan+". ";
 }
 
 function closeLegal(){document.getElementById("legalModal").classList.remove("open")}
