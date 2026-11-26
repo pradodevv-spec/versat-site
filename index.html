@@ -576,7 +576,7 @@ async function runVersatFreeAITest(button){
   const url=String(data.preview_url);
   if(!url.startsWith("https://"))throw new Error("O link de prévia retornado não é válido.");
   result.innerHTML="Site gerado pela IA! ("+Math.round((data.bytes||0)/1024)+" KB) — <a href=\""+escapeHtml(url)+"\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#ff6875;text-decoration:underline;font-weight:700\">Abrir prévia do site ↗</a><br><span class=\"small\">Link privado válido por 7 dias. Nada foi cobrado ou publicado.</span>";
- }catch(error){console.error("Teste grátis da IA:",error);result.textContent="Não foi possível gerar: "+(error.message||"erro inesperado")}
+ }catch(error){console.error("Teste grátis da IA:",error);let detail=error?.message||"erro inesperado";try{const payload=await error?.context?.json();if(payload?.error)detail=payload.error}catch(_){}result.textContent="Não foi possível gerar: "+detail}
  finally{button.disabled=false;button.textContent=old}
 }
 async function loadAdmin(){
