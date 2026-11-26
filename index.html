@@ -367,7 +367,7 @@ async function saveDevelopmentProject(button){
  if(!error)await loadDevelopment();
 }
 function renderNewRequest(){pendingPlan="";document.getElementById("dashContent").innerHTML='<h3>Solicitar um novo projeto</h3><p style="color:#aaa">Conte o que você precisa e acompanhe o andamento por aqui.</p><button type="button" class="btn red" onclick="openRequest()">Começar solicitação</button>'}
-function openRequest(){const meta=currentUser?.user_metadata||{};document.getElementById("reqPhone").value=meta.phone||"";document.getElementById("requestModal").classList.add("open");clearNotice("requestNotice");const planNotice=document.getElementById("selectedPlanNotice"),submit=document.getElementById("requestSubmitButton");if(pendingPlan==="Essencial"||pendingPlan==="Profissional"){const price=pendingPlan==="Essencial"?"R$ 397":"R$ 797";planNotice.textContent="Plano "+pendingPlan+" selecionado • "+price+" • pagamento único pela InfinitePay. O projeto só entra em produção após a confirmação do pagamento.";planNotice.classList.remove("hidden");submit.textContent="Ir para o pagamento • "+price}else{planNotice.textContent="";planNotice.classList.add("hidden");submit.textContent="Enviar briefing do projeto"}}
+function openRequest(plan){if(typeof plan!=="undefined")pendingPlan=plan;else pendingPlan="";const meta=currentUser?.user_metadata||{};document.getElementById("reqPhone").value=meta.phone||"";document.getElementById("requestModal").classList.add("open");clearNotice("requestNotice");const planNotice=document.getElementById("selectedPlanNotice"),submit=document.getElementById("requestSubmitButton");if(pendingPlan==="Essencial"||pendingPlan==="Profissional"){const price=pendingPlan==="Essencial"?"R$ 397":"R$ 797";planNotice.textContent="Plano "+pendingPlan+" selecionado • "+price+" • pagamento único pela InfinitePay. O projeto só entra em produção após a confirmação do pagamento.";planNotice.classList.remove("hidden");submit.textContent="Ir para o pagamento • "+price}else{planNotice.textContent="";planNotice.classList.add("hidden");submit.textContent="Enviar briefing do projeto"}}
 function closeRequest(){document.getElementById("requestModal").classList.remove("open")}
 async function submitRequest(e){
  e.preventDefault();
@@ -642,7 +642,7 @@ function requestPlan(plan){
     showNotice("authNotice","Entre ou crie uma conta para continuar com o plano "+plan+". Se ainda não tiver cadastro, toque em Criar conta.");
     return;
   }
-  openRequest();
+  openRequest(plan);
   document.getElementById("reqType").value=plan==="Essencial"?"Landing page":plan==="Profissional"?"Site institucional":"Sistema web";
   document.getElementById("reqDetails").value="Tenho interesse no plano "+plan+". ";
 }
