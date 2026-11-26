@@ -673,7 +673,6 @@ function restoreHeaderLogo(){
  if(preview){if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);delete preview.dataset.objectUrl;preview.removeAttribute("src");preview.classList.add("hidden")}
  if(label)label.classList.remove("hidden");if(file)file.value="";
  
- document.getElementById("useProcessedLogo")?.classList.add("hidden");document.getElementById("useOriginalLogo")?.classList.add("hidden");
  const notice=document.getElementById("settingsNotice");if(notice)notice.textContent="Logo original selecionada. Toque em “Salvar alterações” para aplicar.";
 }
 async function saveSiteSettings(){
