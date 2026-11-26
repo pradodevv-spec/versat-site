@@ -63,7 +63,7 @@ footer{border-top:1px solid var(--line);padding:34px 0;color:#92929d;font-size:1
 .finance-row small{display:block;color:var(--muted);margin-top:4px}.finance-income{color:#5bd69a}.finance-expense{color:#ff7884}
 .finance-delete{background:transparent;color:#ff7884;border:1px solid #74343a;border-radius:8px;padding:7px 10px}
 @media(max-width:760px){.finance-form{grid-template-columns:1fr 1fr}.finance-form label:first-child{grid-column:1/-1}.finance-form button{grid-column:1/-1}.finance-grid{grid-template-columns:1fr}}
-body.versat-high-contrast{background:#000!important;color:#fff!important}body.versat-high-contrast .card,body.versat-high-contrast .dialog,body.versat-high-contrast .project{background:#111!important;color:#fff!important;border-color:#fff!important}body.versat-high-contrast p,body.versat-high-contrast .small{color:#eee!important}body.versat-high-contrast a{color:#ff6b6b!important}</style>
+body.versat-high-contrast{background:#000!important;color:#fff!important}body.versat-high-contrast .card,body.versat-high-contrast .dialog,body.versat-high-contrast .project{background:#111!important;color:#fff!important;border-color:#fff!important}body.versat-high-contrast p,body.versat-high-contrast .small{color:#eee!important}body.versat-high-contrast a{color:#ff6b6b!important}.project-files input[type=file]{display:block;width:100%;margin:8px 0;padding:10px;border:1px dashed #777;border-radius:10px;color:inherit}.project-files a{color:#ff7777;text-decoration:underline}</style>
 </head>
 <body>
 <header><div class="wrap nav">
@@ -257,6 +257,16 @@ async function loadProjects(){
  const reviewMap={};(reviews||[]).forEach(r=>reviewMap[r.project_id]=r);
  const responseMap={};(responses||[]).forEach(r=>{if(!responseMap[r.project_id])responseMap[r.project_id]=r});
  box.innerHTML='<h3>Meus projetos</h3>'+data.map(p=>projectCard(p,false,reviewMap[p.id],responseMap[p.id])).join("");
+ const cards=box.querySelectorAll(".project");
+ data.forEach((p,index)=>{
+   const section=document.createElement("section");section.className="project-files";section.style.cssText="margin-top:14px;padding-top:12px;border-top:1px solid #333";
+   const heading=document.createElement("b");heading.textContent="Arquivos do projeto";
+   const help=document.createElement("p");help.className="small";help.textContent="Envie referências, imagens ou documentos (JPG, PNG, WEBP ou PDF; até 10 MB por arquivo).";
+   const input=document.createElement("input");input.type="file";input.accept="image/jpeg,image/png,image/webp,application/pdf";
+   const list=document.createElement("div");list.className="small";list.id="project-files-"+p.id;list.style.marginTop="8px";
+   input.addEventListener("change",()=>uploadProjectFile(p.id,input));
+   section.append(heading,help,input,list);cards[index]?.appendChild(section);loadProjectFiles(p.id);
+ });
 }
 function projectCard(p,admin,review,response){
  let cls=p.status==="Concluído"?"done":p.status==="Em desenvolvimento"||p.status==="Em revisão"?"progress":"";
@@ -275,6 +285,38 @@ function projectCard(p,admin,review,response){
  }
  if(admin){layoutEditor='<div class="adminrow" style="margin-top:12px"><input id="layoutUrl-'+p.id+'" type="url" value="'+escapeHtml(p.layout_url||'')+'" placeholder="Cole aqui o link do layout (https://...)"><button class="btn" type="button" onclick="saveProjectLayout(\''+p.id+'\')">Salvar link do layout</button></div>'}
  const brief=p.brief||{};const briefLabels={goal:"Objetivo",audience:"Público-alvo",pages:"Páginas desejadas",style:"Estilo visual",references:"Referência",features:"Funcionalidades",assets:"Materiais",budget:"Orçamento",deadline:"Prazo",differential:"Diferenciais",description:"Descrição"};const briefRows=Object.entries(briefLabels).filter(([key])=>brief[key]).map(([key,label])=>'<div style="margin:5px 0"><b>'+label+'</b>: '+escapeHtml(brief[key])+'</div>').join("");const briefHtml=admin&&briefRows?'<details style="margin-top:12px"><summary style="cursor:pointer;color:#fff;font-weight:700">Ver briefing completo do cliente</summary><div class="small" style="padding:10px 0;line-height:1.65">'+briefRows+'</div></details>':""; return '<div class="project"><div class="projecttop"><div><b>'+escapeHtml(p.project_name)+'</b><div class="small">'+escapeHtml(p.project_type)+' • '+new Date(p.created_at).toLocaleDateString("pt-BR")+'</div></div><span class="status '+cls+'">'+escapeHtml(p.status)+'</span></div>'+(admin?'<div class="small" style="margin-top:12px;line-height:1.8"><b>Cliente:</b> '+escapeHtml(campo("Cliente"))+'<br><b>E-mail:</b> '+escapeHtml(campo("E-mail"))+'<br><b>Telefone:</b> '+escapeHtml(campo("Telefone"))+'</div>':'')+'<p style="color:#aaa;font-size:13px;margin:12px 0 0;white-space:pre-line">'+escapeHtml(detalhes)+'</p>'+briefHtml+layoutEditor+decisionHtml+reviewHtml+(admin?'<div class="adminrow"><select id="status-'+p.id+'"><option '+(p.status==="Recebido"?"selected":"")+' >Recebido</option><option '+(p.status==="Em desenvolvimento"?"selected":"")+' >Em desenvolvimento</option><option '+(p.status==="Em revisão"?"selected":"")+' >Em revisão</option><option '+(p.status==="Aguardando cliente"?"selected":"")+' >Aguardando cliente</option><option '+(p.status==="Concluído"?"selected":"")+' >Concluído</option></select><button class="btn" onclick="updateStatus(&#39;'+p.id+'&#39;)">Atualizar status</button></div>':'')+'</div>';
+}
+async function uploadProjectFile(projectId,input){
+ const file=input.files&&input.files[0];if(!file)return;
+ const allowed=["image/jpeg","image/png","image/webp","application/pdf"];
+ const box=document.getElementById("project-files-"+projectId);
+ if(!allowed.includes(file.type)){if(box)box.textContent="Formato não permitido. Envie JPG, PNG, WEBP ou PDF.";input.value="";return}
+ if(file.size>10*1024*1024){if(box)box.textContent="O arquivo ultrapassa o limite de 10 MB.";input.value="";return}
+ if(!sb||!currentUser){if(box)box.textContent="Entre na sua conta para enviar arquivos.";return}
+ if(box)box.textContent="Enviando arquivo...";
+ const safeName=file.name.split("").map(ch=>/[a-zA-Z0-9._-]/.test(ch)?ch:"_").join("").slice(-100)||"arquivo";
+ const path=currentUser.id+"/"+projectId+"/"+Date.now()+"_"+safeName;
+ const result=await sb.storage.from("versat-project-files").upload(path,file,{contentType:file.type,upsert:false});
+ if(result.error){if(box)box.textContent="Não foi possível enviar: "+result.error.message;return}
+ input.value="";await loadProjectFiles(projectId);
+}
+async function loadProjectFiles(projectId){
+ const box=document.getElementById("project-files-"+projectId);if(!box||!sb||!currentUser)return;
+ const folder=currentUser.id+"/"+projectId;
+ const result=await sb.storage.from("versat-project-files").list(folder,{limit:50,sortBy:{column:"created_at",order:"desc"}});
+ if(result.error){box.textContent="Não foi possível carregar os arquivos.";return}
+ const files=(result.data||[]).filter(x=>x.name);
+ if(!files.length){box.textContent="Nenhum arquivo enviado ainda.";return}
+ box.replaceChildren();
+ for(const file of files){
+   const path=folder+"/"+file.name;
+   const signed=await sb.storage.from("versat-project-files").createSignedUrl(path,300);
+   if(signed.error)continue;
+   const row=document.createElement("div");row.style.margin="5px 0";
+   const link=document.createElement("a");link.href=signed.data.signedUrl;link.target="_blank";link.rel="noopener";link.textContent="📎 "+file.name;
+   row.appendChild(link);box.appendChild(row);
+ }
+ if(!box.children.length)box.textContent="Não foi possível abrir os arquivos.";
 }
 async function saveProjectLayout(projectId){
  const input=document.getElementById("layoutUrl-"+projectId);
