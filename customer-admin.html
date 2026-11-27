@@ -13,7 +13,7 @@
 header{border-bottom:1px solid var(--line);padding:17px 0}.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:900;letter-spacing:2px;color:white;text-decoration:none}.logo span{color:var(--red)}
 button,a.btn{border:1px solid var(--line);border-radius:10px;padding:11px 15px;background:#1b1b23;color:white;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}button:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--red)!important;border-color:var(--red)!important}
 main{padding:38px 0 70px}.eyebrow{color:#ff6574;font-size:11px;font-weight:800;letter-spacing:2px}.heading{margin:8px 0 24px}.heading h1{font-size:clamp(27px,5vw,38px);margin:0}.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0}.hidden{display:none!important}#auth{max-width:430px;margin:45px auto}#auth input{width:100%;margin:7px 0 14px;padding:13px;border-radius:9px;border:1px solid var(--line);background:#09090d;color:white;font:inherit}#message{margin-top:12px;color:#ff9aa3;white-space:pre-wrap}.site-card{background:#101016;border:1px solid var(--line);border-radius:13px;padding:18px;margin:14px 0}.site-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.site-title{font-size:18px;font-weight:800;overflow-wrap:anywhere}.status{display:inline-block;padding:6px 10px;border-radius:30px;background:#272731;color:#ddd;font-size:12px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}.notice{padding:14px;border:1px solid #454550;background:#111116;color:#d8d8df;border-radius:10px;margin:14px 0}.history{border-top:1px solid var(--line);margin-top:15px;padding-top:12px}.history p{margin:6px 0;color:var(--muted);font-size:13px}@media(max-width:600px){.panel{padding:17px}.actions>*{width:100%}}
-</style>
+.profile-card{display:flex;align-items:center;gap:18px}.avatar-preview{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#24242d;border:2px solid #454550;flex:none}.profile-info{min-width:0;flex:1}.profile-info h2{margin:0 0 4px;font-size:19px}.profile-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.profile-actions input{display:none}.profile-message{font-size:13px;color:#ff9aa3;margin-top:9px;white-space:pre-wrap}@media(max-width:600px){.profile-card{align-items:flex-start;flex-direction:column}.avatar-preview{width:82px;height:82px}.profile-actions>*{width:100%}}</style>
 </head>
 <body>
 <header><div class="wrap bar"><a class="logo" href="index.html">VER<span>SAT</span></a><button id="logout" class="hidden" type="button">Sair</button></div></header>
@@ -32,6 +32,21 @@ main{padding:38px 0 70px}.eyebrow{color:#ff6574;font-size:11px;font-weight:800;l
 <section id="app" class="hidden">
 <div class="eyebrow">PAINEL DO CLIENTE</div>
 <div class="heading"><h1>Seus projetos VERSAT</h1><p class="muted">Acompanhe o status, abra o site publicado e fale com nossa equipe se precisar de ajustes.</p></div>
+<section class="panel profile-card" aria-labelledby="profileTitle">
+<img id="avatarPreview" class="avatar-preview" alt="Foto de perfil" src="">
+<div class="profile-info">
+<h2 id="profileTitle">Meu perfil</h2>
+<div id="profileEmail" class="muted"></div>
+<p class="muted" style="margin:5px 0 0">Adicione uma foto para personalizar sua conta VERSAT.</p>
+<div class="profile-actions">
+<label class="btn primary" for="avatarFile">Escolher foto</label>
+<input id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp">
+<button id="saveAvatar" type="button" disabled>Salvar foto</button>
+<button id="removeAvatar" type="button">Remover foto</button>
+</div>
+<div id="avatarMessage" class="profile-message" role="status" aria-live="polite"></div>
+</div>
+</section>
 <div id="siteList"><div class="notice">Carregando seus projetos...</div></div>
 </section>
 </main>
@@ -43,6 +58,62 @@ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 const $=id=>document.getElementById(id);
 const statusLabels={draft:"Em preparação",in_review:"Em revisão",approved:"Aprovado",published:"Publicado",suspended:"Suspenso"};
 function showAuth(){ $("auth").classList.remove("hidden");$("app").classList.add("hidden");$("logout").classList.add("hidden"); }
+const AVATAR_BUCKET="versat-customer-avatars";
+let pendingAvatarFile=null;
+let previewObjectUrl=null;
+function renderProfile(user){
+ $("profileEmail").textContent=user.email||"";
+ const avatar=(user.user_metadata&&user.user_metadata.avatar_url)||"";
+ $("avatarPreview").src=avatar||"data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="50" fill="#292932"/><circle cx="50" cy="37" r="18" fill="#777784"/><path d="M16 96c3-23 16-34 34-34s31 11 34 34" fill="#777784"/></svg>');
+ $("removeAvatar").disabled=!avatar;
+}
+$("avatarFile").addEventListener("change",()=>{
+ const file=$("avatarFile").files&&$("avatarFile").files[0];
+ pendingAvatarFile=null;
+ $("saveAvatar").disabled=true;
+ if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null}
+ if(!file){return}
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)){ $("avatarMessage").textContent="Escolha uma imagem JPG, PNG ou WEBP.";return}
+ if(file.size>8*1024*1024){$("avatarMessage").textContent="A imagem deve ter até 8 MB.";return}
+ pendingAvatarFile=file;
+ previewObjectUrl=URL.createObjectURL(file);
+ $("avatarPreview").src=previewObjectUrl;
+ $("saveAvatar").disabled=false;
+ $("avatarMessage").textContent="Prévia pronta. Toque em “Salvar foto” para confirmar.";
+});
+$("saveAvatar").addEventListener("click",async()=>{
+ if(!pendingAvatarFile)return;
+ const btn=$("saveAvatar");btn.disabled=true;$("avatarMessage").textContent="Preparando e enviando sua foto...";
+ try{
+  const img=new Image();const sourceUrl=URL.createObjectURL(pendingAvatarFile);
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=sourceUrl});
+  const side=512,scale=Math.min(1,side/Math.max(img.naturalWidth,img.naturalHeight));
+  const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+  canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(sourceUrl);
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",.86));
+  if(!blob)throw new Error("Não foi possível processar essa imagem.");
+  const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user)throw userError||new Error("Entre novamente na sua conta.");
+  const path=user.id+"/avatar.webp";
+  const {error:uploadError}=await db.storage.from(AVATAR_BUCKET).upload(path,blob,{upsert:true,contentType:"image/webp",cacheControl:"3600"});
+  if(uploadError)throw uploadError;
+  const {data:{publicUrl}}=db.storage.from(AVATAR_BUCKET).getPublicUrl(path);
+  const avatarUrl=publicUrl+"?v="+Date.now();
+  const {data:updateData,error:updateError}=await db.auth.updateUser({data:{avatar_url:avatarUrl}});
+  if(updateError)throw updateError;
+  renderProfile(updateData.user);pendingAvatarFile=null;$("avatarFile").value="";if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null}
+  $("avatarMessage").textContent="Foto de perfil atualizada com sucesso!";
+ }catch(error){$("avatarMessage").textContent=error.message||"Não foi possível salvar a foto."}
+ finally{btn.disabled=!pendingAvatarFile}
+});
+$("removeAvatar").addEventListener("click",async()=>{
+ const btn=$("removeAvatar");btn.disabled=true;$("avatarMessage").textContent="Removendo foto...";
+ try{
+  const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user)throw userError||new Error("Entre novamente na sua conta.");
+  const {error:removeError}=await db.storage.from(AVATAR_BUCKET).remove([user.id+"/avatar.webp"]);if(removeError)throw removeError;
+  const {data:updateData,error:updateError}=await db.auth.updateUser({data:{avatar_url:null}});if(updateError)throw updateError;
+  renderProfile(updateData.user);$("avatarFile").value="";pendingAvatarFile=null;$("saveAvatar").disabled=true;$("avatarMessage").textContent="Foto removida.";
+ }catch(error){$("avatarMessage").textContent=error.message||"Não foi possível remover a foto.";btn.disabled=false}
+});
 function requestChanges(site){
  const message="Olá, VERSAT! Gostaria de solicitar um ajuste no meu site. Projeto: "+site.site_slug+". Link: "+(site.published_url||"Ainda não publicado")+".";
  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
@@ -66,6 +137,7 @@ async function boot(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){showAuth();return}
  $("auth").classList.add("hidden");$("app").classList.remove("hidden");$("logout").classList.remove("hidden");
+ renderProfile(session.user);
  const list=$("siteList");list.replaceChildren();
  const {data:sites,error}=await db.from("customer_sites").select("id,project_id,site_slug,status,published_url,created_at").eq("owner_id",session.user.id).order("created_at",{ascending:false});
  if(error){const p=document.createElement("div");p.className="notice";p.textContent="Não foi possível carregar seus projetos agora. Tente novamente em instantes.";list.append(p);return}
