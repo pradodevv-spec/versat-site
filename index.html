@@ -25,7 +25,7 @@
 <style>
 :root{--bg:#09090c;--panel:#111116;--panel2:#17171e;--line:#292932;--text:#f7f7fa;--muted:#a1a1ad;--red:#ed2638;--red2:#ff4554;--white:#fff;--radius:20px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}button{cursor:pointer}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
-header{position:sticky;top:0;z-index:20;background:#09090ceF;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff12}.nav{height:88px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;letter-spacing:2px}.brand{gap:11px;letter-spacing:1.4px}.brand-symbol{width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;color:#f2293b;background:linear-gradient(145deg,#292a2f,#09090c);border:1px solid #f2293b88;border-radius:11px;box-shadow:0 0 18px #f2293b35}.brand-symbol svg{width:31px;height:31px;display:block}.brand-logo-image{width:auto;max-width:290px;max-height:76px;height:auto;object-fit:contain;display:block;filter:drop-shadow(0 3px 10px #0008)}.brand-logo-image.hidden{display:none}.brand-word{font:800 25px/1 "Space Grotesk",sans-serif;color:#f4f4f5;letter-spacing:1.5px;text-shadow:0 2px 10px #000}.brand-word span{color:#f2293b}.navlinks{display:flex;gap:27px;color:#c4c4ce;font-size:14px}.navlinks a:hover{color:white}.navactions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:transparent;color:white;padding:12px 18px;border-radius:12px;font-weight:700;transition:.2s}.btn:hover{transform:translateY(-2px);border-color:#666}.btn.red{background:var(--red);border-color:var(--red);box-shadow:0 8px 28px #ed263833}.btn.red:hover{background:var(--red2)}.menu{display:none;background:none;border:0;color:white;font-size:25px}
+header{position:sticky;top:0;z-index:20;background:#09090ceF;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff12}.nav{height:88px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;letter-spacing:2px}.brand{gap:11px;letter-spacing:1.4px}.brand-symbol{width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;color:#f2293b;background:linear-gradient(145deg,#292a2f,#09090c);border:1px solid #f2293b88;border-radius:11px;box-shadow:0 0 18px #f2293b35}.brand-symbol svg{width:31px;height:31px;display:block}.brand-logo-image{width:auto;max-width:290px;max-height:76px;height:auto;object-fit:contain;display:block;filter:drop-shadow(0 3px 10px #0008)}.brand-logo-image.hidden{display:none}html:not(.vx-logo-ready) .brand-symbol,html:not(.vx-logo-ready) .brand-word,html:not(.vx-logo-ready) .brand-logo-image{visibility:hidden}.brand-word{font:800 25px/1 "Space Grotesk",sans-serif;color:#f4f4f5;letter-spacing:1.5px;text-shadow:0 2px 10px #000}.brand-word span{color:#f2293b}.navlinks{display:flex;gap:27px;color:#c4c4ce;font-size:14px}.navlinks a:hover{color:white}.navactions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:transparent;color:white;padding:12px 18px;border-radius:12px;font-weight:700;transition:.2s}.btn:hover{transform:translateY(-2px);border-color:#666}.btn.red{background:var(--red);border-color:var(--red);box-shadow:0 8px 28px #ed263833}.btn.red:hover{background:var(--red2)}.menu{display:none;background:none;border:0;color:white;font-size:25px}
 .profile-wrap{position:relative;display:flex;align-items:center}
 .profile-avatar{width:44px;height:44px;border-radius:50%;padding:0;border:2px solid var(--red);background:#202028;color:#fff;display:grid;place-items:center;overflow:hidden;font-weight:800;font-size:17px}
 .profile-avatar img{width:100%;height:100%;object-fit:cover}
@@ -186,7 +186,31 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 \n.client-payment-box{box-sizing:border-box;width:100%;max-width:100%;min-width:0;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#14141b}.client-payment-box>*{max-width:100%}.client-payment-button{display:flex;box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:48px;align-items:center;justify-content:center;padding:12px 14px;white-space:normal;text-align:center;line-height:1.35;overflow-wrap:anywhere;word-break:normal;}
 .client-project-menu{position:relative;z-index:40;display:flex;width:max-content;margin:10px 0 0 auto;flex:0 0 auto;align-self:auto}.client-project-menu summary{list-style:none;cursor:pointer;display:grid;place-items:center;width:42px;height:38px;border:1px solid #555;border-radius:10px;background:#202027;color:#fff;font-size:27px;font-weight:700;line-height:1}.client-project-menu summary::-webkit-details-marker{display:none}.client-project-menu>div{position:absolute;right:0;top:calc(100% + 6px);z-index:50;min-width:155px;padding:6px;background:#17171e;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 28px #0009}.client-project-menu button{width:100%;border:0;background:transparent;color:#ff7884;text-align:left;padding:10px;border-radius:7px}.client-project-menu button:hover{background:#ffffff10}
 
-/* Atendimento oficial pelo WhatsApp */
+
+/* Chat flutuante compacto: não bloqueia o restante do site */
+.vx-chat-window.vx-admin-expanded{width:min(520px,calc(100vw - 24px));height:min(680px,calc(100dvh - 104px));border-radius:18px}
+@media(max-width:600px){.vx-chat-window.vx-admin-expanded{width:calc(100vw - 20px);height:min(76dvh,720px);right:10px;bottom:78px}}
+.vx-chat-window{position:fixed;right:18px;bottom:88px;z-index:10049;width:min(330px,calc(100vw - 24px));height:min(445px,calc(100dvh - 112px));display:none;flex-direction:column;overflow:hidden;border:0;border-radius:15px;background:transparent;box-shadow:0 8px 22px #0005;font-family:"DM Sans",sans-serif}
+.vx-chat-window.open{display:flex;animation:vxChatIn .16s ease-out}
+@keyframes vxChatIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+.vx-chat-head{display:flex;align-items:center;gap:9px;padding:9px 11px;background:#19191f;border:0;border-bottom:1px solid #ffffff08;cursor:grab;touch-action:none;user-select:none}.vx-chat-head:active{cursor:grabbing}
+.vx-chat-avatar{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:50%;background:#ed2638;color:white;font:800 13px "Space Grotesk",sans-serif}
+.vx-chat-head-copy{flex:1;min-width:0}.vx-chat-head-copy strong{display:block;color:#fff;font-size:13px}.vx-chat-head-copy small{display:block;margin-top:2px;color:#9da5a0;font-size:10px}
+.vx-chat-online{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:#35c96f}.vx-chat-head-actions{display:flex;gap:5px;align-items:center}
+.vx-chat-minimize{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:0;border-radius:6px;background:#ffffff08;color:#bbb;font-size:15px;line-height:1;cursor:pointer}
+.vx-chat-close{display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;padding:0;border:0;border-radius:5px;background:transparent;color:#999;font-size:17px;line-height:1;cursor:pointer}.vx-chat-close:hover{color:#fff;background:#ffffff10}
+.vx-chat-messages{flex:1;min-height:0;overflow:auto;padding:12px 10px;background:#19191f;display:flex;flex-direction:column;gap:8px}
+.vx-chat-welcome{max-width:90%;padding:9px 10px;border:0;border-radius:4px 11px 11px 11px;background:#191920;color:#e8e8ed;font-size:12px;line-height:1.5;align-self:flex-start}
+.vx-chat-bubble{max-width:86%;padding:8px 10px 6px;border-radius:11px;background:#202028;color:#f1f1f4;font-size:12px;line-height:1.45;overflow-wrap:anywhere;align-self:flex-start}.vx-chat-bubble.mine{align-self:flex-end;background:#70232d;border:0;border-bottom-right-radius:4px}.vx-chat-bubble small{display:block;margin-top:4px;text-align:right;color:#b9b9c2;font-size:9px}
+.vx-chat-compose{display:flex;align-items:flex-end;gap:7px;padding:8px;background:#19191f;border:0;border-top:1px solid #ffffff08}
+.vx-chat-compose textarea{flex:1;min-width:0;max-height:90px;resize:none;padding:9px 11px;border:1px solid #303039;border-radius:16px;outline:none;background:#0c0c11;color:#fff;font:12px "DM Sans",sans-serif}.vx-chat-compose textarea:focus{border-color:#ed2638}
+.vx-chat-send{width:36px;height:36px;flex:0 0 36px;border:0;border-radius:50%;background:#ed2638;color:white;font-size:16px}
+.vx-chat-login{padding:11px;text-align:center;border-top:1px solid #ffffff08;background:#19191f}.vx-chat-login p{margin:0 0 8px;color:#aaa;font-size:11px}.vx-chat-status{min-height:13px;padding:0 10px 6px;background:#19191f;color:#aaa;font-size:9px}
+.vx-chat-window{resize:both;min-width:260px;min-height:210px;max-width:calc(100vw - 12px);max-height:calc(100dvh - 76px);overflow:hidden}
+.vx-chat-window.minimized{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;max-width:58px!important;max-height:58px!important;resize:none;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;filter:none!important;outline:0!important;animation:none!important;transform:none!important;overflow:visible}.vx-chat-window.minimized::before,.vx-chat-window.minimized::after{content:none!important;display:none!important;box-shadow:none!important;filter:none!important}.vx-chat-window.minimized .vx-chat-head{width:58px;height:58px;box-sizing:border-box;padding:0;border:0;border-radius:50%;background:transparent;box-shadow:none;filter:none}.vx-chat-window.minimized .vx-chat-head-copy,.vx-chat-window.minimized .vx-chat-head-actions{display:none!important}.vx-chat-window.minimized .vx-chat-avatar{width:58px;height:58px;flex:0 0 58px;border:1px solid #ffffff55;border-radius:50%;background:linear-gradient(145deg,#f04452,#b8172b);box-shadow:none!important;filter:none!important;text-shadow:none!important;font-size:25px;cursor:pointer}.vx-chat-window.minimized .vx-chat-messages,.vx-chat-window.minimized .vx-chat-compose,.vx-chat-window.minimized .vx-chat-login,.vx-chat-window.minimized .vx-chat-status{display:none!important}
+@media(max-width:600px){.vx-chat-window{right:8px;bottom:76px;width:min(315px,calc(100vw - 16px));height:min(420px,calc(100dvh - 92px));min-width:250px;min-height:205px;max-width:calc(100vw - 8px);max-height:calc(100dvh - 72px);border-radius:14px}.versat-whatsapp-float{z-index:10050}}
+.versat-whatsapp-float.chat-minimized{display:grid!important;background:linear-gradient(145deg,#f04452,#b8172b)!important;border:1px solid #ffffff55!important;color:#fff!important;box-shadow:none!important;filter:none!important;text-shadow:none!important;font-size:25px!important}.versat-whatsapp-float.chat-minimized:hover{transform:none!important;box-shadow:none!important}.vx-chat-window.minimized{display:none!important}
+/* Atendimento flutuante estilo chat */
 .versat-whatsapp-float{position:fixed;right:20px;left:auto;bottom:22px;z-index:10050;width:58px;height:58px;padding:0;border:1px solid #35c96f;border-radius:50%;background:#159447;color:#fff;display:grid;place-items:center;font-family:Arial,sans-serif;font-size:28px;font-weight:700;line-height:1;box-shadow:0 8px 28px #0006;cursor:pointer;transition:transform .2s,box-shadow .2s}
 .versat-whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 12px 32px #0008}
 .versat-whatsapp-float .wa-icon{display:grid;place-items:center;width:100%;height:100%;font-size:28px;font-weight:700}
@@ -241,6 +265,45 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 .mockcards div:nth-child(2){animation-delay:.5s}
 .mockcards div:nth-child(3){animation-delay:1s}
 @media(prefers-reduced-motion:reduce){.showcase,.dot,.hero:before,.mockcards div,.btn.red:hover{animation:none!important}}
+
+.vx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}.vx-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}.vx-card label{display:block;margin:10px 0;color:var(--muted)}.vx-card input,.vx-card textarea{display:block;width:100%;margin-top:6px;background:#09090d;border:1px solid var(--line);border-radius:9px;padding:11px;color:var(--text);font:inherit}.vx-bar{height:9px;background:#292932;border-radius:20px;overflow:hidden}.vx-bar i{display:block;height:100%;background:var(--red)}.vx-muted{color:var(--muted);font-size:13px}/* VERSAT motion system — refined, lightweight and accessible */
+:root{--vx-motion-fast:180ms;--vx-motion:420ms;--vx-ease:cubic-bezier(.2,.75,.25,1)}
+@media(prefers-reduced-motion:no-preference){
+ html{scroll-behavior:smooth}
+ body{animation:vxPageIn .65s var(--vx-ease) both}
+ @keyframes vxPageIn{from{opacity:0}to{opacity:1}}
+ .hero h1,.hero .lead,.hero .eyebrow{animation:vxRise .75s var(--vx-ease) both}
+ .hero .lead{animation-delay:100ms}
+ @keyframes vxRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+ .btn,.nav a,.plan,.project,.metric,.vx-card,.feature,.service-card{transition:transform var(--vx-motion-fast) var(--vx-ease),box-shadow var(--vx-motion-fast) var(--vx-ease),border-color var(--vx-motion-fast) ease,filter var(--vx-motion-fast) ease}
+ .btn:hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 9px 28px rgba(230,35,55,.18)}
+ .btn:active{transform:translateY(0) scale(.98)}
+ .plan:hover,.project:hover,.metric:hover,.vx-card:hover,.feature:hover,.service-card:hover{transform:translateY(-4px);box-shadow:0 16px 38px rgba(0,0,0,.22);border-color:rgba(239,45,62,.48)}
+ .vx-reveal{opacity:0;transform:translateY(22px);transition:opacity .65s var(--vx-ease),transform .65s var(--vx-ease)}
+ .vx-reveal.vx-visible{opacity:1;transform:translateY(0)}
+ .vx-glow{position:relative;isolation:isolate}
+ .vx-glow:after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .35s ease;background:radial-gradient(ellipse at 50% 0,rgba(235,38,58,.16),transparent 68%)}
+ .vx-glow:hover:after{opacity:1}
+ .accessibility-trigger,.versat-whatsapp-float{transition:transform .25s var(--vx-ease),box-shadow .25s ease}
+ .accessibility-trigger:hover,.versat-whatsapp-float:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 30px rgba(230,35,55,.25)}
+ .status{transition:background .25s ease,color .25s ease}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* Atendimento sempre visível e fácil de encontrar */
+.vx-helpbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 20px;padding:18px 20px;border:1px solid rgba(239,45,62,.35);border-radius:16px;background:linear-gradient(110deg,rgba(224,32,52,.13),rgba(25,25,31,.96) 58%);box-shadow:0 12px 32px rgba(0,0,0,.16)}
+.vx-helpbar strong{display:block;font-size:15px;margin-bottom:5px}.vx-helpbar span{display:block;color:#aaa;font-size:12px;line-height:1.5}.vx-helpbar .btn{white-space:nowrap;flex:0 0 auto}
+.vx-support-nav{color:#ff7b86!important;border:1px solid rgba(239,45,62,.28)!important;background:rgba(224,32,52,.09)!important}.vx-support-nav.active{background:#e52b3d!important;color:white!important}
+@media(max-width:680px){.vx-helpbar{align-items:stretch;flex-direction:column;padding:16px}.vx-helpbar .btn{width:100%}}
+/* Floating CTA now opens the on-site support inbox, not WhatsApp */
+.versat-whatsapp-float{background:linear-gradient(145deg,#f04452,#b8172b)!important;border:1px solid rgba(255,255,255,.2)!important;color:#fff!important;box-shadow:0 8px 28px rgba(220,35,55,.34)!important}
+.versat-whatsapp-float .wa-icon{font-family:Arial,sans-serif;font-size:25px}
+.versat-whatsapp-float:after{content:"Atendimento";position:absolute;right:68px;white-space:nowrap;padding:8px 11px;border-radius:9px;background:#17171e;border:1px solid #383842;color:#fff;font-size:12px;font-weight:700;opacity:0;transform:translateX(5px);transition:opacity .2s,transform .2s;pointer-events:none}
+.versat-whatsapp-float:hover:after{opacity:1;transform:translateX(0)}
+@media(max-width:600px){.versat-whatsapp-float:after{display:none}}
+
 
 </style>
 </head>
@@ -310,7 +373,7 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 <div class="sim-result"><div class="eyebrow">ESTIMATIVA DO SEU PROJETO</div><div id="simPrice" class="sim-price">R$ 450</div><p id="simNote">Estimativa inicial para uma landing page.</p><p class="sim-disclaimer">Este valor é uma referência, não uma proposta fechada. Projetos com integrações ou funcionalidades especiais podem exigir orçamento personalizado. Domínio e hospedagem não estão incluídos.</p><button type="button" class="btn red" onclick="sendBudgetWhatsApp()">Enviar orçamento pelo WhatsApp ↗</button></div></div></div></section>
 <section id="contato"><div class="wrap"><div class="cta"><div><div class="eyebrow">VAMOS CONVERSAR?</div><h2>Seu próximo projeto começa aqui.</h2><p>Conte sua ideia para a VERSAT e vamos encontrar a melhor solução.</p></div><button type="button" class="btn red" onclick="contactWhatsApp()">Falar com a VERSAT ↗</button></div></div></section>
 </main>
-<section id="dashboard"><div class="wrap"><div class="dashhead"><div><div class="eyebrow">ÁREA DO CLIENTE</div><h2>Meu painel</h2><p id="welcome" style="color:#aaa;margin:8px 0 0"></p></div><button type="button" class="btn" onclick="signOut()">Sair da conta</button></div><div class="dashgrid"><aside class="side"><button type="button" class="active" onclick="dashTab('projects',this)">Meus projetos</button><button type="button" onclick="dashTab('new',this)">Solicitar projeto</button><button type="button" id="adminTab" class="hidden" onclick="dashTab('admin',this)">Administração</button><button type="button" id="devTab" class="hidden" data-tab="development" onclick="dashTab(this.dataset.tab,this)">Desenvolvimento</button><button type="button" id="crmTab" class="hidden" onclick="dashTab('crm',this)">Clientes (CRM)</button></aside><div class="dashmain"><div id="dashContent"><div class="empty">Carregando seus projetos...</div></div></div></div></div></section>
+<section id="dashboard"><div class="wrap"><div class="dashhead"><div><div class="eyebrow">ÁREA DO CLIENTE</div><h2>Meu painel</h2><p id="welcome" style="color:#aaa;margin:8px 0 0"></p></div><button type="button" class="btn" onclick="signOut()">Sair da conta</button></div><div class="vx-helpbar"><div><strong>Precisa de ajuda com seu projeto?</strong><span>Fale diretamente com a equipe VERSAT pelo atendimento.</span></div><button type="button" class="btn red" onclick="dashTab(\'support\',document.getElementById(\'supportTab\'))">💬 Falar com atendimento</button></div><div class="dashgrid"><aside class="side"><button type="button" class="active" onclick="dashTab('projects',this)">Meus projetos</button><button type="button" onclick="dashTab('new',this)">Solicitar projeto</button><button type="button" id="adminTab" class="hidden" onclick="dashTab('admin',this)">Administração</button><button type="button" id="devTab" class="hidden" data-tab="development" onclick="dashTab(this.dataset.tab,this)">Desenvolvimento</button><button type="button" id="crmTab" class="hidden" onclick="dashTab('crm',this)">Clientes (CRM)</button><button type="button" id="analyticsTab" class="hidden" onclick="dashTab('analytics',this)">Indicadores</button><button type="button" id="editorTab" class="hidden" onclick="dashTab('editor',this)">Editor visual</button><button type="button" id="supportTab" class="vx-support-nav" onclick="dashTab('support',this)">💬 Falar com atendimento</button><button type="button" id="notificationsTab" class="hidden" onclick="dashTab('notifications',this)">Notificações</button><button type="button" id="templatesTab" class="hidden" onclick="dashTab('templates',this)">Modelos</button></aside><div class="dashmain"><div id="dashContent"><div class="empty">Carregando seus projetos...</div></div></div></div></div></section>
 <footer><div class="wrap foot"><div><div class="footlogo">VER<span>SAT</span></div><div style="margin-top:7px">Sites & soluções digitais.</div><div class="footlinks"><button type="button" onclick="openLegal('privacy')">Política de privacidade</button><button type="button" onclick="openLegal('terms')">Termos de uso</button></div></div><div>© <span id="year"></span> VERSAT. Todos os direitos reservados.</div></div></footer>
 
 <div class="modal" id="authModal" onclick="if(event.target===this)closeAuth()"><div class="dialog"><button type="button" class="close" onclick="closeAuth()">×</button><div class="eyebrow">BEM-VINDO À VERSAT</div><h2 id="authTitle">Entre na sua conta</h2><p id="authDesc">Acesse sua área para acompanhar seus projetos.</p><div id="authNotice" class="notice hidden"></div>
@@ -430,15 +493,121 @@ function openDashboardFromMenu(){
 
 function openAuth(mode){authMode=mode;updateAuthMode();document.getElementById("authModal").classList.add("open")}
 function closeAuth(){document.getElementById("authModal").classList.remove("open")}
-function continueAfterAuth(){if(pendingPlan){openRequest();document.getElementById("reqType").value=pendingPlan==="Essencial"?"Landing page":pendingPlan==="Profissional"?"Site institucional":"Sistema web";document.getElementById("reqDetails").value="Tenho interesse no plano "+pendingPlan+". ";return}openDashboard()}
+let vxPendingSupportEntry=false;
+(function initVxHeaderLogo(){const img=document.getElementById("brandLogoImage");if(img){img.removeAttribute("src");img.classList.add("hidden")}document.documentElement.classList.remove("vx-logo-ready")})();
+function setVxChatLauncher(minimized){const launcher=document.querySelector(".versat-whatsapp-float");if(!launcher)return;launcher.classList.toggle("chat-minimized",!!minimized);launcher.classList.remove("chat-open");const icon=launcher.querySelector(".wa-icon");if(icon)icon.textContent=minimized?"V":"💬";launcher.setAttribute("aria-label",minimized?"Restaurar atendimento VERSAT":"Abrir atendimento VERSAT");launcher.setAttribute("aria-expanded",minimized?"false":"true")}
+async function openVxSupportEntry(){initVxChatDrag();const panel=document.getElementById("vxChatWindow");if(!panel)return;const isAdmin=!!(currentUser&&sb&&await vxIsAdmin());if(isAdmin)showHome();const opening=!panel.classList.contains("open")||panel.classList.contains("minimized");if(opening){panel.classList.remove("minimized");panel.classList.add("open");setVxChatLauncher(false);await loadVxFloatingChat()}else{panel.classList.remove("open");setVxChatLauncher(false)}}
+function toggleVxChatMinimize(){const panel=document.getElementById("vxChatWindow");if(!panel)return;panel.classList.remove("open");panel.classList.add("minimized");setVxChatLauncher(true)}
+function initVxChatDrag(){const panel=document.getElementById("vxChatWindow"),handle=document.getElementById("vxChatDragHandle");if(!panel||!handle||panel.dataset.dragReady)return;panel.dataset.dragReady="1";try{const saved=JSON.parse(localStorage.getItem("vxChatPosition")||"null");if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)){panel.style.left=saved.left+"px";panel.style.top=saved.top+"px";panel.style.right="auto";panel.style.bottom="auto"}}catch(e){}
+let drag=null;handle.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;const rect=panel.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,left:rect.left,top:rect.top};handle.setPointerCapture?.(e.pointerId);e.preventDefault()});handle.addEventListener("pointermove",e=>{if(!drag)return;const w=panel.offsetWidth,h=panel.offsetHeight;const left=Math.max(4,Math.min(window.innerWidth-w,drag.left+e.clientX-drag.x));const top=Math.max(4,Math.min(window.innerHeight-h,drag.top+e.clientY-drag.y));panel.style.left=left+"px";panel.style.top=top+"px";panel.style.right="auto";panel.style.bottom="auto"});const stop=()=>{if(!drag)return;drag=null;const rect=panel.getBoundingClientRect();try{localStorage.setItem("vxChatPosition",JSON.stringify({left:Math.round(rect.left),top:Math.round(rect.top)}))}catch(e){}};handle.addEventListener("pointerup",stop);handle.addEventListener("pointercancel",stop);window.addEventListener("resize",()=>{if(panel.style.left){const left=Math.max(4,Math.min(window.innerWidth-panel.offsetWidth,panel.getBoundingClientRect().left));const top=Math.max(4,Math.min(window.innerHeight-panel.offsetHeight,panel.getBoundingClientRect().top));panel.style.left=left+"px";panel.style.top=top+"px"}})}
+function closeVxFloatingChat(){const panel=document.getElementById("vxChatWindow");panel?.classList.remove("open","minimized");setVxChatLauncher(false)}
+async function loadVxFloatingChat(){
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
+ if(!messages)return;
+ if(!currentUser||!sb){messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Entre na sua conta para iniciar uma conversa e acompanhar suas mensagens por aqui.</div>";compose.classList.add("hidden");login.classList.remove("hidden");return}
+ if(await vxIsAdmin()){await loadVxAdminFloatingInbox();return}
+ document.getElementById("vxChatWindow")?.classList.remove("vx-admin-expanded");vxAdminFloatingMode=false;vxAdminFloatingConversation=null;
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent="Atendimento VERSAT";
+ compose.classList.add("hidden");login.classList.add("hidden");
+ messages.innerHTML="<div class='vx-chat-welcome'>Carregando seu atendimento...</div>";
+ const cr=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
+ if(cr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível carregar o atendimento.</div>";return}
+ let conv=(cr.data||[])[0]||null;
+ if(!conv){
+  const nr=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+  if(nr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível iniciar o atendimento: "+escapeHtml(nr.error.message)+"</div>";return}
+  conv=nr.data;
+ }
+ vxCurrentConversationId=conv.id;vxCurrentConversationStatus=conv.status;
+ const mr=await sb.from("support_messages").select("id,user_id,sender_id,body,created_at,conversation_id").eq("conversation_id",conv.id).order("created_at",{ascending:true});
+ if(mr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível carregar as mensagens.</div>";return}
+ const rr=await sb.from("support_ratings").select("*").eq("conversation_id",conv.id).maybeSingle();
+ if(conv.status==="closed"){
+  compose.classList.add("hidden");
+  const rating=rr.data||null;
+  if(rating){messages.innerHTML="<div class='vx-chat-welcome'>Este atendimento foi encerrado. Obrigado por conversar com a VERSAT!</div><div class='review-display'><b>Sua avaliação</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"</div><p>"+escapeHtml(rating.comment||"")+"</p></div><button class='btn red wide' type='button' onclick='startNewVxFloatingConversation()'>Iniciar novo atendimento</button>";}
+  else{messages.innerHTML="<div class='vx-chat-welcome'>Seu atendimento foi encerrado. Queremos saber como foi sua experiência!</div><div class='review-form'><h3>Como foi seu atendimento com a VERSAT?</h3><p>1 estrela: Muito ruim · 2: Ruim · 3: Regular · 4: Bom · 5: Excelente</p><div id='vxRatingStars' style='display:flex;gap:8px;font-size:34px;color:#ffc44d;margin:12px 0'>"+[1,2,3,4,5].map(n=>"<button type='button' onclick='selectVxRating("+n+")' aria-label='"+n+" estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button>").join("")+"</div><div id='vxRatingLabel' class='vx-muted'>Selecione sua nota</div><textarea id='vxRatingComment' maxlength='1200' placeholder='Comentário (opcional)'></textarea><button class='btn red wide' type='button' onclick=\"submitVxFloatingRating('"+conv.id+"')\">Enviar avaliação</button></div>";window.vxSelectedRating=0;}
+  return;
+ }
+ compose.classList.remove("hidden");
+ renderVxFloatingMessages(mr.data||[]);
+}
+let vxAdminFloatingMode=false;
+let vxAdminFloatingConversation=null;
+async function loadVxAdminFloatingInbox(){
+ const panel=document.getElementById("vxChatWindow");panel?.classList.add("vx-admin-expanded");
+ vxAdminFloatingMode=true;vxAdminFloatingConversation=null;
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
+ if(!messages)return;compose.classList.add("hidden");login.classList.add("hidden");
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent="Conversas dos clientes";
+ messages.innerHTML="<div class='vx-chat-welcome'>Carregando conversas...</div>";
+ const r=await sb.from("support_conversations").select("*").order("created_at",{ascending:false});
+ if(r.error){messages.innerHTML="<div class='vx-chat-welcome'>Erro ao carregar: "+escapeHtml(r.error.message)+"</div>";return}
+ const convs=r.data||[];if(!convs.length){messages.innerHTML="<div class='vx-chat-welcome'>Nenhuma conversa recebida ainda.</div>";return}
+ const ids=[...new Set(convs.map(c=>c.user_id))],pr=await sb.from("profiles").select("*").in("id",ids);
+ const pm=Object.fromEntries((pr.data||[]).map(p=>[p.id,p]));
+ messages.innerHTML=convs.map(c=>{const p=pm[c.user_id]||{},name=p.full_name||p.name||p.nome||p.display_name||p.email||"Cliente";return "<button type='button' class='vx-card' style='display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;text-align:left;margin:7px 0;padding:11px;cursor:pointer' onclick=\"loadVxAdminFloatingThread('"+c.id+"')\"><span style='min-width:0'><b style='display:block;color:#fff'>"+escapeHtml(name)+"</b><small style='color:#aaa'>"+new Date(c.created_at).toLocaleString("pt-BR")+"</small></span><small style='color:"+(c.status==="open"?"#55cf83":"#aaa")+"'>"+(c.status==="open"?"Em atendimento":"Encerrada")+"</small></button>"}).join("");
+}
+async function loadVxAdminFloatingThread(id){
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose");
+ const cr=await sb.from("support_conversations").select("*").eq("id",id).single();if(cr.error){messages.textContent=cr.error.message;return}
+ const conv=cr.data;vxAdminFloatingConversation=conv;vxCurrentConversationId=conv.id;vxCurrentConversationStatus=conv.status;
+ const [mr,rr,pr]=await Promise.all([sb.from("support_messages").select("*").eq("conversation_id",id).order("created_at",{ascending:true}),sb.from("support_ratings").select("*").eq("conversation_id",id).maybeSingle(),sb.from("profiles").select("*").eq("id",conv.user_id).maybeSingle()]);
+ const p=pr.data||{},name=p.full_name||p.name||p.nome||p.display_name||p.email||"Cliente";
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent=name;
+ const back="<button type='button' onclick='loadVxAdminFloatingInbox()' style='border:0;background:#292932;color:#fff;border-radius:7px;padding:6px 9px;margin-bottom:8px'>← Conversas</button>";
+ const status="<div class='vx-chat-welcome'>"+(conv.status==="open"?"Atendimento em andamento":"Atendimento encerrado")+"</div>";
+ const bubbles=(mr.data||[]).map(m=>{const mine=m.sender_id===currentUser.id;return "<div class='vx-chat-bubble "+(mine?"mine":"")+"'>"+escapeHtml(m.body)+"<small>"+(mine?"Você":"Cliente")+" · "+new Date(m.created_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+"</small></div>"}).join("");
+ let footer="";
+ if(conv.status==="open"){footer="<button type='button' class='btn red wide' style='margin-top:10px' onclick=\"closeVxAdminFloatingConversation('"+id+"')\">Encerrar atendimento</button>";compose.classList.remove("hidden");}
+ else{compose.classList.add("hidden");footer=rr.data?"<div class='vx-chat-welcome'>Avaliação do cliente: <b style='color:#ffc44d'>"+("★".repeat(rr.data.rating))+"</b><p>"+escapeHtml(rr.data.comment||"Sem comentário.")+"</p></div>":"<div class='vx-chat-welcome'>Aguardando avaliação do cliente.</div>"}
+ messages.innerHTML=back+status+(bubbles||"<div class='vx-chat-welcome'>Ainda não há mensagens.</div>")+footer;
+ messages.scrollTop=messages.scrollHeight;
+}
+async function closeVxAdminFloatingConversation(id){
+ if(!confirm("Encerrar este atendimento? O cliente poderá avaliar pelo chat."))return;
+ const r=await sb.from("support_conversations").update({status:"closed",closed_at:new Date().toISOString(),closed_by:currentUser.id}).eq("id",id).eq("status","open");
+ if(r.error){alert("Não foi possível encerrar: "+r.error.message);return}
+ await loadVxAdminFloatingThread(id);
+}
+function renderVxFloatingMessages(rows){
+ const messages=document.getElementById("vxChatMessages");if(!messages)return;
+ const greeting="<div class='vx-chat-welcome'>Olá! 👋 Você está falando com o atendimento VERSAT. Como podemos ajudar?</div>";
+ messages.innerHTML=greeting+(rows.length?rows.map(m=>{const mine=m.sender_id===currentUser.id;return "<div class='vx-chat-bubble "+(mine?"mine":"")+"'>"+escapeHtml(m.body)+"<small>"+(mine?"Você":"Equipe VERSAT")+" · "+new Date(m.created_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+"</small></div>"}).join(""):"<div class='vx-chat-welcome'>Pode mandar sua dúvida ou contar o que precisa. 😊</div>");
+ messages.scrollTop=messages.scrollHeight;
+}
+async function submitVxFloatingRating(conversationId){
+ const rating=Number(window.vxSelectedRating||0),comment=document.getElementById("vxRatingComment")?.value.trim()||"";
+ if(rating<1||rating>5){alert("Escolha uma nota de 1 a 5 estrelas.");return}
+ const r=await sb.from("support_ratings").insert({conversation_id:conversationId,user_id:currentUser.id,rating,comment});
+ if(r.error){alert("Não foi possível enviar a avaliação: "+r.error.message);return}
+ await loadVxFloatingChat();
+}
+async function startNewVxFloatingConversation(){
+ const r=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+ if(r.error){alert("Não foi possível iniciar um novo atendimento: "+r.error.message);return}
+ await loadVxFloatingChat();
+}
+async function sendVxFloatingMessage(event){
+ event.preventDefault();if(!currentUser||!sb||!vxCurrentConversationId)return;
+ const field=document.getElementById("vxChatInput"),button=document.getElementById("vxChatSend"),status=document.getElementById("vxChatStatus"),body=field.value.trim();if(!body)return;
+ button.disabled=true;status.textContent="Enviando...";
+ const uid=vxAdminFloatingMode&&vxAdminFloatingConversation?vxAdminFloatingConversation.user_id:currentUser.id;
+ const r=await sb.from("support_messages").insert({conversation_id:vxCurrentConversationId,user_id:uid,sender_id:currentUser.id,body});button.disabled=false;
+ if(r.error){status.textContent="Não foi possível enviar: "+r.error.message;return}
+ field.value="";status.textContent="Mensagem enviada.";
+ if(vxAdminFloatingMode)await loadVxAdminFloatingThread(vxCurrentConversationId);else await loadVxFloatingChat();
+}
+function openVxChatLogin(){vxPendingSupportEntry=true;closeAuth();openAuth("login");showNotice("authNotice","Entre ou crie sua conta para conversar com a equipe VERSAT.")}
+async function continueAfterAuth(){if(pendingPlan){openRequest();document.getElementById("reqType").value=pendingPlan==="Essencial"?"Landing page":pendingPlan==="Profissional"?"Site institucional":"Sistema web";document.getElementById("reqDetails").value="Tenho interesse no plano "+pendingPlan+". ";return}if(vxPendingSupportEntry){vxPendingSupportEntry=false;showHome();closeAuth();document.getElementById("vxChatWindow")?.classList.add("open");await loadVxFloatingChat();return}await openDashboard()}
 function toggleAuthMode(){authMode=authMode==="login"?"signup":"login";updateAuthMode()}
 function updateAuthMode(){const recovery=authMode==="recovery",signup=authMode==="signup";document.getElementById("authTitle").textContent=recovery?"Defina uma nova senha":signup?"Crie sua conta":"Entre na sua conta";document.getElementById("authDesc").textContent=recovery?"Escolha uma nova senha para acessar sua conta.":signup?"Informe seus dados para acompanhar seus projetos.":"Acesse sua área para acompanhar seus projetos.";document.getElementById("authSubmit").textContent=recovery?"Salvar nova senha":signup?"Criar minha conta":"Entrar";document.getElementById("authEmail").closest("label").classList.toggle("hidden",recovery);document.getElementById("authEmail").required=!recovery;document.getElementById("authPassword").autocomplete=recovery?"new-password":"current-password";document.getElementById("fullNameField").classList.toggle("hidden",!signup);document.getElementById("phoneField").classList.toggle("hidden",!signup);document.getElementById("authFullName").required=signup;document.getElementById("authPhone").required=signup;document.getElementById("confirmField").classList.toggle("hidden",!(signup||recovery));document.getElementById("authConfirm").required=signup||recovery;document.getElementById("switchText").classList.toggle("hidden",recovery);document.getElementById("switchBtn").classList.toggle("hidden",recovery);document.querySelector("#authModal .switchline:last-child").classList.toggle("hidden",recovery);clearNotice("authNotice")}
 async function submitAuth(e){e.preventDefault();clearNotice("authNotice");if(!sb){showNotice("authNotice","A área de contas ainda precisa ser conectada ao banco de dados.");return}const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(authMode==="recovery"){if(password.length<8){showNotice("authNotice","A nova senha precisa ter pelo menos 8 caracteres.");return}if(password!==document.getElementById("authConfirm").value){showNotice("authNotice","As senhas não coincidem.");return}const {error}=await sb.auth.updateUser({password});if(error){showNotice("authNotice","Não foi possível atualizar a senha: "+error.message);return}authMode="login";updateAuthMode();showNotice("authNotice","Senha atualizada! Agora entre com sua nova senha.");return}if(authMode==="signup"){const fullName=document.getElementById("authFullName").value.trim(),phone=document.getElementById("authPhone").value.trim();if(!fullName||!phone){showNotice("authNotice","Informe seu nome completo e telefone.");return}if(password!==document.getElementById("authConfirm").value){showNotice("authNotice","As senhas não coincidem.");return}const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:fullName,phone:phone}}});if(error){showNotice("authNotice",error.message);return}showNotice("authNotice","Cadastro enviado! Se a confirmação de e-mail estiver ativa, confira sua caixa de entrada para confirmar a conta.");if(data.session){currentUser=data.user;updateAccountHeader(currentUser);closeAuth();continueAfterAuth()}}else{const {data,error}=await sb.auth.signInWithPassword({email,password});if(error){showNotice("authNotice","Não foi possível entrar: "+error.message);return}currentUser=data.user;updateAccountHeader(currentUser);closeAuth();continueAfterAuth()}}
 async function resetPassword(){if(!sb){showNotice("authNotice","A recuperação de senha está indisponível no momento.");return}const email=document.getElementById("authEmail").value.trim();if(!email){showNotice("authNotice","Digite seu e-mail primeiro.");return}const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});showNotice("authNotice",error?"Erro: "+error.message:"Se o e-mail estiver cadastrado, enviaremos um link para criar uma nova senha.")}
 async function signOut(){if(sb)await sb.auth.signOut();currentUser=null;updateAccountHeader(null);document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block";window.scrollTo(0,0)}
-async function openDashboard(){updateAccountHeader(currentUser);document.getElementById("home").style.display="none";document.getElementById("dashboard").style.display="block";document.getElementById("welcome").textContent=currentUser?.email||"";document.getElementById("adminTab").classList.add("hidden");document.getElementById("devTab").classList.add("hidden");document.getElementById("crmTab").classList.add("hidden");window.scrollTo(0,0);if(sb&&currentUser){const {data}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();if(data?.role==="admin"){document.getElementById("adminTab").classList.remove("hidden");document.getElementById("devTab").classList.remove("hidden");document.getElementById("crmTab").classList.remove("hidden")}}loadProjects()}
-function showHome(){document.getElementById("home").style.display="block";document.getElementById("dashboard").style.display="none"}
-function dashTab(tab,btn){document.querySelectorAll(".side button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");if(tab==="projects")loadProjects();if(tab==="new")renderNewRequest();if(tab==="admin")loadAdmin();if(tab==="development")loadDevelopment();if(tab==="crm")loadCRM()}
+async function openDashboard(){updateAccountHeader(currentUser);document.getElementById("home").style.display="none";document.getElementById("dashboard").style.display="block";document.getElementById("welcome").textContent=currentUser?.email||"";document.getElementById("adminTab").classList.add("hidden");document.getElementById("devTab").classList.add("hidden");document.getElementById("crmTab").classList.add("hidden");["analyticsTab","editorTab","templatesTab"].forEach(id=>document.getElementById(id).classList.add("hidden"));const supportTab=document.getElementById("supportTab");supportTab.classList.remove("hidden");supportTab.textContent="💬 Falar com atendimento";const helpbar=document.querySelector(".vx-helpbar");if(helpbar)helpbar.classList.remove("hidden");document.querySelector(".dashhead .eyebrow").textContent="ÁREA DO CLIENTE";document.querySelector(".dashhead h2").textContent="Meu painel";window.scrollTo(0,0);if(sb&&currentUser){const {data}=await sb.from("profiles").select("role").eq("id",currentUser.id).single();if(data?.role==="admin"){document.getElementById("adminTab").classList.remove("hidden");document.getElementById("devTab").classList.remove("hidden");document.getElementById("crmTab").classList.remove("hidden");["analyticsTab","editorTab","templatesTab"].forEach(id=>document.getElementById(id).classList.remove("hidden"));supportTab.classList.add("hidden");if(helpbar)helpbar.classList.add("hidden");document.querySelector(".dashhead .eyebrow").textContent="ÁREA ADMINISTRATIVA";document.querySelector(".dashhead h2").textContent="Painel ADM"}}loadProjects()}
+function showHome(){const home=document.getElementById("home"),dashboard=document.getElementById("dashboard");if(home)home.style.display="block";if(dashboard)dashboard.style.display="none";window.scrollTo({top:0,behavior:"smooth"});}
+function dashTab(tab,btn){document.querySelectorAll(".side button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(tab==="projects")loadProjects();if(tab==="new")renderNewRequest();if(tab==="admin")loadAdmin();if(tab==="development")loadDevelopment();if(tab==="crm")loadCRM();if(tab==="analytics")loadVxAnalytics();if(tab==="editor")loadVxEditor();if(tab==="support")loadVxSupport();if(tab==="notifications")loadVxNotifications();if(tab==="templates")loadVxTemplates()}
 function renderClientBrief(project){
  const brief=project.brief&&typeof project.brief==="object"?project.brief:{};
  const groups=[
@@ -467,7 +636,38 @@ function manualSetPreviewWidth(w){const f=document.getElementById("manualSitePre
 function manualValidate(){const c=document.getElementById("manualSiteCode")?.value||"",n=document.getElementById("manualSiteNotice"),a=[];if(!c.toLowerCase().includes("<html"))a.push("Tag html ausente.");if(!c.toLowerCase().includes("</html>"))a.push("Fechamento html ausente.");if(!c.toLowerCase().includes("viewport"))a.push("Viewport para celular ausente.");if(c.includes('href="#"'))a.push("Há link sem destino (#).");n.textContent=a.length?"Revisão: "+a.join(" "):"Verificação básica concluída. Revise também links e formulários."}
 
 function manualStarterHtml(title){
- return '<!doctype html>\\n<html lang="pt-BR">\\n<head>\\n<meta charset="utf-8">\\n<meta name="viewport" content="width=device-width,initial-scale=1">\\n<title>'+String(title||"Meu site").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'</title>\\n<style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#20212a;background:#f6f7fb}header{padding:22px 7%;display:flex;justify-content:space-between;align-items:center;background:#fff}nav a{margin-left:18px;color:inherit;text-decoration:none}main{padding:90px 7%;background:linear-gradient(120deg,#171923,#30364a);color:white}h1{font-size:clamp(38px,7vw,68px);max-width:760px;margin:0 0 18px}p{line-height:1.7}.button{display:inline-block;padding:14px 22px;border-radius:8px;background:#ed2638;color:white;text-decoration:none;font-weight:bold}.section{padding:65px 7%}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}.card{background:white;padding:24px;border-radius:14px;box-shadow:0 8px 28px #1111}footer{padding:28px 7%;background:#171923;color:white}@media(max-width:600px){header{display:block}nav{margin-top:14px}nav a{margin:0 12px 0 0}}</style>\\n</head>\\n<body>\\n<header><strong>'+String(title||"MINHA MARCA")+'</strong><nav><a href="#inicio">Início</a><a href="#sobre">Sobre</a><a href="#servicos">Serviços</a><a href="#contato">Contato</a></nav></header>\\n<main id="inicio"><h1>Seu site começa aqui.</h1><p>Apresente sua marca com um site moderno, bonito e responsivo.</p><a class="button" href="#contato">Fale conosco</a></main>\\n<section class="section" id="sobre"><h2>Sobre nós</h2><p>Conte aqui a história da sua empresa e o que torna seu trabalho especial.</p></section>\\n<section class="section" id="servicos"><h2>Nossos serviços</h2><div class="cards"><article class="card"><h3>Serviço 1</h3><p>Descreva seu primeiro serviço.</p></article><article class="card"><h3>Serviço 2</h3><p>Descreva seu segundo serviço.</p></article><article class="card"><h3>Serviço 3</h3><p>Descreva seu terceiro serviço.</p></article></div></section>\\n<section class="section" id="contato"><h2>Vamos conversar?</h2><p>Adicione aqui seus dados de contato e redes sociais.</p><a class="button" href="https://wa.me/5500000000000">Chamar no WhatsApp</a></section>\\n<footer>© '+new Date().getFullYear()+' '+String(title||"Minha marca")+'</footer>\\n</body>\\n</html>';
+ const safeTitle=String(title||"Meu site").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+ return `<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${safeTitle}</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#20212a;background:#f6f7fb}
+header{padding:22px 7%;display:flex;justify-content:space-between;align-items:center;background:#fff}
+nav a{margin-left:18px;color:inherit;text-decoration:none}
+main{padding:90px 7%;background:linear-gradient(120deg,#171923,#30364a);color:white}
+h1{font-size:clamp(38px,7vw,68px);max-width:760px;margin:0 0 18px}
+p{line-height:1.7}
+.button{display:inline-block;padding:14px 22px;border-radius:8px;background:#ed2638;color:white;text-decoration:none;font-weight:bold}
+.section{padding:65px 7%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.card{background:white;padding:24px;border-radius:14px;box-shadow:0 8px 28px #1111}
+footer{padding:28px 7%;background:#171923;color:white}
+@media(max-width:600px){header{display:block}nav{margin-top:14px}nav a{margin:0 12px 0 0}}
+</style>
+</head>
+<body>
+<header><strong>${safeTitle}</strong><nav><a href="#inicio">Início</a><a href="#sobre">Sobre</a><a href="#servicos">Serviços</a><a href="#contato">Contato</a></nav></header>
+<main id="inicio"><h1>Seu site começa aqui.</h1><p>Apresente sua marca com um site moderno, bonito e responsivo.</p><a class="button" href="#contato">Fale conosco</a></main>
+<section class="section" id="sobre"><h2>Sobre nós</h2><p>Conte aqui a história da sua empresa e o que torna seu trabalho especial.</p></section>
+<section class="section" id="servicos"><h2>Nossos serviços</h2><div class="cards"><article class="card"><h3>Serviço 1</h3><p>Descreva seu primeiro serviço.</p></article><article class="card"><h3>Serviço 2</h3><p>Descreva seu segundo serviço.</p></article><article class="card"><h3>Serviço 3</h3><p>Descreva seu terceiro serviço.</p></article></div></section>
+<section class="section" id="contato"><h2>Vamos conversar?</h2><p>Adicione aqui seus dados de contato e redes sociais.</p><a class="button" href="https://wa.me/5500000000000">Chamar no WhatsApp</a></section>
+<footer>© ${new Date().getFullYear()} ${String(title||"Minha marca")}</footer>
+</body>
+</html>`;
 }
 function manualGetDrafts(){try{return JSON.parse(localStorage.getItem(VERSAT_MANUAL_DRAFTS_KEY())||"[]")}catch(_){return []}}
 function manualSiteNew(){
@@ -985,6 +1185,7 @@ async function deleteFinanceEntry(id){
 }
 
 function applySiteSettings(content){
+ const vh=content?.visual_home||{};const heroTitle=document.querySelector("#home .hero h1"),heroLead=document.querySelector("#home .hero .lead");if(heroTitle&&vh.title)heroTitle.textContent=vh.title;if(heroLead&&vh.description)heroLead.textContent=vh.description;
  if(!content)return;
  const title=String(content.title||"").trim();
  const description=String(content.description||"").trim();
@@ -992,9 +1193,9 @@ function applySiteSettings(content){
  const email=String(content.email||"").trim();
  const setMeta=(selector,value)=>{const el=document.querySelector(selector);if(el&&value)el.setAttribute("content",value)};
  if(title){document.title=title;setMeta('meta[property="og:title"]',title);setMeta('meta[name="twitter:title"]',title)}
- if(description){const lead=document.querySelector(".hero .lead");if(lead)lead.textContent=description;setMeta('meta[name="description"]',description);setMeta('meta[property="og:description"]',description);setMeta('meta[name="twitter:description"]',description)}
+ if(description){const lead=document.querySelector(".hero .lead");if(lead)lead.textContent=description;setMeta('meta[name="description"]',description);setMeta('meta[property="og:description"]',description);setMeta('meta[name="twitter:description"]',description)}const visual=content.visual_home||{};const visualTitle=document.querySelector("#home .hero h1"),visualLead=document.querySelector("#home .hero .lead");if(visualTitle&&visual.title)visualTitle.textContent=visual.title;if(visualLead&&visual.description)visualLead.textContent=visual.description;
  if(/^\d{10,13}$/.test(whatsapp))WHATSAPP_NUMBER=whatsapp;
- const logoUrl=String(content.header_logo_url||"").trim(),logoImage=document.getElementById("brandLogoImage"),logoSymbol=document.getElementById("brandLogoSymbol"),logoWord=document.getElementById("brandLogoWord");if(logoImage){if(logoUrl){logoImage.src=logoUrl;logoImage.classList.remove("hidden");logoSymbol?.classList.add("hidden");logoWord?.classList.add("hidden")}else{logoImage.removeAttribute("src");logoImage.classList.add("hidden");logoSymbol?.classList.remove("hidden");logoWord?.classList.remove("hidden")}}
+ const logoUrl=String(content.header_logo_url||"").trim(),logoImage=document.getElementById("brandLogoImage"),logoSymbol=document.getElementById("brandLogoSymbol"),logoWord=document.getElementById("brandLogoWord");if(logoImage){if(logoUrl){try{localStorage.setItem("vxHeaderLogoUrl",logoUrl)}catch(e){}logoImage.onload=()=>document.documentElement.classList.add("vx-logo-ready");logoImage.onerror=()=>{document.documentElement.classList.add("vx-logo-ready");logoImage.classList.add("hidden");logoSymbol?.classList.remove("hidden");logoWord?.classList.remove("hidden")};logoImage.src=logoUrl;logoImage.classList.remove("hidden");logoSymbol?.classList.add("hidden");logoWord?.classList.add("hidden")}else{try{localStorage.removeItem("vxHeaderLogoUrl")}catch(e){}logoImage.removeAttribute("src");logoImage.classList.add("hidden");logoSymbol?.classList.remove("hidden");logoWord?.classList.remove("hidden");document.documentElement.classList.add("vx-logo-ready")}}
  const footer=document.querySelector("footer .foot>div:first-child");
  if(footer){
   let link=document.getElementById("footerEmail");
@@ -1007,9 +1208,9 @@ function applySiteSettings(content){
  }
 }
 async function loadPublicSiteSettings(){
- if(!sb)return;
+ if(!sb){document.documentElement.classList.add("vx-logo-ready");return}
  const {data,error}=await sb.from("site_settings").select("content").eq("id",1).maybeSingle();
- if(!error&&data?.content)applySiteSettings(data.content);
+ if(!error&&data?.content)applySiteSettings(data.content);else document.documentElement.classList.add("vx-logo-ready");
 }
 async function verifyLogoAdmin(){
  if(!sb||!currentUser)throw new Error("Entre como administrador para trocar a logo.");
@@ -1063,6 +1264,111 @@ async function saveSiteSettings(){
  applySiteSettings(content);
  notice.innerHTML='<div class="notice">Alterações salvas e aplicadas ao site!</div>';
 }
+
+async function vxIsAdmin(){if(!sb||!currentUser)return false;const r=await sb.from("profiles").select("role").eq("id",currentUser.id).single();return !r.error&&r.data?.role==="admin"}
+async function loadVxAnalytics(){const b=document.getElementById("dashContent");b.innerHTML="<p>Carregando indicadores...</p>";if(!await vxIsAdmin()){b.textContent="Área exclusiva da administração.";return}const [p,q]=await Promise.all([sb.from("projects").select("status"),sb.from("project_payments").select("status,amount_cents")]);if(p.error||q.error){b.textContent=p.error?.message||q.error?.message;return}const ps=p.data||[],pay=q.data||[],paid=pay.filter(x=>x.status==="paid"),pending=pay.filter(x=>x.status==="pending"),revenue=paid.reduce((n,x)=>n+Number(x.amount_cents||0),0)/100;const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const stages=["Recebido","Em desenvolvimento","Em revisão","Aguardando cliente","Concluído"];b.innerHTML="<h3>Indicadores VERSAT</h3><div class='vx-grid'><div class='vx-card'>Faturamento confirmado<h2>"+money(revenue)+"</h2></div><div class='vx-card'>Projetos cadastrados<h2>"+ps.length+"</h2></div><div class='vx-card'>Pagamentos confirmados<h2>"+paid.length+"</h2></div><div class='vx-card'>Pagamentos pendentes<h2>"+pending.length+"</h2></div></div><div class='vx-card'><h3>Projetos por etapa</h3>"+stages.map(st=>{const n=ps.filter(x=>x.status===st).length;return "<p>"+escapeHtml(st)+" <b style='float:right'>"+n+"</b></p><div class='vx-bar'><i style='width:"+(ps.length?100*n/ps.length:0)+"%'></i></div>"}).join("")+"</div>"}
+async function loadVxEditor(){const b=document.getElementById("dashContent");if(!await vxIsAdmin()){b.textContent="Área exclusiva da administração.";return}const r=await sb.from("site_settings").select("content").eq("id",1).single();if(r.error){b.textContent=r.error.message;return}const v=r.data.content?.visual_home||{};const title=v.title||"Seu negócio merece um site de presença.";const desc=v.description||"A VERSAT transforma ideias em experiências digitais. Criamos sites modernos, rápidos e pensados para apresentar sua marca e conquistar clientes.";b.innerHTML="<h3>Editor visual da página inicial</h3><p class='vx-muted'>Edite o título e a apresentação principal. Salvar aplica as alterações para os visitantes.</p><div class='vx-card'><label>Título<input id='vxTitle' maxlength='110' value='"+escapeHtml(title)+"'></label><label>Apresentação<textarea id='vxDesc' rows='4' maxlength='350'>"+escapeHtml(desc)+"</textarea></label><div class='vx-card'><span class='vx-muted'>Prévia</span><h2 id='vxPreviewTitle'>"+escapeHtml(title)+"</h2><p id='vxPreviewDesc'>"+escapeHtml(desc)+"</p></div><button class='btn red' type='button' onclick='saveVxEditor()'>Salvar alterações</button><p id='vxEditorNotice' class='vx-muted'></p></div>";document.getElementById("vxTitle").addEventListener("input",e=>document.getElementById("vxPreviewTitle").textContent=e.target.value);document.getElementById("vxDesc").addEventListener("input",e=>document.getElementById("vxPreviewDesc").textContent=e.target.value)}
+async function saveVxEditor(){const n=document.getElementById("vxEditorNotice");if(!await vxIsAdmin()){n.textContent="Acesso negado.";return}const r=await sb.from("site_settings").select("content").eq("id",1).single();if(r.error){n.textContent=r.error.message;return}const c={...(r.data.content||{}),visual_home:{title:document.getElementById("vxTitle").value.trim(),description:document.getElementById("vxDesc").value.trim()}};const u=await sb.from("site_settings").update({content:c}).eq("id",1);if(u.error){n.textContent="Erro: "+u.error.message;return}applySiteSettings(c);n.textContent="Alterações salvas."}
+let vxCurrentConversationId=null;
+let vxCurrentConversationStatus=null;
+async function loadVxSupport(){
+ const b=document.getElementById("dashContent");
+ if(!sb||!currentUser){b.textContent="Entre na sua conta para acessar o atendimento.";return}
+ const admin=await vxIsAdmin();
+ b.innerHTML="<h3>"+(admin?"Central de conversas":"Atendimento VERSAT")+"</h3><p class='vx-muted'>"+(admin?"Selecione um cliente para abrir o chat, responder e encerrar o atendimento.":"Converse com nossa equipe VERSAT.")+"</p><div id='vxThread'></div>";
+ if(admin){
+  const r=await sb.from("support_conversations").select("*").order("created_at",{ascending:false});
+  if(r.error){document.getElementById("vxThread").textContent="Não foi possível carregar: "+r.error.message;return}
+  const convs=r.data||[];
+  if(!convs.length){document.getElementById("vxThread").innerHTML="<div class='empty'>Nenhuma conversa recebida ainda.</div>";return}
+  const ids=[...new Set(convs.map(c=>c.user_id))];
+  const pr=await sb.from("profiles").select("*").in("id",ids);
+  const profileMap=Object.fromEntries((pr.data||[]).map(p=>[p.id,p]));
+  const userLabel=id=>{const p=profileMap[id]||{};return p.full_name||p.name||p.nome||p.display_name||p.email||id};
+  const grouped=convs.map(c=>{const label=userLabel(c.user_id);return "<button type='button' class='vx-card vx-conversation-item' style='display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;text-align:left;margin:10px 0;cursor:pointer' onclick=\"loadVxThread('"+c.id+"')\"><span style='display:flex;align-items:center;gap:11px;min-width:0'><span style='width:40px;height:40px;flex:0 0 40px;border-radius:50%;display:grid;place-items:center;background:#ed263826;color:#ff6875;font-weight:800'>"+escapeHtml(String(label).trim().charAt(0).toUpperCase()||"C")+"</span><span style='min-width:0'><b style='display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>"+escapeHtml(label)+"</b><small class='vx-muted'>"+new Date(c.created_at).toLocaleString("pt-BR")+"</small></span></span><span class='status "+(c.status==="open"?"progress":"done")+"'>"+(c.status==="open"?"Em atendimento":"Encerrada")+"</span></button>"}).join("");
+  document.getElementById("vxThread").innerHTML="<div class='vx-conversation-list'>"+grouped+"</div><div id='vxThreadContent'></div>";
+  const firstOpen=convs.find(c=>c.status==="open")||convs[0];
+  await loadVxThread(firstOpen.id);
+ }else{
+  const r=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
+  if(r.error){document.getElementById("vxThread").textContent=r.error.message;return}
+  const conv=(r.data||[])[0]||null;
+  if(!conv){document.getElementById("vxThread").innerHTML="<div class='empty'>Você ainda não iniciou um atendimento.</div><button class='btn red' type='button' onclick='startVxDashboardConversation()'>Iniciar atendimento</button>";return}
+  const mr=await sb.from("support_messages").select("*").eq("conversation_id",conv.id).order("created_at",{ascending:true});
+  if(mr.error){document.getElementById("vxThread").textContent=mr.error.message;return}
+  const rr=await sb.from("support_ratings").select("*").eq("conversation_id",conv.id).maybeSingle();
+  renderVxThread(mr.data||[],conv,false,rr.data||null);
+ }
+}
+async function startVxDashboardConversation(){
+ const r=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+ if(r.error){alert("Não foi possível iniciar: "+r.error.message);return}
+ await loadVxSupport();
+}
+function renderVxThread(rows,conversation,isAdmin=false,rating=null){
+ const t=document.getElementById(isAdmin?"vxThreadContent":"vxThread");
+ if(!t)return;
+ const uid=conversation.user_id,closed=conversation.status==="closed";
+ const messages="<div class='vx-card' style='max-height:350px;overflow:auto'>"+(rows.length?rows.map(m=>"<div class='vx-message'><b>"+(m.sender_id===currentUser.id?"Você":(isAdmin?"Cliente":"Equipe VERSAT"))+"</b><p>"+escapeHtml(m.body)+"</p><small class='vx-muted'>"+new Date(m.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"Ainda não há mensagens nesta conversa.")+"</div>";
+ let top=isAdmin?"<div class='vx-card'><b>"+(closed?"Atendimento encerrado":"Atendimento em andamento")+"</b><p class='vx-muted'>"+new Date(conversation.created_at).toLocaleString("pt-BR")+"</p>"+(closed?(rating?"<span class='vx-muted'>Atendimento avaliado</span>":"<button type='button' class='btn' onclick=\"reopenVxAdminConversation('"+conversation.id+"')\">Reabrir atendimento</button>"):"<button type='button' class='btn red' onclick=\"closeVxAdminConversation('"+conversation.id+"')\">Encerrar atendimento</button>")+"</div>":"";
+ let review="";
+ if(isAdmin){
+  review=rating?"<div class='review-display'><b>Avaliação do cliente</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"<span style='color:#555'>"+("★".repeat(5-rating.rating))+"</span></div><p>"+escapeHtml(rating.comment||"Sem comentário.")+"</p><small class='vx-muted'>"+new Date(rating.created_at).toLocaleString("pt-BR")+"</small></div>":(closed?"<div class='review-display'>Aguardando avaliação do cliente.</div>":"");
+ }else if(closed){
+  review=rating?"<div class='review-display'><b>Obrigado pela avaliação!</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"</div><p>"+escapeHtml(rating.comment||"")+"</p></div>":"<div class='review-form'><h3>Como foi seu atendimento com a VERSAT?</h3><p>Escolha uma nota de 1 a 5 estrelas.</p><div id='vxRatingStars' style='display:flex;gap:8px;font-size:34px;color:#ffc44d;margin:12px 0'><button type='button' onclick='selectVxRating(1)' aria-label='1 estrela' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(2)' aria-label='2 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(3)' aria-label='3 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(4)' aria-label='4 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(5)' aria-label='5 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button></div><div id='vxRatingLabel' class='vx-muted'>Selecione sua nota</div><textarea id='vxRatingComment' maxlength='1200' placeholder='Quer deixar um comentário? (opcional)'></textarea><button class='btn red' type='button' onclick=\"submitVxRating('"+conversation.id+"')\">Enviar avaliação</button></div>";
+ }
+ const form=(!closed||isAdmin&& !closed)?"<form class='vx-card' onsubmit=\"sendVxMessage(event,'"+conversation.id+"','"+uid+"')\"><label>Mensagem<textarea id='vxBody' maxlength='2000' required rows='3'></textarea></label><button class='btn red' type='submit'>Enviar</button><span id='vxSendNotice' class='vx-muted'></span></form>":"";
+ t.innerHTML=top+messages+form+review;
+ if(!isAdmin&&closed&&!rating)window.vxSelectedRating=0;
+}
+window.vxSelectedRating=0;
+function selectVxRating(value){
+ window.vxSelectedRating=value;
+ const labels=["","Muito ruim","Ruim","Regular","Bom","Excelente"];
+ const stars=document.querySelectorAll("#vxRatingStars button");
+ stars.forEach((b,i)=>{b.textContent=i<value?"★":"☆";b.style.color=i<value?"#ffc44d":"#777"});
+ const label=document.getElementById("vxRatingLabel");if(label)label.textContent=labels[value];
+}
+async function submitVxRating(conversationId){
+ const rating=Number(window.vxSelectedRating||0),comment=document.getElementById("vxRatingComment")?.value.trim()||"";
+ if(rating<1||rating>5){alert("Escolha uma nota de 1 a 5 estrelas.");return}
+ const r=await sb.from("support_ratings").insert({conversation_id:conversationId,user_id:currentUser.id,rating,comment});
+ if(r.error){alert("Não foi possível enviar a avaliação: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function closeVxAdminConversation(id){
+ if(!confirm("Deseja encerrar este atendimento? O cliente poderá avaliar o suporte depois. O histórico será mantido."))return;
+ const r=await sb.from("support_conversations").update({status:"closed",closed_at:new Date().toISOString(),closed_by:currentUser.id}).eq("id",id).eq("status","open");
+ if(r.error){alert("Não foi possível encerrar: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function reopenVxAdminConversation(id){
+ if(!confirm("Deseja reabrir este atendimento?"))return;
+ const r=await sb.from("support_conversations").update({status:"open",closed_at:null,closed_by:null}).eq("id",id).eq("status","closed");
+ if(r.error){alert("Não foi possível reabrir: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function loadVxThread(id){
+ if(!id)return;
+ const cr=await sb.from("support_conversations").select("*").eq("id",id).single();
+ if(cr.error){document.getElementById("vxThreadContent").textContent=cr.error.message;return}
+ const mr=await sb.from("support_messages").select("*").eq("conversation_id",id).order("created_at",{ascending:true});
+ if(mr.error){document.getElementById("vxThreadContent").textContent=mr.error.message;return}
+ const rr=await sb.from("support_ratings").select("*").eq("conversation_id",id).maybeSingle();
+ renderVxThread(mr.data||[],cr.data,true,rr.data||null);
+}
+async function sendVxMessage(e,conversationId,uid){
+ e.preventDefault();
+ const body=document.getElementById("vxBody").value.trim(),n=document.getElementById("vxSendNotice");
+ if(!body)return;
+ const r=await sb.from("support_messages").insert({conversation_id:conversationId,user_id:uid,sender_id:currentUser.id,body});
+ if(r.error){n.textContent="Erro ao enviar: "+r.error.message;return}
+ if(await vxIsAdmin())await loadVxThread(conversationId);else await loadVxSupport();
+}
+async function loadVxNotifications(){const b=document.getElementById("dashContent");if(!sb||!currentUser){b.textContent="Entre para ver suas notificações.";return}const admin=await vxIsAdmin();const r=await sb.from("projects").select("id,user_id,project_name,status,created_at,updated_at").order("updated_at",{ascending:false});if(r.error){b.textContent=r.error.message;return}let rows=r.data||[];if(!admin)rows=rows.filter(x=>x.user_id===currentUser.id);b.innerHTML="<h3>Central de notificações</h3><p class='vx-muted'>Atualizações recentes dos projetos.</p>"+(rows.length?rows.map(x=>"<div class='vx-card'><b>"+escapeHtml(x.project_name||"Projeto")+"</b><p>"+escapeHtml(x.status||"Atualização")+"</p><small class='vx-muted'>"+new Date(x.updated_at||x.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"<div class='empty'>Nenhuma atualização ainda.</div>")}
+function loadVxTemplates(){const b=document.getElementById("dashContent");const a=[["Institucional","Apresentação de empresa e serviços","Sua empresa em destaque"],["Landing page","Página para uma oferta ou campanha","Uma oferta que merece atenção"],["Portfólio","Projetos e habilidades profissionais","Meu portfólio profissional"],["Catálogo","Vitrine de produtos e categorias","Conheça nossos produtos"],["Restaurante","Cardápio e contato pelo WhatsApp","Sabor e qualidade em cada detalhe"],["Agência","Serviços, cases e orçamento","Ideias que viram resultados"]];b.innerHTML="<h3>Galeria de modelos</h3><p class='vx-muted'>Bases editáveis para começar um projeto.</p><div class='vx-grid'>"+a.map((x,i)=>"<article class='vx-card'><small>MODELO 0"+(i+1)+"</small><h3>"+x[0]+"</h3><p>"+x[1]+"</p><button class='btn red' type='button' onclick='useVxTemplate("+i+")'>Usar modelo</button></article>").join("")+"</div>"}
+function useVxTemplate(i){const a=["Sua empresa em destaque","Uma oferta que merece atenção","Meu portfólio profissional","Conheça nossos produtos","Sabor e qualidade em cada detalhe","Ideias que viram resultados"];dashTab("development",document.getElementById("devTab"));setTimeout(()=>{const n=document.getElementById("manualSiteName"),c=document.getElementById("manualSiteCode");if(n&&c){n.value=a[i]||"Novo site";c.value=manualStarterHtml(n.value);manualHistory=[];manualHistoryIndex=-1;manualRemember(true);manualSitePreview()}},350)}
+
 async function loadCRM(){
  const box=document.getElementById("dashContent");
  box.innerHTML='<div class="empty">Carregando clientes...</div>';
@@ -1113,8 +1419,9 @@ function requestCustomPlanWhatsApp(){
  const message="Olá, VERSAT! Tenho interesse em um projeto personalizado. Gostaria de explicar minha ideia e receber um orçamento.";
  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message),"_blank");
 }
-function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de WhatsApp no campo WHATSAPP_NUMBER dentro do index.html para ativar este botão.");return}window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent("Olá, VERSAT! Gostaria de solicitar um orçamento."),"_blank")}
+async function contactWhatsApp(){if(!WHATSAPP_NUMBER){alert("Adicione seu número de WhatsApp no campo WHATSAPP_NUMBER dentro do index.html para ativar este botão.");return}window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent("Olá, VERSAT! Gostaria de solicitar um orçamento."),"_blank")}
 window.addEventListener("DOMContentLoaded",async()=>{if(localStorage.getItem("versat_theme")==="light")document.body.classList.add("versat-light-theme");const savedFont=Number(localStorage.getItem("versat_font_scale")||100);if(savedFont>=85&&savedFont<=125){document.documentElement.dataset.fontScale=String(savedFont);document.documentElement.style.fontSize=savedFont+"%"}updateAccountHeader(null);if(sb){await loadPublicSiteSettings();const {data}=await sb.auth.getSession();if(data.session){currentUser=data.session.user;updateAccountHeader(currentUser);openDashboard()}sb.auth.onAuthStateChange((_event,session)=>{if(_event==="PASSWORD_RECOVERY"){authMode="recovery";updateAuthMode();document.getElementById("authModal").classList.add("open")}currentUser=session?.user||null;updateAccountHeader(currentUser);if(!currentUser){document.getElementById("dashboard").style.display="none";document.getElementById("home").style.display="block"}})}});
+document.addEventListener("click",(event)=>{const logo=event.target.closest("a.brand");if(!logo)return;event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();showHome();try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}window.scrollTo({top:0,behavior:"smooth"})},true);
 document.addEventListener("click",(event)=>{const widget=document.getElementById("accessibilityWidget");if(widget&&!widget.contains(event.target)){document.getElementById("accessibilityPanel")?.classList.add("hidden");document.querySelector(".accessibility-trigger")?.setAttribute("aria-expanded","false")}const wrap=document.getElementById("profileWrap");if(wrap&&!wrap.contains(event.target)){document.getElementById("profileMenu").classList.add("hidden");document.getElementById("profileButton").setAttribute("aria-expanded","false")}});
 function requestPlan(plan){
   pendingPlan=plan;
@@ -1165,7 +1472,42 @@ function toggleCookieSettings(){document.getElementById("cookieSettings")?.class
 function saveCustomCookieChoice(){saveCookieChoice(!!document.getElementById("optionalCookies")?.checked)}
 window.addEventListener("DOMContentLoaded",showCookieBanner);
 
+
+/* Progressive reveal: observes new content too, including dashboard tabs */
+(function(){
+ const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ if(reduce)return;
+ const selectors="section, .plan, .project, .metric, .vx-card, .feature, .service-card, .admin-card";
+ let observer;
+ function reveal(root){
+  if(!root||!root.querySelectorAll)return;
+  const nodes=[];
+  if(root.matches&&root.matches(selectors))nodes.push(root);
+  nodes.push(...root.querySelectorAll(selectors));
+  nodes.forEach((el,i)=>{
+   if(el.dataset.vxMotionReady)return;
+   el.dataset.vxMotionReady="1";
+   el.classList.add("vx-reveal");
+   if(observer)observer.observe(el);
+   else el.classList.add("vx-visible");
+   if(el.classList.contains("vx-card")||el.classList.contains("plan"))el.classList.add("vx-glow");
+  });
+ }
+ if("IntersectionObserver" in window){
+  observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+   if(entry.isIntersecting){entry.target.classList.add("vx-visible");observer.unobserve(entry.target)}
+  }),{threshold:.12,rootMargin:"0px 0px -35px 0px"});
+ }
+ function boot(){reveal(document);if(!observer)document.querySelectorAll(".vx-reveal").forEach(el=>el.classList.add("vx-visible"))}
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+ if("MutationObserver" in window){
+  const mutations=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node.nodeType===1)reveal(node)})));
+  const start=()=>{if(document.body)mutations.observe(document.body,{childList:true,subtree:true})};
+  if(document.body)start();else document.addEventListener("DOMContentLoaded",start,{once:true});
+ }
+})();
+
 </script>
 
-<button type="button" class="versat-whatsapp-float" onclick="contactWhatsApp()" aria-label="Tirar dúvidas pelo WhatsApp"><span class="wa-icon" aria-hidden="true">?</span></button>
+<section class="vx-chat-window" id="vxChatWindow" role="dialog" aria-label="Chat de atendimento VERSAT" aria-modal="false"><div class="vx-chat-head" id="vxChatDragHandle"><button type="button" class="vx-chat-avatar" onclick="toggleVxChatMinimize()" aria-label="Restaurar chat">V</button><div class="vx-chat-head-copy"><strong>Atendimento VERSAT</strong><small><i class="vx-chat-online"></i>Estamos aqui para ajudar</small></div><div class="vx-chat-head-actions"><button type="button" class="vx-chat-minimize" onclick="toggleVxChatMinimize()" aria-label="Minimizar ou restaurar chat">−</button><button type="button" class="vx-chat-close" onclick="closeVxFloatingChat()" aria-label="Fechar chat">×</button></div></div><div class="vx-chat-messages" id="vxChatMessages"><div class="vx-chat-welcome">Olá! 👋 Seja bem-vindo ao atendimento da VERSAT. Como podemos ajudar?</div></div><div class="vx-chat-login hidden" id="vxChatLogin"><p>Entre na sua conta para enviar mensagens e acompanhar a conversa.</p><button type="button" class="btn red" onclick="openVxChatLogin()">Entrar ou criar conta</button></div><form class="vx-chat-compose hidden" id="vxChatCompose" onsubmit="sendVxFloatingMessage(event)"><textarea id="vxChatInput" rows="1" maxlength="2000" required placeholder="Digite sua mensagem..."></textarea><button type="submit" class="vx-chat-send" id="vxChatSend" aria-label="Enviar mensagem">➤</button></form><div class="vx-chat-status" id="vxChatStatus" aria-live="polite"></div></section><button type="button" class="versat-whatsapp-float" onclick="openVxSupportEntry()" aria-label="Abrir atendimento VERSAT" aria-expanded="false"><span class="wa-icon" aria-hidden="true">💬</span></button>
 </body></html>
