@@ -726,118 +726,23 @@ async function runVersatFreeAITest(button,isRevision=false){
   const url=String(data.preview_url);
   if(!url.startsWith("https://"))throw new Error("O link de prévia retornado não é válido.");
   window.versatAiStoragePath=data.storage_path||window.versatAiStoragePath||"";
-  result.textContent="Site criado! Carregando a prévia visual...";
-  const response=await fetch(url,{signal:controller.signal});
-  if(!response.ok)throw new Error("O site foi salvo, mas não consegui abrir a prévia (HTTP "+response.status+").");
-  const html=await response.text();
-  if(!html.toLowerCase().includes("<html")||!html.toLowerCase().includes("</html>"))throw new Error("A IA não entregou uma página HTML completa.");
-  result.innerHTML="";
+  result.replaceChildren();
   const heading=document.createElement("div");
-  heading.style.cssText="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0";
-  const label=document.createElement("b");label.textContent="Prévia visual do site";
-  const meta=document.createElement("span");meta.className="small";const qa=data.audit||{};meta.textContent=Math.round((data.bytes||0)/1024)+" KB • "+(qa.routeCount||0)+" rotas • "+(qa.anchorCount||0)+" links • "+(qa.formCount||0)+" formulários • auditoria estática aprovada";
+  heading.style.cssText="margin:14px 0 10px";
+  const label=document.createElement("b");label.textContent="Site gerado pela IA VERSAT";
+  const meta=document.createElement("div");meta.className="small";meta.style.marginTop="6px";
+  const qa=data.audit||{};
+  meta.textContent=Math.round((data.bytes||0)/1024)+" KB • "+(qa.routeCount||0)+" rotas • "+(qa.anchorCount||0)+" links • "+(qa.formCount||0)+" formulários • auditoria estática aprovada";
   heading.append(label,meta);
-  const frame=document.createElement("iframe");
-  frame.title="Site criado pela IA VERSAT";
-  frame.setAttribute("sandbox","allow-scripts allow-forms");
-  frame.setAttribute("referrerpolicy","no-referrer");
-  frame.style.cssText="display:block;width:100%;height:720px;background:#fff;border:1px solid #454550;border-radius:14px";
-  const previewGuard = `<meta http-equiv="Content-Security-Policy" content="form-action 'none'; base-uri 'none'">
-<script>
-(()=> {
- const showDemoNotice = (message) => {
-  let notice = document.querySelector("[data-preview-notice]");
-  if (!notice) {
-   notice = document.createElement("div");
-   notice.setAttribute("data-preview-notice", "true");
-   notice.style.cssText = "position:fixed;z-index:2147483647;left:12px;right:12px;bottom:12px;padding:12px 14px;border-radius:10px;background:#171717;color:#fff;font:14px/1.4 Arial,sans-serif;box-shadow:0 4px 20px #0005";
-   document.body.appendChild(notice);
-  }
-  notice.textContent = message;
-  clearTimeout(notice._hideTimer);
-  notice._hideTimer = setTimeout(()=>notice.remove(),4500);
- };
- const routeFrom = raw => {
-  if (!raw) return null;
-  let value = String(raw).trim();
-  if (!value || /^(mailto:|tel:|sms:|javascript:)/i.test(value)) return null;
-  if (value.startsWith("#/")) return value.slice(1);
-  try {
-   if (/^https?:/i.test(value)) {
-    const u = new URL(value);
-    if (!/(^|\\.)versatstudio\\.netlify\\.app$/i.test(u.hostname)) return null;
-    value = u.hash && u.hash.startsWith("#/") ? u.hash : (u.pathname + u.search + u.hash);
-   }
-  } catch (_) { return null; }
-  if (value.startsWith("#/")) return value.slice(1);
-  if (value.startsWith("#") || value.startsWith("?")) return null;
-  const path = value.split(/[?#]/)[0].replace(/^\\.\\//, "").replace(/^\\/+/, "").replace(/\\.html?$/i, "").replace(/\\/+$/, "");
-  return "#/" + (path && path !== "index" ? path : "inicio");
- };
- const normalizeInternalLinks = () => {
-  document.querySelectorAll("a[href]").forEach(link => {
-   const raw = (link.getAttribute("href") || "").trim();
-   const route = routeFrom(raw);
-   if (route && raw !== route && !/^(mailto:|tel:|sms:)/i.test(raw)) {
-    link.setAttribute("href", route);
-    link.removeAttribute("target");
-   }
-  });
- };
- if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", normalizeInternalLinks, {once:true});
- else normalizeInternalLinks();
- new MutationObserver(normalizeInternalLinks).observe(document.documentElement, {childList:true,subtree:true});
- document.addEventListener("click", event => {
-  const control = event.target.closest && event.target.closest("a[href],button,[role='button'],input[type='button'],input[type='submit']");
-  if (!control) return;
-  const link = control.closest("a[href]");
-  const href = link ? (link.getAttribute("href") || "").trim() : "";
-  if (href.startsWith("#/")) return;
-  if (/^(mailto:|tel:|sms:)/i.test(href)) return;
-  if (href.startsWith("#")) {
-   event.preventDefault(); event.stopImmediatePropagation();
-   const id = decodeURIComponent(href.slice(1));
-   const target = id ? document.getElementById(id) : null;
-   if (target) target.scrollIntoView({behavior:"smooth",block:"start"});
-   else if (!id) window.scrollTo({top:0,behavior:"smooth"});
-   return;
-  }
-  const inline = [control.getAttribute("onclick"), control.getAttribute("formaction"), control.getAttribute("data-href"), control.getAttribute("data-url"), link && link.getAttribute("onclick")].filter(Boolean).join(" ");
-  let target = routeFrom(href);
-  if (!target && inline) {
-   const patterns = [
-    /(?:window\\.)?location(?:\\.href)?\\s*=\\s*['"]([^'"]+)['"]/i,
-    /window\\.open\\s*\\(\\s*['"]([^'"]+)['"]/i,
-    /(?:href|url|route)\\s*[:=]\\s*['"]([^'"]+)['"]/i
-   ];
-   for (const pattern of patterns) {
-    const match = inline.match(pattern);
-    if (match) { target = routeFrom(match[1]); if (target) break; }
-   }
-  }
-  if (target) {
-   event.preventDefault(); event.stopImmediatePropagation();
-   window.location.hash = target.slice(1);
-   return;
-  }
-  if (href || inline) {
-   event.preventDefault(); event.stopImmediatePropagation();
-   showDemoNotice("Navegação externa bloqueada na prévia. As páginas internas continuam dentro do site gerado.");
-  }
- }, true);
- document.addEventListener("submit", event => {
-  event.preventDefault(); event.stopImmediatePropagation();
-  showDemoNotice("Demonstração: este formulário ainda não está conectado a um sistema de envio.");
- }, true);
- try { window.open = (url) => { const route = routeFrom(url); if (route) window.location.hash = route.slice(1); return null; }; } catch (_) {}
-})();
-<\/script>`;
-  const cleanHtml = html.replace(/<base\b[^>]*>/gi, "");
-  const guardedHtml = /<head\b[^>]*>/i.test(cleanHtml) ? cleanHtml.replace(/<head\b[^>]*>/i, match => match + previewGuard) : previewGuard + cleanHtml;
-  frame.srcdoc=guardedHtml;
-  result.append(heading,frame);
-  const note=document.createElement("div");note.className="small";note.style.marginTop="9px";note.textContent="Prévia de teste: links internos permanecem no site gerado; links para a VERSAT são bloqueados ou direcionados à seção correspondente. Formulários são demonstrativos. Nada foi publicado no domínio principal; quem tiver o link da prévia poderá acessá-la.";
-  result.append(note);
+  const message=document.createElement("p");message.className="small";
+  message.textContent="A prévia não será exibida dentro da VERSAT. Abra o link abaixo para testar o site em uma página separada no navegador. O site ainda não foi publicado no domínio oficial.";
+  const link=document.createElement("a");
+  link.href=url;link.target="_blank";link.rel="noopener noreferrer";
+  link.textContent="Abrir site gerado no navegador ↗";
+  link.style.cssText="display:inline-flex;align-items:center;justify-content:center;margin:8px 0;padding:14px 20px;border-radius:10px;background:#e11d2e;color:#fff;font-weight:700;text-decoration:none";
+  const address=document.createElement("div");address.className="small";address.style.cssText="margin-top:8px;overflow-wrap:anywhere";
+  address.textContent=url;
+  result.append(heading,message,link,address);
   if(window.versatAiStoragePath){const revise=document.createElement("section");revise.style.cssText="margin-top:18px;padding:18px;border:1px solid #454550;border-radius:14px;background:#111116";const reviseTitle=document.createElement("b");reviseTitle.textContent="Encontrou algum erro ou algo que não funciona?";const reviseHelp=document.createElement("p");reviseHelp.className="small";reviseHelp.style.margin="7px 0 12px";reviseHelp.textContent="Descreva o problema ou a mudança desejada. A IA VERSAT vai revisar o site atual e gerar outra prévia para você conferir.";const reviseInput=document.createElement("textarea");reviseInput.id="versatAiRevisionPrompt";reviseInput.rows=3;reviseInput.maxLength=3000;reviseInput.placeholder="Ex.: O menu não abre no celular, o botão de contato não funciona e a página de serviços está vazia.";reviseInput.style.cssText="display:block;width:100%;padding:12px;border:1px solid #454550;border-radius:10px;background:#09090d;color:#fff;resize:vertical";const reviseBtn=document.createElement("button");reviseBtn.type="button";reviseBtn.className="btn red";reviseBtn.style.marginTop="12px";reviseBtn.textContent="↻ Revisar e corrigir site com IA VERSAT";reviseBtn.onclick=()=>runVersatFreeAITest(reviseBtn,true);revise.append(reviseTitle,reviseHelp,reviseInput,reviseBtn);result.append(revise);}
  }catch(error){console.error("Teste grátis da IA:",error);if(controller.signal.aborted){result.textContent="Criação cancelada. Nenhuma prévia nova foi aberta.";return}let detail=error?.message||"erro inesperado";let status=error?.context?.status||error?.status||0;let code="";try{code=error?.context?.headers?.get?.("sb-error-code")||error?.context?.headers?.get?.("sb_error_code")||""}catch(_){}try{const payload=await error?.context?.json();if(payload?.error)detail=payload.error}catch(_){}if(status===546||code==="WORKER_RESOURCE_LIMIT"||/WORKER_RESOURCE_LIMIT|wall.?clock|546/i.test(detail)){detail="A geração ultrapassou o limite de tempo do servidor (erro 546). O pedido foi interrompido antes de terminar. O briefing agora pede uma entrega mais enxuta; se continuar acontecendo, será necessário dividir a geração em etapas no backend."}result.textContent="Não foi possível gerar: "+detail}
  finally{if(versatAiActiveController===controller){versatAiActiveController=null;versatAiActiveButton=null;button.disabled=false;button.textContent=old}}
