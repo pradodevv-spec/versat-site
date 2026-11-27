@@ -711,9 +711,9 @@ async function runVersatFreeAITest(button,isRevision=false){
   if(!started?.success||!started?.job_id)throw new Error(started?.error||"Não foi possível iniciar a geração.");
   result.textContent="Geração iniciada. A IA está trabalhando em segundo plano; você pode aguardar nesta tela...";
   let data=null;
-  for(let attempt=0;attempt<100;attempt++){
+  for(let attempt=0;attempt<90;attempt++){
    if(controller.signal.aborted)throw new DOMException("Geração cancelada pelo usuário.","AbortError");
-   await new Promise(resolve=>setTimeout(resolve,1800));
+   await new Promise(resolve=>setTimeout(resolve,1600));
    const {data:statusData,error:statusError}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"status",job_id:started.job_id},signal:controller.signal});
    if(statusError)throw statusError;
    if(statusData?.status==="completed"){data={...statusData.result,success:true};break;}
