@@ -191,6 +191,37 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 .versat-whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 12px 32px #0008}
 .versat-whatsapp-float .wa-icon{display:grid;place-items:center;width:100%;height:100%;font-size:28px;font-weight:700}
 @media(max-width:600px){.versat-whatsapp-float{right:14px;left:auto;bottom:14px;width:54px;height:54px;padding:0;font-size:27px}}
+
+/* Briefing em etapas — VERSAT */
+#requestModal .dialog{width:min(620px,100%);max-height:92vh;padding:clamp(20px,4vw,30px)}
+#requestModal .dialog>p{max-width:520px;margin-bottom:20px}
+.brief-progress{padding:15px 16px;margin:18px 0 22px;border:1px solid #303039;border-radius:14px;background:#17171e}
+.brief-progress-top{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;color:#eee}
+.brief-progress-top span{color:#ff6875;font-weight:800}
+.brief-progress-track{height:5px;border-radius:9px;background:#303039;overflow:hidden;margin:11px 0 13px}
+.brief-progress-track span{display:block;width:25%;height:100%;border-radius:9px;background:linear-gradient(90deg,#ed2638,#ff6875);transition:width .2s}
+.brief-step-dots{display:flex;justify-content:space-between;max-width:310px;margin:auto}
+.brief-step-dots span{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#292932;color:#aaa;font-size:11px;font-weight:800}
+.brief-step-dots span.active,.brief-step-dots span.done{background:#ed2638;color:#fff}
+.brief-step{border:0;padding:0;margin:0;min-width:0}
+.brief-step[disabled]{display:none}
+.brief-step-heading{margin:0 0 20px}
+.brief-step-heading>span{font-size:10px;letter-spacing:1.7px;font-weight:800;color:#ff6875}
+.brief-step-heading h3{font:700 23px/1.2 "Space Grotesk",sans-serif;margin:8px 0}
+.brief-step-heading p{font-size:13px;color:#a5a5b0;line-height:1.55;margin:0}
+#requestModal .field{margin:15px 0}
+#requestModal .field span{font-size:13px;font-weight:650;color:#eee}
+#requestModal .field span i{font-style:normal;color:#ff7882;font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-left:5px}
+#requestModal .field small{display:block;color:#858590;font-size:11px;line-height:1.5;margin-top:6px}
+#requestModal .field input,#requestModal .field textarea,#requestModal .field select{padding:13px 14px;border-radius:11px;background:#0b0b10;border-color:#34343e}
+#requestModal .field input:focus,#requestModal .field textarea:focus,#requestModal .field select:focus{border-color:#ed2638;box-shadow:0 0 0 3px #ed26381c}
+.brief-review-note{display:flex;flex-direction:column;gap:5px;padding:13px 14px;border:1px solid #ed26384a;background:#ed263810;border-radius:11px;margin:20px 0}
+.brief-review-note strong{font-size:12px;color:#ff7882}.brief-review-note span{font-size:12px;color:#bbb;line-height:1.5}
+.brief-nav{display:flex;align-items:center;gap:10px;justify-content:space-between;border-top:1px solid #303039;padding-top:17px;margin-top:18px}
+.brief-nav>span{font-size:10px;color:#858590;text-align:center;flex:1}
+.brief-nav .btn{min-width:105px;padding:12px 14px}
+.brief-nav .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+@media(max-width:480px){#requestModal{padding:8px}.brief-nav{gap:7px}.brief-nav>span{display:none}.brief-nav .btn{flex:1;min-width:0}.brief-step-heading h3{font-size:21px}}
 </style>
 </head>
 <body>
@@ -264,7 +295,43 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 
 <div class="modal" id="authModal" onclick="if(event.target===this)closeAuth()"><div class="dialog"><button type="button" class="close" onclick="closeAuth()">×</button><div class="eyebrow">BEM-VINDO À VERSAT</div><h2 id="authTitle">Entre na sua conta</h2><p id="authDesc">Acesse sua área para acompanhar seus projetos.</p><div id="authNotice" class="notice hidden"></div>
 <form id="authForm" onsubmit="submitAuth(event)"><label class="field hidden" id="fullNameField"><span>Nome completo</span><input id="authFullName" type="text" autocomplete="name" placeholder="Seu nome completo"></label><label class="field hidden" id="phoneField"><span>Telefone / WhatsApp</span><input id="authPhone" type="tel" autocomplete="tel" placeholder="(DDD) 99999-9999"></label><label class="field"><span>E-mail</span><input id="authEmail" type="email" autocomplete="email" placeholder="voce@email.com" required></label><label class="field"><span>Senha</span><input id="authPassword" type="password" minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres" required></label><label class="field hidden" id="confirmField"><span>Confirmar senha</span><input id="authConfirm" type="password" minlength="6" placeholder="Digite a senha novamente"></label><button class="btn red wide" id="authSubmit" type="submit">Entrar</button></form><div class="switchline"><span id="switchText">Ainda não tem conta?</span> <button type="button" class="link" id="switchBtn" onclick="toggleAuthMode()">Criar conta</button></div><div class="switchline"><button type="button" class="link" onclick="resetPassword()">Esqueci minha senha</button></div></div></div>
-<div class="modal" id="requestModal" onclick="if(event.target===this)closeRequest()"><div class="dialog" style="max-height:88vh;overflow-y:auto"><button type="button" class="close" onclick="closeRequest()">×</button><div class="eyebrow">BRIEFING DO PROJETO</div><h2>Vamos entender sua ideia.</h2><p>Quanto mais detalhes você compartilhar, melhor conseguiremos planejar um site que funcione para seu negócio. Você pode deixar campos opcionais em branco.</p><div id="requestNotice" class="notice hidden"></div><div id="selectedPlanNotice" class="notice hidden"></div><form onsubmit="submitRequest(event)"><label class="field"><span>Tipo de projeto</span><select id="reqType"><option>Site institucional</option><option>Loja virtual</option><option>Landing page</option><option>Sistema web</option><option>Redesign</option><option>Outro</option></select></label><label class="field"><span>Nome da empresa</span><input id="reqName" required placeholder="Ex.: Minha empresa"></label><label class="field"><span>Telefone para contato</span><input id="reqPhone" type="tel" required placeholder="(DDD) 99999-9999"></label><label class="field"><span>Qual é o principal objetivo do site?</span><select id="reqGoal"><option value="">Selecione (opcional)</option><option>Conseguir mais clientes e contatos</option><option>Vender produtos ou serviços</option><option>Apresentar minha empresa</option><option>Receber agendamentos ou reservas</option><option>Oferecer uma área ou sistema para usuários</option><option>Outro objetivo</option></select></label><label class="field"><span>Quem é o público que você deseja alcançar?</span><input id="reqAudience" maxlength="300" placeholder="Ex.: pessoas da minha cidade, empresas, jovens..."></label><label class="field"><span>Quais páginas ou seções o site precisa ter?</span><textarea id="reqPages" rows="2" maxlength="1200" placeholder="Ex.: Início, Sobre, Serviços, Produtos, Contato..."></textarea></label><label class="field"><span>Qual estilo visual combina com sua empresa?</span><select id="reqStyle"><option value="">Ainda não sei / aceito sugestões</option><option>Moderno e minimalista</option><option>Elegante e sofisticado</option><option>Corporativo e profissional</option><option>Criativo e colorido</option><option>Impactante e tecnológico</option><option>Simples e acolhedor</option></select></label><label class="field"><span>Tem algum site de referência? (link)</span><input id="reqReferences" type="url" maxlength="500" placeholder="https://exemplo.com"></label><label class="field"><span>Quais recursos você precisa?</span><textarea id="reqFeatures" rows="2" maxlength="1200" placeholder="Ex.: botão de WhatsApp, catálogo, pagamentos, login, agendamento..."></textarea></label><label class="field"><span>Você já tem logo, fotos e textos?</span><select id="reqAssets"><option value="">Selecione (opcional)</option><option>Sim, tenho tudo</option><option>Tenho logo e algumas imagens</option><option>Tenho apenas a logo</option><option>Ainda preciso produzir os materiais</option><option>Preciso de ajuda para definir</option></select></label><label class="field"><span>Qual faixa de investimento está considerando?</span><select id="reqBudget"><option value="">Prefiro conversar sobre isso</option><option>Até R$ 500</option><option>R$ 500 a R$ 1.000</option><option>R$ 1.000 a R$ 2.000</option><option>R$ 2.000 a R$ 5.000</option><option>Acima de R$ 5.000</option></select></label><label class="field"><span>Quando gostaria de ter o projeto pronto?</span><select id="reqDeadline"><option value="">Sem prazo definido</option><option>O mais rápido possível</option><option>Em até 2 semanas</option><option>Em até 1 mês</option><option>Em 1 a 2 meses</option><option>Tenho uma data específica para combinar</option></select></label><label class="field"><span>O que diferencia sua empresa?</span><textarea id="reqDifferential" rows="2" maxlength="1000" placeholder="Conte o que torna seu negócio especial (opcional)"></textarea></label><label class="field"><span>Conte mais sobre o site que deseja</span><textarea id="reqDetails" rows="4" required maxlength="5000" placeholder="Explique sua ideia, o que oferece e qualquer detalhe importante..."></textarea></label><button class="btn red wide" id="requestSubmitButton" type="submit">Continuar para pagamento</button></form></div></div>
+<div class="modal" id="requestModal" onclick="if(event.target===this)closeRequest()"><div class="dialog" style="max-height:88vh;overflow-y:auto"><button type="button" class="close" onclick="closeRequest()">×</button><div class="eyebrow">BRIEFING DO PROJETO</div><h2>Vamos entender sua ideia.</h2><p>Quanto mais detalhes você compartilhar, melhor conseguiremos planejar um site que funcione para seu negócio. Você pode deixar campos opcionais em branco.</p><div id="requestNotice" class="notice hidden"></div><div id="selectedPlanNotice" class="notice hidden"></div>
+<form id="requestForm" onsubmit="submitRequest(event)">
+ <div class="brief-progress" aria-label="Etapas do briefing">
+  <div class="brief-progress-top"><strong id="briefStepLabel">Etapa 1 de 4 · Seu negócio</strong><span id="briefStepPercent">25%</span></div>
+  <div class="brief-progress-track"><span id="briefProgressFill"></span></div>
+  <div class="brief-step-dots"><span class="active">1</span><span>2</span><span>3</span><span>4</span></div>
+ </div>
+ <fieldset class="brief-step active" data-brief-step="0">
+  <div class="brief-step-heading"><span>01 / NEGÓCIO</span><h3>Vamos conhecer sua empresa.</h3><p>Essas informações ajudam a IA a entender o que você oferece e para quem o site será criado.</p></div>
+  <label class="field"><span>O que vamos criar?</span><select id="reqType"><option>Site institucional</option><option>Loja virtual</option><option>Landing page</option><option>Sistema web</option><option>Redesign</option><option>Outro</option></select></label>
+  <label class="field"><span>Nome da empresa ou projeto <i>obrigatório</i></span><input id="reqName" required maxlength="120" placeholder="Ex.: Prado Barber"></label>
+  <label class="field"><span>WhatsApp com DDD <i>obrigatório</i></span><input id="reqPhone" type="tel" required maxlength="20" autocomplete="tel" placeholder="(11) 99999-9999"></label>
+  <label class="field"><span>Qual é o principal objetivo do site?</span><select id="reqGoal"><option value="">Selecione uma opção</option><option>Conseguir mais clientes e contatos</option><option>Vender produtos ou serviços</option><option>Apresentar minha empresa</option><option>Receber agendamentos ou reservas</option><option>Oferecer uma área ou sistema para usuários</option><option>Outro objetivo</option></select></label>
+  <label class="field"><span>Quem você quer alcançar?</span><input id="reqAudience" maxlength="300" placeholder="Ex.: moradores da minha cidade, empresas, jovens..."></label>
+ </fieldset>
+ <fieldset class="brief-step" data-brief-step="1" disabled>
+  <div class="brief-step-heading"><span>02 / APARÊNCIA</span><h3>Qual estilo combina com sua marca?</h3><p>Não precisa entender de design. Conte sua preferência ou deixe a VERSAT propor uma direção visual.</p></div>
+  <label class="field"><span>Estilo visual</span><select id="reqStyle"><option value="">Quero sugestões da VERSAT</option><option>Moderno e minimalista</option><option>Elegante e sofisticado</option><option>Corporativo e profissional</option><option>Criativo e colorido</option><option>Impactante e tecnológico</option><option>Simples e acolhedor</option></select></label>
+  <label class="field"><span>Cores que gostaria de usar</span><input id="reqColors" maxlength="180" placeholder="Ex.: preto e dourado, azul e branco..."></label>
+  <label class="field"><span>Quais páginas ou áreas imagina ter?</span><textarea id="reqPages" rows="3" maxlength="1200" placeholder="Ex.: Início, Sobre, Serviços, Produtos, Galeria e Contato. Se não souber, podemos sugerir."></textarea></label>
+  <label class="field"><span>Tem algum site como inspiração?</span><input id="reqReferences" type="url" maxlength="500" placeholder="https://exemplo.com"><small>Opcional. Pode ser um site cujo visual ou organização você goste.</small></label>
+ </fieldset>
+ <fieldset class="brief-step" data-brief-step="2" disabled>
+  <div class="brief-step-heading"><span>03 / RECURSOS</span><h3>O que seu site precisa fazer?</h3><p>Marque ou descreva as funções importantes para o seu negócio.</p></div>
+  <label class="field"><span>Quais funcionalidades são importantes?</span><textarea id="reqFeatures" rows="4" maxlength="1600" placeholder="Ex.: botão de WhatsApp, catálogo, carrinho, pagamento, login, agendamento, mapa..."></textarea></label>
+  <label class="field"><span>Quais materiais você já tem?</span><select id="reqAssets"><option value="">Ainda não defini</option><option>Tenho logo, fotos e textos</option><option>Tenho logo e algumas imagens</option><option>Tenho apenas a logo</option><option>Tenho fotos, mas preciso de uma logo</option><option>Ainda preciso produzir os materiais</option><option>Preciso de ajuda para definir</option></select></label>
+  <label class="field"><span>O que diferencia sua empresa?</span><textarea id="reqDifferential" rows="3" maxlength="1000" placeholder="Conte o que torna seu negócio especial, seus pontos fortes ou diferenciais."></textarea></label>
+ </fieldset>
+ <fieldset class="brief-step" data-brief-step="3" disabled>
+  <div class="brief-step-heading"><span>04 / ENTREGA</span><h3>Vamos fechar os detalhes.</h3><p>Conte o que você espera receber. Quanto mais contexto, melhor será o primeiro resultado.</p></div>
+  <label class="field"><span>Faixa de investimento prevista</span><select id="reqBudget"><option value="">Prefiro conversar sobre isso</option><option>Até R$ 500</option><option>R$ 500 a R$ 1.000</option><option>R$ 1.000 a R$ 2.000</option><option>R$ 2.000 a R$ 5.000</option><option>Acima de R$ 5.000</option></select></label>
+  <label class="field"><span>Quando gostaria de ter o projeto pronto?</span><select id="reqDeadline"><option value="">Sem prazo definido</option><option>O mais rápido possível</option><option>Em até 2 semanas</option><option>Em até 1 mês</option><option>Em 1 a 2 meses</option><option>Tenho uma data específica para combinar</option></select></label>
+  <label class="field"><span>Descreva sua ideia com suas palavras <i>obrigatório</i></span><textarea id="reqDetails" rows="6" required maxlength="5000" placeholder="O que sua empresa faz? Quais produtos ou serviços oferece? O que você quer que o visitante faça ao entrar no site? Conte qualquer detalhe importante..."></textarea><small>Não precisa escrever de forma técnica. Explique como se estivesse contando sua ideia para nossa equipe.</small></label>
+  <div class="brief-review-note"><strong>Antes de enviar</strong><span>Revise suas respostas. Seu briefing será encaminhado para análise da VERSAT. O envio não publica o site automaticamente.</span></div>
+ </fieldset>
+ <div class="brief-nav"><button class="btn" type="button" id="briefBack" onclick="changeBriefStep(-1)" disabled>Voltar</button><span id="briefNavHint">Você pode voltar e editar suas respostas.</span><button class="btn red" type="button" id="briefNext" onclick="changeBriefStep(1)">Continuar</button><button class="btn red hidden" type="submit" id="requestSubmitButton">Enviar briefing</button></div>
+</form></div></div>
 
 
 <div class="accessibility-widget" id="accessibilityWidget">
@@ -411,8 +478,30 @@ async function saveDevelopmentProject(button){
  if(!error)await loadDevelopment();
 }
 function renderNewRequest(){pendingPlan="";document.getElementById("dashContent").innerHTML='<h3>Solicitar um novo projeto</h3><p style="color:#aaa">Conte o que você precisa e acompanhe o andamento por aqui.</p><button type="button" class="btn red" onclick="openRequest()">Começar solicitação</button>'}
-function openRequest(plan){if(typeof plan!=="undefined")pendingPlan=plan;else pendingPlan="";const meta=currentUser?.user_metadata||{};document.getElementById("reqPhone").value=meta.phone||"";document.getElementById("requestModal").classList.add("open");clearNotice("requestNotice");const planNotice=document.getElementById("selectedPlanNotice"),submit=document.getElementById("requestSubmitButton");if(pendingPlan==="Essencial"||pendingPlan==="Profissional"){const price=pendingPlan==="Essencial"?"R$ 397":"R$ 797";planNotice.textContent="Plano "+pendingPlan+" selecionado • "+price+" • pagamento único pela InfinitePay. O projeto só entra em produção após a confirmação do pagamento.";planNotice.classList.remove("hidden");submit.textContent="Ir para o pagamento • "+price}else{planNotice.textContent="";planNotice.classList.add("hidden");submit.textContent="Enviar briefing do projeto"}}
+function openRequest(plan){if(typeof plan!=="undefined")pendingPlan=plan;else pendingPlan="";versatBriefStep=0;renderBriefStep();const meta=currentUser?.user_metadata||{};document.getElementById("reqPhone").value=meta.phone||"";document.getElementById("requestModal").classList.add("open");clearNotice("requestNotice");const planNotice=document.getElementById("selectedPlanNotice"),submit=document.getElementById("requestSubmitButton");if(pendingPlan==="Essencial"||pendingPlan==="Profissional"){const price=pendingPlan==="Essencial"?"R$ 397":"R$ 797";planNotice.textContent="Plano "+pendingPlan+" selecionado • "+price+" • pagamento único pela InfinitePay. O projeto só entra em produção após a confirmação do pagamento.";planNotice.classList.remove("hidden");submit.textContent="Ir para o pagamento • "+price}else{planNotice.textContent="";planNotice.classList.add("hidden");submit.textContent="Enviar briefing do projeto"}}
 function closeRequest(){document.getElementById("requestModal").classList.remove("open")}
+
+let versatBriefStep=0;
+const VERSAT_BRIEF_STEPS=["Seu negócio","Aparência","Recursos","Entrega"];
+function renderBriefStep(){
+ const steps=[...document.querySelectorAll(".brief-step")];
+ steps.forEach((step,index)=>{const active=index===versatBriefStep;step.disabled=!active;step.classList.toggle("active",active)});
+ const dots=[...document.querySelectorAll(".brief-step-dots span")];dots.forEach((dot,index)=>{dot.classList.toggle("active",index===versatBriefStep);dot.classList.toggle("done",index<versatBriefStep)});
+ document.getElementById("briefStepLabel").textContent="Etapa "+(versatBriefStep+1)+" de 4 · "+VERSAT_BRIEF_STEPS[versatBriefStep];
+ document.getElementById("briefStepPercent").textContent=Math.round((versatBriefStep+1)/4*100)+"%";
+ document.getElementById("briefProgressFill").style.width=((versatBriefStep+1)/4*100)+"%";
+ document.getElementById("briefBack").disabled=versatBriefStep===0;
+ document.getElementById("briefNext").classList.toggle("hidden",versatBriefStep===3);
+ document.getElementById("requestSubmitButton").classList.toggle("hidden",versatBriefStep!==3);
+ document.getElementById("requestSubmitButton").textContent=(pendingPlan==="Essencial"||pendingPlan==="Profissional")?"Continuar para pagamento":"Enviar briefing";
+}
+function changeBriefStep(direction){
+ const current=document.querySelector('.brief-step[data-brief-step="'+versatBriefStep+'"]');
+ if(direction>0){const invalid=[...current.querySelectorAll("input,select,textarea")].find(el=>!el.disabled&&!el.checkValidity());if(invalid){invalid.reportValidity();invalid.focus();return}}
+ versatBriefStep=Math.max(0,Math.min(3,versatBriefStep+direction));renderBriefStep();
+ const dialog=document.querySelector("#requestModal .dialog");if(dialog)dialog.scrollTo({top:0,behavior:"smooth"});
+}
+
 async function submitRequest(e){
  e.preventDefault();
  if(!sb||!currentUser){showNotice("requestNotice","Entre na sua conta para continuar.");return}
@@ -422,8 +511,8 @@ async function submitRequest(e){
   const value=id=>document.getElementById(id)?.value.trim()||"";
   const tipo=value("reqType"),empresa=value("reqName"),meta=currentUser.user_metadata||{};
   const nome=meta.full_name||meta.name||"Cliente",email=currentUser.email||"",telefone=value("reqPhone")||meta.phone||"";
-  const brief={goal:value("reqGoal"),audience:value("reqAudience"),pages:value("reqPages"),style:value("reqStyle"),references:value("reqReferences"),features:value("reqFeatures"),assets:value("reqAssets"),budget:value("reqBudget"),deadline:value("reqDeadline"),differential:value("reqDifferential"),description:value("reqDetails")};
-  const labels={goal:"Objetivo",audience:"Público-alvo",pages:"Páginas desejadas",style:"Estilo visual",references:"Site de referência",features:"Funcionalidades",assets:"Materiais disponíveis",budget:"Orçamento previsto",deadline:"Prazo desejado",differential:"Diferenciais",description:"Descrição do projeto"};
+  const brief={goal:value("reqGoal"),audience:value("reqAudience"),pages:value("reqPages"),style:value("reqStyle"),colors:value("reqColors"),references:value("reqReferences"),features:value("reqFeatures"),assets:value("reqAssets"),budget:value("reqBudget"),deadline:value("reqDeadline"),differential:value("reqDifferential"),description:value("reqDetails")};
+  const labels={goal:"Objetivo",audience:"Público-alvo",pages:"Páginas desejadas",style:"Estilo visual",colors:"Cores preferidas",references:"Site de referência",features:"Funcionalidades",assets:"Materiais disponíveis",budget:"Orçamento previsto",deadline:"Prazo desejado",differential:"Diferenciais",description:"Descrição do projeto"};
   const resumo=Object.entries(brief).filter(([k,v])=>v).map(([k,v])=>labels[k]+": "+v).join("\n");
   const detalhes="Cliente: "+nome+"\nE-mail: "+email+"\nTelefone: "+telefone+"\n\nBRIEFING DO PROJETO\n"+resumo;
   if(pendingPlan==="Essencial"||pendingPlan==="Profissional"){
