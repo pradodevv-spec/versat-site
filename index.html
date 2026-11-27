@@ -491,7 +491,7 @@ function openDashboardFromMenu(){
 function openAuth(mode){authMode=mode;updateAuthMode();document.getElementById("authModal").classList.add("open")}
 function closeAuth(){document.getElementById("authModal").classList.remove("open")}
 let vxPendingSupportEntry=false;
-(function initVxHeaderLogo(){const img=document.getElementById("brandLogoImage"),symbol=document.getElementById("brandLogoSymbol"),word=document.getElementById("brandLogoWord");let cached="";try{cached=localStorage.getItem("vxHeaderLogoUrl")||""}catch(e){}if(cached&&img){img.src=cached;img.classList.remove("hidden");symbol?.classList.add("hidden");word?.classList.add("hidden");img.onload=()=>document.documentElement.classList.add("vx-logo-ready");img.onerror=()=>{img.classList.add("hidden");symbol?.classList.remove("hidden");word?.classList.remove("hidden");document.documentElement.classList.add("vx-logo-ready")}}else{document.documentElement.classList.add("vx-logo-ready")}})();
+(function initVxHeaderLogo(){const img=document.getElementById("brandLogoImage"),symbol=document.getElementById("brandLogoSymbol"),word=document.getElementById("brandLogoWord");let cached="";try{cached=localStorage.getItem("vxHeaderLogoUrl")||""}catch(e){}if(cached&&img){img.src=cached;img.classList.remove("hidden");symbol?.classList.add("hidden");word?.classList.add("hidden");img.onload=()=>document.documentElement.classList.add("vx-logo-ready");img.onerror=()=>{img.classList.add("hidden");symbol?.classList.remove("hidden");word?.classList.remove("hidden");document.documentElement.classList.add("vx-logo-ready")}}})();
 function openVxSupportEntry(){initVxChatDrag();const panel=document.getElementById("vxChatWindow");if(!panel)return;const opening=!panel.classList.contains("open");panel.classList.toggle("open",opening);panel.classList.remove("minimized");document.querySelector(".versat-whatsapp-float")?.setAttribute("aria-expanded",String(opening));if(opening)loadVxFloatingChat()}
 function toggleVxChatMinimize(){const panel=document.getElementById("vxChatWindow");if(!panel)return;const mini=panel.classList.toggle("minimized");const b=panel.querySelector(".vx-chat-minimize");if(b){b.setAttribute("aria-label",mini?"Restaurar chat":"Minimizar chat")}}
 function initVxChatDrag(){const panel=document.getElementById("vxChatWindow"),handle=document.getElementById("vxChatDragHandle");if(!panel||!handle||panel.dataset.dragReady)return;panel.dataset.dragReady="1";try{const saved=JSON.parse(localStorage.getItem("vxChatPosition")||"null");if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)){panel.style.left=saved.left+"px";panel.style.top=saved.top+"px";panel.style.right="auto";panel.style.bottom="auto"}}catch(e){}
@@ -1110,9 +1110,9 @@ function applySiteSettings(content){
  }
 }
 async function loadPublicSiteSettings(){
- if(!sb)return;
+ if(!sb){document.documentElement.classList.add("vx-logo-ready");return}
  const {data,error}=await sb.from("site_settings").select("content").eq("id",1).maybeSingle();
- if(!error&&data?.content)applySiteSettings(data.content);
+ if(!error&&data?.content)applySiteSettings(data.content);else document.documentElement.classList.add("vx-logo-ready");
 }
 async function verifyLogoAdmin(){
  if(!sb||!currentUser)throw new Error("Entre como administrador para trocar a logo.");
