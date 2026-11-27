@@ -222,6 +222,26 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 .brief-nav .btn{min-width:105px;padding:12px 14px}
 .brief-nav .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 @media(max-width:480px){#requestModal{padding:8px}.brief-nav{gap:7px}.brief-nav>span{display:none}.brief-nav .btn{flex:1;min-width:0}.brief-step-heading h3{font-size:21px}}
+
+/* Movimento sutil e consistente da identidade VERSAT */
+@keyframes versatFloat{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-10px) rotate(0deg)}}
+@keyframes versatPulse{0%,100%{box-shadow:0 0 0 0 #ed263855}50%{box-shadow:0 0 0 9px #ed263800}}
+@keyframes versatGlow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes versatShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.showcase{animation:versatFloat 7s ease-in-out infinite}
+.dot{animation:versatPulse 2.2s ease-out infinite}
+.hero:before{animation:versatGlow 8s ease-in-out infinite}
+.card,.pricecard,.step,.faq-item,.about-copy,.about-values,.cta{transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}
+.card:hover,.pricecard:hover,.step:hover,.faq-item:hover,.about-copy:hover,.about-values:hover{transform:translateY(-5px);border-color:#ed263877;box-shadow:0 16px 38px #0005}
+.btn,.accessibility-trigger,.profile-avatar{transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}
+.btn:hover,.accessibility-trigger:hover,.profile-avatar:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.08)}
+.btn.red{background-image:linear-gradient(110deg,#ed2638 0%,#ff5366 45%,#ed2638 70%);background-size:220% 100%}
+.btn.red:hover{animation:versatShine 1.2s ease}
+.mockcards div{animation:versatFloat 5s ease-in-out infinite}
+.mockcards div:nth-child(2){animation-delay:.5s}
+.mockcards div:nth-child(3){animation-delay:1s}
+@media(prefers-reduced-motion:reduce){.showcase,.dot,.hero:before,.mockcards div,.btn.red:hover{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -240,7 +260,7 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 <div class="profile-menu-user"><div class="profile-menu-avatar" id="profileMenuAvatar">C</div><div class="profile-menu-identity"><strong id="profileMenuName">Minha conta</strong><small id="profileMenuEmail"></small></div></div>
 <button type="button" onclick="openDashboardFromMenu()">Meu perfil e painel</button>
 <button type="button" onclick="openDashboardFromMenu()">Meus projetos</button>
-<a class="profile-menu-link" href="./customer-admin.html" target="_blank" rel="noopener">Gerenciar meu site</a>
+<a class="profile-menu-link" href="customer-admin.html">Gerenciar meu site</a>
 <button type="button" class="profile-logout" onclick="signOut()">Sair da conta</button>
 </div></div>
 <button type="button" class="menu" onclick="document.getElementById('navlinks').classList.toggle('show')">☰</button></div>
