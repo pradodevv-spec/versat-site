@@ -501,7 +501,7 @@ async function approveAndPublishProject(projectId){
   const {data,error}=await sb.functions.invoke("versat-approve-project",{body:{project_id:projectId}});
   if(error)throw error;
   if(!data?.published||!data?.url)throw new Error(data?.error||"A publicação não foi confirmada.");
-  alert("Site publicado com sucesso!\\n\\n"+data.url+"\\n\\nO envio automático de e-mail ao cliente ainda será configurado.");
+  alert("Site publicado com sucesso!\\n\\n"+data.url+(data.customer_portal_ready?"\\n\\nO site também foi vinculado ao painel do cliente.":"\\n\\nA publicação foi concluída, mas houve um problema ao vincular o painel do cliente: "+(data.customer_portal_error||"verifique o Supabase."))+"\\n\\nO envio automático de e-mail ao cliente ainda será configurado.");
   await loadAdmin();
  }catch(error){
   alert("Não foi possível publicar: "+(error.message||"erro inesperado"));
