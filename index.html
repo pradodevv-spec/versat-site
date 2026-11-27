@@ -36,7 +36,7 @@ header{position:sticky;top:0;z-index:20;background:#09090ceF;backdrop-filter:blu
 .profile-menu-identity strong,.profile-menu-identity small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .profile-menu-identity strong{font-size:13px}.profile-menu-identity small{font-size:11px;color:#aaa}
 .profile-menu>button{display:block;width:100%;padding:11px 9px;border:0;border-radius:8px;text-align:left;background:transparent;color:#eee;font-size:13px}
-.profile-menu>button:hover{background:#ffffff10}.profile-menu>.profile-logout{color:#ff7882}
+.profile-menu>button:hover,.profile-menu-link:hover{background:#ffffff10}.profile-menu>.profile-logout{color:#ff7882}.profile-menu-link{display:block;width:100%;box-sizing:border-box;padding:11px 9px;border:0;border-radius:8px;text-align:left;background:transparent;color:#eee;font-size:13px;text-decoration:none;cursor:pointer}
 
 .hero{padding:88px 0 76px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:560px;height:560px;right:-170px;top:-160px;background:radial-gradient(circle,#ed26382b,transparent 68%);pointer-events:none}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:42px;align-items:center}.eyebrow{display:inline-flex;gap:9px;align-items:center;color:#ff6875;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.dot{width:7px;height:7px;background:var(--red);border-radius:50%;box-shadow:0 0 14px var(--red)}h1,h2,h3,p{margin-top:0}h1{font:700 clamp(42px,6vw,70px)/1.02 "Space Grotesk";letter-spacing:-3px;margin:20px 0}.accent{color:var(--red)}.lead{color:#b6b6c1;font-size:17px;line-height:1.8;max-width:570px}.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 34px}.trust{display:flex;gap:24px;flex-wrap:wrap;color:#a6a6b1;font-size:13px}.trust span:before{content:"✓";color:#ff4b5a;margin-right:8px}.showcase{border:1px solid #ffffff20;border-radius:26px;background:linear-gradient(145deg,#1b1b24,#0e0e13);padding:16px;box-shadow:0 30px 90px #0009;transform:rotate(1deg)}.browser{border:1px solid #ffffff17;border-radius:17px;overflow:hidden;background:#0a0a0e}.browserbar{height:36px;background:#191920;display:flex;align-items:center;padding:0 12px;gap:6px}.browserbar i{width:7px;height:7px;border-radius:50%;background:#555}.mock{padding:25px 22px 28px;min-height:330px;background:radial-gradient(circle at 90% 20%,#ed26382a,transparent 35%),#0d0d12}.mocktop{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:2px;color:#eee}.mocklogo{font:700 17px "Space Grotesk"}.mock h3{font:700 34px/1.05 "Space Grotesk";margin:48px 0 12px;max-width:260px}.mock p{font-size:11px;color:#aaa;line-height:1.6;max-width:230px}.mockbtn{display:inline-block;background:var(--red);padding:10px 14px;border-radius:7px;font-size:10px;font-weight:bold;margin-top:12px}.mockcards{display:flex;gap:8px;margin-top:24px}.mockcards div{height:54px;flex:1;border:1px solid #ffffff18;border-radius:8px;background:linear-gradient(135deg,#25252e,#111)}
 section{padding:78px 0}.section-head{max-width:650px;margin-bottom:34px}.section-head h2{font:700 clamp(30px,4vw,44px)/1.1 "Space Grotesk";letter-spacing:-1.5px;margin:13px 0}.section-head p{color:var(--muted);line-height:1.7}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,#15151c,#0e0e13)}.card:hover{border-color:#ed263866;transform:translateY(-3px);transition:.2s}.ico{width:45px;height:45px;border-radius:13px;background:#ed26381c;color:#ff5967;display:grid;place-items:center;font-size:21px;margin-bottom:20px}.card h3{font:700 19px "Space Grotesk";margin-bottom:10px}.card p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:0}.price{font:700 27px "Space Grotesk";margin:20px 0 5px}.small{color:#999;font-size:12px}.features{list-style:none;padding:0;margin:20px 0 24px;color:#c5c5ce;font-size:13px;line-height:2}.features li:before{content:"✓";color:#ff5967;margin-right:9px}.pricecard{display:flex;flex-direction:column}.pricecard .btn{margin-top:auto}.featured{border-color:#ed2638;box-shadow:0 0 0 1px #ed263822,0 20px 50px #0005;position:relative}.tag{position:absolute;right:18px;top:18px;background:var(--red);font-size:10px;font-weight:800;padding:6px 9px;border-radius:20px;letter-spacing:1px}
@@ -113,7 +113,7 @@ body.versat-light-theme .brand-word{color:#202027;text-shadow:none}
 body.versat-light-theme .btn:not(.red){color:#202027;border-color:#d0d0d8}
 body.versat-light-theme .menu{color:#202027}
 body.versat-light-theme .profile-menu,body.versat-light-theme .accessibility-panel{background:#fff;color:#202027;border-color:#d8d8df;box-shadow:0 18px 45px #0002}
-body.versat-light-theme .profile-menu>button{color:#33333c}
+body.versat-light-theme .profile-menu>button,body.versat-light-theme .profile-menu-link{color:#33333c}
 body.versat-light-theme .profile-menu>button:hover{background:#f0f0f4}
 body.versat-light-theme .profile-menu-identity small,body.versat-light-theme .accessibility-row span{color:#555560}
 body.versat-light-theme .hero:before{opacity:.55}
@@ -240,7 +240,7 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 <div class="profile-menu-user"><div class="profile-menu-avatar" id="profileMenuAvatar">C</div><div class="profile-menu-identity"><strong id="profileMenuName">Minha conta</strong><small id="profileMenuEmail"></small></div></div>
 <button type="button" onclick="openDashboardFromMenu()">Meu perfil e painel</button>
 <button type="button" onclick="openDashboardFromMenu()">Meus projetos</button>
-<button type="button" onclick="goToCustomerPortal()">Gerenciar meu site</button>
+<a class="profile-menu-link" href="./customer-admin.html" target="_blank" rel="noopener">Gerenciar meu site</a>
 <button type="button" class="profile-logout" onclick="signOut()">Sair da conta</button>
 </div></div>
 <button type="button" class="menu" onclick="document.getElementById('navlinks').classList.toggle('show')">☰</button></div>
@@ -396,9 +396,6 @@ function updateAccountHeader(user){
   const avatar=getUserAvatar(user), img=document.getElementById("profileAvatarImage");
   if(avatar){img.src=avatar;img.classList.remove("hidden");document.getElementById("profileAvatarInitial").classList.add("hidden")}
   else{img.removeAttribute("src");img.classList.add("hidden");document.getElementById("profileAvatarInitial").classList.remove("hidden")}
-}
-function goToCustomerPortal(){
-  window.location.href="customer-admin.html";
 }
 function toggleProfileMenu(){
   const menu=document.getElementById("profileMenu"),button=document.getElementById("profileButton");
