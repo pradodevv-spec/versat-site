@@ -499,9 +499,63 @@ function toggleVxChatMinimize(){const panel=document.getElementById("vxChatWindo
 function initVxChatDrag(){const panel=document.getElementById("vxChatWindow"),handle=document.getElementById("vxChatDragHandle");if(!panel||!handle||panel.dataset.dragReady)return;panel.dataset.dragReady="1";try{const saved=JSON.parse(localStorage.getItem("vxChatPosition")||"null");if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)){panel.style.left=saved.left+"px";panel.style.top=saved.top+"px";panel.style.right="auto";panel.style.bottom="auto"}}catch(e){}
 let drag=null;handle.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;const rect=panel.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,left:rect.left,top:rect.top};handle.setPointerCapture?.(e.pointerId);e.preventDefault()});handle.addEventListener("pointermove",e=>{if(!drag)return;const w=panel.offsetWidth,h=panel.offsetHeight;const left=Math.max(4,Math.min(window.innerWidth-w,drag.left+e.clientX-drag.x));const top=Math.max(4,Math.min(window.innerHeight-h,drag.top+e.clientY-drag.y));panel.style.left=left+"px";panel.style.top=top+"px";panel.style.right="auto";panel.style.bottom="auto"});const stop=()=>{if(!drag)return;drag=null;const rect=panel.getBoundingClientRect();try{localStorage.setItem("vxChatPosition",JSON.stringify({left:Math.round(rect.left),top:Math.round(rect.top)}))}catch(e){}};handle.addEventListener("pointerup",stop);handle.addEventListener("pointercancel",stop);window.addEventListener("resize",()=>{if(panel.style.left){const left=Math.max(4,Math.min(window.innerWidth-panel.offsetWidth,panel.getBoundingClientRect().left));const top=Math.max(4,Math.min(window.innerHeight-panel.offsetHeight,panel.getBoundingClientRect().top));panel.style.left=left+"px";panel.style.top=top+"px"}})}
 function closeVxFloatingChat(){const panel=document.getElementById("vxChatWindow");panel?.classList.remove("open","minimized");setVxChatLauncher(false)}
-async function loadVxFloatingChat(){const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");if(!messages)return;if(!currentUser||!sb){messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Seja bem-vindo ao atendimento da VERSAT. Entre na sua conta para iniciar uma conversa e acompanhar suas mensagens por aqui.</div>";compose.classList.add("hidden");login.classList.remove("hidden");return}if(await vxIsAdmin()){closeVxFloatingChat();await openDashboard();dashTab("support",document.getElementById("supportTab"));return}compose.classList.remove("hidden");login.classList.add("hidden");messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Você está falando com o atendimento VERSAT. Envie sua mensagem e nossa equipe responderá por aqui.</div><div class='vx-chat-welcome'>Carregando conversa...</div>";const r=await sb.from("support_messages").select("id,user_id,sender_id,body,created_at").eq("user_id",currentUser.id).order("created_at",{ascending:true});if(r.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível carregar as mensagens. Tente novamente.</div>";return}renderVxFloatingMessages(r.data||[])}
-function renderVxFloatingMessages(rows){const messages=document.getElementById("vxChatMessages");if(!messages)return;const greeting="<div class='vx-chat-welcome'>Olá! 👋 Você está falando com o atendimento VERSAT. Como podemos ajudar?</div>";messages.innerHTML=greeting+(rows.length?rows.map(m=>{const mine=m.sender_id===currentUser.id;return "<div class='vx-chat-bubble "+(mine?"mine":"")+"'>"+escapeHtml(m.body)+"<small>"+(mine?"Você":"Equipe VERSAT")+" · "+new Date(m.created_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+"</small></div>"}).join(""):"<div class='vx-chat-welcome'>Pode mandar sua dúvida ou contar o que precisa. 😊</div>");messages.scrollTop=messages.scrollHeight}
-async function sendVxFloatingMessage(event){event.preventDefault();if(!currentUser||!sb)return;const field=document.getElementById("vxChatInput"),button=document.getElementById("vxChatSend"),status=document.getElementById("vxChatStatus"),body=field.value.trim();if(!body)return;button.disabled=true;status.textContent="Enviando...";const r=await sb.from("support_messages").insert({user_id:currentUser.id,sender_id:currentUser.id,body});button.disabled=false;if(r.error){status.textContent="Não foi possível enviar. Tente novamente.";return}field.value="";status.textContent="Mensagem enviada.";await loadVxFloatingChat()}
+async async function loadVxFloatingChat(){
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
+ if(!messages)return;
+ if(!currentUser||!sb){messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Entre na sua conta para iniciar uma conversa e acompanhar suas mensagens por aqui.</div>";compose.classList.add("hidden");login.classList.remove("hidden");return}
+ if(await vxIsAdmin()){closeVxFloatingChat();await openDashboard();dashTab("support",document.getElementById("supportTab"));return}
+ compose.classList.add("hidden");login.classList.add("hidden");
+ messages.innerHTML="<div class='vx-chat-welcome'>Carregando seu atendimento...</div>";
+ const cr=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
+ if(cr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível carregar o atendimento.</div>";return}
+ let conv=(cr.data||[])[0]||null;
+ if(!conv){
+  const nr=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+  if(nr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível iniciar o atendimento: "+escapeHtml(nr.error.message)+"</div>";return}
+  conv=nr.data;
+ }
+ vxCurrentConversationId=conv.id;vxCurrentConversationStatus=conv.status;
+ const mr=await sb.from("support_messages").select("id,user_id,sender_id,body,created_at,conversation_id").eq("conversation_id",conv.id).order("created_at",{ascending:true});
+ if(mr.error){messages.innerHTML="<div class='vx-chat-welcome'>Não foi possível carregar as mensagens.</div>";return}
+ const rr=await sb.from("support_ratings").select("*").eq("conversation_id",conv.id).maybeSingle();
+ if(conv.status==="closed"){
+  compose.classList.add("hidden");
+  const rating=rr.data||null;
+  if(rating){messages.innerHTML="<div class='vx-chat-welcome'>Este atendimento foi encerrado. Obrigado por conversar com a VERSAT!</div><div class='review-display'><b>Sua avaliação</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"</div><p>"+escapeHtml(rating.comment||"")+"</p></div><button class='btn red wide' type='button' onclick='startNewVxFloatingConversation()'>Iniciar novo atendimento</button>";}
+  else{messages.innerHTML="<div class='vx-chat-welcome'>Seu atendimento foi encerrado. Queremos saber como foi sua experiência!</div><div class='review-form'><h3>Como foi seu atendimento com a VERSAT?</h3><p>1 estrela: Muito ruim · 2: Ruim · 3: Regular · 4: Bom · 5: Excelente</p><div id='vxRatingStars' style='display:flex;gap:8px;font-size:34px;color:#ffc44d;margin:12px 0'>"+[1,2,3,4,5].map(n=>"<button type='button' onclick='selectVxRating("+n+")' aria-label='"+n+" estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button>").join("")+"</div><div id='vxRatingLabel' class='vx-muted'>Selecione sua nota</div><textarea id='vxRatingComment' maxlength='1200' placeholder='Comentário (opcional)'></textarea><button class='btn red wide' type='button' onclick=\"submitVxFloatingRating('"+conv.id+"')\">Enviar avaliação</button></div>";window.vxSelectedRating=0;}
+  return;
+ }
+ compose.classList.remove("hidden");
+ renderVxFloatingMessages(mr.data||[]);
+}
+function renderVxFloatingMessages(rows){
+ const messages=document.getElementById("vxChatMessages");if(!messages)return;
+ const greeting="<div class='vx-chat-welcome'>Olá! 👋 Você está falando com o atendimento VERSAT. Como podemos ajudar?</div>";
+ messages.innerHTML=greeting+(rows.length?rows.map(m=>{const mine=m.sender_id===currentUser.id;return "<div class='vx-chat-bubble "+(mine?"mine":"")+"'>"+escapeHtml(m.body)+"<small>"+(mine?"Você":"Equipe VERSAT")+" · "+new Date(m.created_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+"</small></div>"}).join(""):"<div class='vx-chat-welcome'>Pode mandar sua dúvida ou contar o que precisa. 😊</div>");
+ messages.scrollTop=messages.scrollHeight;
+}
+async function submitVxFloatingRating(conversationId){
+ const rating=Number(window.vxSelectedRating||0),comment=document.getElementById("vxRatingComment")?.value.trim()||"";
+ if(rating<1||rating>5){alert("Escolha uma nota de 1 a 5 estrelas.");return}
+ const r=await sb.from("support_ratings").insert({conversation_id:conversationId,user_id:currentUser.id,rating,comment});
+ if(r.error){alert("Não foi possível enviar a avaliação: "+r.error.message);return}
+ await loadVxFloatingChat();
+}
+async function startNewVxFloatingConversation(){
+ const r=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+ if(r.error){alert("Não foi possível iniciar um novo atendimento: "+r.error.message);return}
+ await loadVxFloatingChat();
+}
+async function sendVxFloatingMessage(event){
+ event.preventDefault();if(!currentUser||!sb||!vxCurrentConversationId)return;
+ const field=document.getElementById("vxChatInput"),button=document.getElementById("vxChatSend"),status=document.getElementById("vxChatStatus"),body=field.value.trim();
+ if(!body)return;
+ button.disabled=true;status.textContent="Enviando...";
+ const r=await sb.from("support_messages").insert({conversation_id:vxCurrentConversationId,user_id:currentUser.id,sender_id:currentUser.id,body});
+ button.disabled=false;
+ if(r.error){status.textContent="Não foi possível enviar. Tente novamente.";return}
+ field.value="";status.textContent="Mensagem enviada.";await loadVxFloatingChat();
+}
 function openVxChatLogin(){vxPendingSupportEntry=true;closeAuth();openAuth("login");showNotice("authNotice","Entre ou crie sua conta para conversar com a equipe VERSAT.")}
 async function continueAfterAuth(){if(pendingPlan){openRequest();document.getElementById("reqType").value=pendingPlan==="Essencial"?"Landing page":pendingPlan==="Profissional"?"Site institucional":"Sistema web";document.getElementById("reqDetails").value="Tenho interesse no plano "+pendingPlan+". ";return}if(vxPendingSupportEntry){vxPendingSupportEntry=false;showHome();closeAuth();document.getElementById("vxChatWindow")?.classList.add("open");await loadVxFloatingChat();return}await openDashboard()}
 function toggleAuthMode(){authMode=authMode==="login"?"signup":"login";updateAuthMode()}
@@ -1173,12 +1227,102 @@ async function vxIsAdmin(){if(!sb||!currentUser)return false;const r=await sb.fr
 async function loadVxAnalytics(){const b=document.getElementById("dashContent");b.innerHTML="<p>Carregando indicadores...</p>";if(!await vxIsAdmin()){b.textContent="Área exclusiva da administração.";return}const [p,q]=await Promise.all([sb.from("projects").select("status"),sb.from("project_payments").select("status,amount_cents")]);if(p.error||q.error){b.textContent=p.error?.message||q.error?.message;return}const ps=p.data||[],pay=q.data||[],paid=pay.filter(x=>x.status==="paid"),pending=pay.filter(x=>x.status==="pending"),revenue=paid.reduce((n,x)=>n+Number(x.amount_cents||0),0)/100;const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});const stages=["Recebido","Em desenvolvimento","Em revisão","Aguardando cliente","Concluído"];b.innerHTML="<h3>Indicadores VERSAT</h3><div class='vx-grid'><div class='vx-card'>Faturamento confirmado<h2>"+money(revenue)+"</h2></div><div class='vx-card'>Projetos cadastrados<h2>"+ps.length+"</h2></div><div class='vx-card'>Pagamentos confirmados<h2>"+paid.length+"</h2></div><div class='vx-card'>Pagamentos pendentes<h2>"+pending.length+"</h2></div></div><div class='vx-card'><h3>Projetos por etapa</h3>"+stages.map(st=>{const n=ps.filter(x=>x.status===st).length;return "<p>"+escapeHtml(st)+" <b style='float:right'>"+n+"</b></p><div class='vx-bar'><i style='width:"+(ps.length?100*n/ps.length:0)+"%'></i></div>"}).join("")+"</div>"}
 async function loadVxEditor(){const b=document.getElementById("dashContent");if(!await vxIsAdmin()){b.textContent="Área exclusiva da administração.";return}const r=await sb.from("site_settings").select("content").eq("id",1).single();if(r.error){b.textContent=r.error.message;return}const v=r.data.content?.visual_home||{};const title=v.title||"Seu negócio merece um site de presença.";const desc=v.description||"A VERSAT transforma ideias em experiências digitais. Criamos sites modernos, rápidos e pensados para apresentar sua marca e conquistar clientes.";b.innerHTML="<h3>Editor visual da página inicial</h3><p class='vx-muted'>Edite o título e a apresentação principal. Salvar aplica as alterações para os visitantes.</p><div class='vx-card'><label>Título<input id='vxTitle' maxlength='110' value='"+escapeHtml(title)+"'></label><label>Apresentação<textarea id='vxDesc' rows='4' maxlength='350'>"+escapeHtml(desc)+"</textarea></label><div class='vx-card'><span class='vx-muted'>Prévia</span><h2 id='vxPreviewTitle'>"+escapeHtml(title)+"</h2><p id='vxPreviewDesc'>"+escapeHtml(desc)+"</p></div><button class='btn red' type='button' onclick='saveVxEditor()'>Salvar alterações</button><p id='vxEditorNotice' class='vx-muted'></p></div>";document.getElementById("vxTitle").addEventListener("input",e=>document.getElementById("vxPreviewTitle").textContent=e.target.value);document.getElementById("vxDesc").addEventListener("input",e=>document.getElementById("vxPreviewDesc").textContent=e.target.value)}
 async function saveVxEditor(){const n=document.getElementById("vxEditorNotice");if(!await vxIsAdmin()){n.textContent="Acesso negado.";return}const r=await sb.from("site_settings").select("content").eq("id",1).single();if(r.error){n.textContent=r.error.message;return}const c={...(r.data.content||{}),visual_home:{title:document.getElementById("vxTitle").value.trim(),description:document.getElementById("vxDesc").value.trim()}};const u=await sb.from("site_settings").update({content:c}).eq("id",1);if(u.error){n.textContent="Erro: "+u.error.message;return}applySiteSettings(c);n.textContent="Alterações salvas."}
-async function loadVxSupport(){const b=document.getElementById("dashContent");if(!sb||!currentUser){b.textContent="Entre na sua conta para acessar o atendimento.";return}const admin=await vxIsAdmin();let q=sb.from("support_messages").select("*").order("created_at",{ascending:true});if(!admin)q=q.eq("user_id",currentUser.id);const r=await q;if(r.error){b.textContent=r.error.message;return}const rows=r.data||[],users=[...new Set(rows.map(x=>x.user_id))];b.innerHTML="<h3>Atendimento VERSAT</h3><p class='vx-muted'>"+(admin?"Caixa de entrada de conversas dos clientes.":"Envie uma mensagem para nossa equipe.")+"</p>"+(admin?"<label class='field'>Conversa<select id='vxUser' onchange='loadVxThread(this.value)'><option value=''>Selecione</option>"+users.map(x=>"<option value='"+x+"'>"+x+"</option>").join("")+"</select></label>":"")+"<div id='vxThread'></div>";if(admin){if(users.length)await loadVxThread(users[0]);else document.getElementById("vxThread").textContent="Nenhuma conversa ainda."}else renderVxThread(rows,currentUser.id,false)}
-function renderVxThread(rows,uid,isAdmin=false){const t=document.getElementById("vxThread");if(!t)return;t.innerHTML=(isAdmin?"<div style='display:flex;justify-content:flex-end;margin:0 0 8px'><button type='button' class='btn' style='padding:7px 11px;font-size:11px' onclick='closeVxAdminThread()'>Fechar conversa nesta tela ×</button></div>":"")+"<div class='vx-card' style='max-height:350px;overflow:auto'>"+(rows.length?rows.map(m=>"<div class='vx-message'><b>"+(m.sender_id===currentUser.id?"Você":"Mensagem")+"</b><p>"+escapeHtml(m.body)+"</p><small class='vx-muted'>"+new Date(m.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"Comece a conversa por aqui.")+"</div><form class='vx-card' onsubmit=\"sendVxMessage(event,'"+uid+"')\"><label>Mensagem<textarea id='vxBody' maxlength='2000' required rows='3'></textarea></label><button class='btn red' type='submit'>Enviar</button><span id='vxSendNotice' class='vx-muted'></span></form>"}
-async function loadVxThread(uid){if(!uid)return;const r=await sb.from("support_messages").select("*").eq("user_id",uid).order("created_at",{ascending:true});if(r.error){document.getElementById("vxThread").textContent=r.error.message;return}renderVxThread(r.data||[],uid,true)}
-function closeVxAdminThread(){const t=document.getElementById('vxThread');if(t)t.innerHTML="<div class='empty'>Conversa fechada nesta tela. As mensagens continuam salvas. Para abrir novamente, selecione o cliente na lista.</div>"}
-async function sendVxMessage(e,uid){e.preventDefault();const body=document.getElementById("vxBody").value.trim(),n=document.getElementById("vxSendNotice");if(!body)return;const r=await sb.from("support_messages").insert({user_id:uid,sender_id:currentUser.id,body});if(r.error){n.textContent="Erro ao enviar: "+r.error.message;return}if(await vxIsAdmin())await loadVxThread(uid);else await loadVxSupport();n.textContent="Mensagem enviada."}
-async function loadVxNotifications(){const b=document.getElementById("dashContent");if(!sb||!currentUser){b.textContent="Entre para ver suas notificações.";return}const admin=await vxIsAdmin();const r=await sb.from("projects").select("id,user_id,project_name,status,created_at,updated_at").order("updated_at",{ascending:false});if(r.error){b.textContent=r.error.message;return}let rows=r.data||[];if(!admin)rows=rows.filter(x=>x.user_id===currentUser.id);b.innerHTML="<h3>Central de notificações</h3><p class='vx-muted'>Atualizações recentes dos projetos.</p>"+(rows.length?rows.map(x=>"<div class='vx-card'><b>"+escapeHtml(x.project_name||"Projeto")+"</b><p>"+escapeHtml(x.status||"Atualização")+"</p><small class='vx-muted'>"+new Date(x.updated_at||x.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"<div class='empty'>Nenhuma atualização ainda.</div>")}
+let vxCurrentConversationId=null;
+let vxCurrentConversationStatus=null;
+async async function loadVxSupport(){
+ const b=document.getElementById("dashContent");
+ if(!sb||!currentUser){b.textContent="Entre na sua conta para acessar o atendimento.";return}
+ const admin=await vxIsAdmin();
+ b.innerHTML="<h3>Atendimento VERSAT</h3><p class='vx-muted'>"+(admin?"Caixa de entrada: abra uma conversa, responda ou encerre o atendimento.":"Converse com nossa equipe VERSAT.")+"</p><div id='vxThread'></div>";
+ if(admin){
+  const r=await sb.from("support_conversations").select("*").order("created_at",{ascending:false});
+  if(r.error){document.getElementById("vxThread").textContent="Não foi possível carregar: "+r.error.message;return}
+  const convs=r.data||[];
+  if(!convs.length){document.getElementById("vxThread").innerHTML="<div class='empty'>Nenhuma conversa ainda.</div>";return}
+  const ids=[...new Set(convs.map(c=>c.user_id))];
+  const pr=await sb.from("profiles").select("id,email").in("id",ids);
+  const emails=Object.fromEntries((pr.data||[]).map(p=>[p.id,p.email||p.id]));
+  document.getElementById("vxThread").innerHTML="<label class='field'><span>Conversa do cliente</span><select id='vxConversationSelect' onchange='loadVxThread(this.value)'><option value=''>Selecione uma conversa</option>"+convs.map(c=>"<option value='"+c.id+"'>"+escapeHtml(emails[c.user_id]||c.user_id)+" · "+(c.status==="open"?"Em atendimento":"Encerrada")+" · "+new Date(c.created_at).toLocaleDateString("pt-BR")+"</option>").join("")+"</select></label><div id='vxThreadContent'></div>";
+  const firstOpen=convs.find(c=>c.status==="open")||convs[0];
+  document.getElementById("vxConversationSelect").value=firstOpen.id;
+  await loadVxThread(firstOpen.id);
+ }else{
+  const r=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
+  if(r.error){document.getElementById("vxThread").textContent=r.error.message;return}
+  const conv=(r.data||[])[0]||null;
+  if(!conv){document.getElementById("vxThread").innerHTML="<div class='empty'>Você ainda não iniciou um atendimento.</div><button class='btn red' type='button' onclick='startVxDashboardConversation()'>Iniciar atendimento</button>";return}
+  const mr=await sb.from("support_messages").select("*").eq("conversation_id",conv.id).order("created_at",{ascending:true});
+  if(mr.error){document.getElementById("vxThread").textContent=mr.error.message;return}
+  const rr=await sb.from("support_ratings").select("*").eq("conversation_id",conv.id).maybeSingle();
+  renderVxThread(mr.data||[],conv,false,rr.data||null);
+ }
+}
+async function startVxDashboardConversation(){
+ const r=await sb.from("support_conversations").insert({user_id:currentUser.id}).select("*").single();
+ if(r.error){alert("Não foi possível iniciar: "+r.error.message);return}
+ await loadVxSupport();
+}
+function renderVxThread(rows,conversation,isAdmin=false,rating=null){
+ const t=document.getElementById(isAdmin?"vxThreadContent":"vxThread");
+ if(!t)return;
+ const uid=conversation.user_id,closed=conversation.status==="closed";
+ const messages="<div class='vx-card' style='max-height:350px;overflow:auto'>"+(rows.length?rows.map(m=>"<div class='vx-message'><b>"+(m.sender_id===currentUser.id?"Você":(isAdmin?"Cliente":"Equipe VERSAT"))+"</b><p>"+escapeHtml(m.body)+"</p><small class='vx-muted'>"+new Date(m.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"Ainda não há mensagens nesta conversa.")+"</div>";
+ let top=isAdmin?"<div class='vx-card'><b>"+(closed?"Atendimento encerrado":"Atendimento em andamento")+"</b><p class='vx-muted'>"+new Date(conversation.created_at).toLocaleString("pt-BR")+"</p>"+(closed?"<button type='button' class='btn' onclick=\"reopenVxAdminConversation('"+conversation.id+"')\">Reabrir atendimento</button>":"<button type='button' class='btn red' onclick=\"closeVxAdminConversation('"+conversation.id+"')\">Encerrar atendimento</button>")+"</div>":"";
+ let review="";
+ if(isAdmin){
+  review=rating?"<div class='review-display'><b>Avaliação do cliente</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"<span style='color:#555'>"+("★".repeat(5-rating.rating))+"</span></div><p>"+escapeHtml(rating.comment||"Sem comentário.")+"</p><small class='vx-muted'>"+new Date(rating.created_at).toLocaleString("pt-BR")+"</small></div>":(closed?"<div class='review-display'>Aguardando avaliação do cliente.</div>":"");
+ }else if(closed){
+  review=rating?"<div class='review-display'><b>Obrigado pela avaliação!</b><div style='font-size:25px;color:#ffc44d'>"+("★".repeat(rating.rating))+"</div><p>"+escapeHtml(rating.comment||"")+"</p></div>":"<div class='review-form'><h3>Como foi seu atendimento com a VERSAT?</h3><p>Escolha uma nota de 1 a 5 estrelas.</p><div id='vxRatingStars' style='display:flex;gap:8px;font-size:34px;color:#ffc44d;margin:12px 0'><button type='button' onclick='selectVxRating(1)' aria-label='1 estrela' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(2)' aria-label='2 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(3)' aria-label='3 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(4)' aria-label='4 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button><button type='button' onclick='selectVxRating(5)' aria-label='5 estrelas' style='background:none;border:0;color:inherit;font-size:34px'>☆</button></div><div id='vxRatingLabel' class='vx-muted'>Selecione sua nota</div><textarea id='vxRatingComment' maxlength='1200' placeholder='Quer deixar um comentário? (opcional)'></textarea><button class='btn red' type='button' onclick=\"submitVxRating('"+conversation.id+"')\">Enviar avaliação</button></div>";
+ }
+ const form=(!closed||isAdmin&& !closed)?"<form class='vx-card' onsubmit=\"sendVxMessage(event,'"+conversation.id+"','"+uid+"')\"><label>Mensagem<textarea id='vxBody' maxlength='2000' required rows='3'></textarea></label><button class='btn red' type='submit'>Enviar</button><span id='vxSendNotice' class='vx-muted'></span></form>":"";
+ t.innerHTML=top+messages+form+review;
+ if(!isAdmin&&closed&&!rating)window.vxSelectedRating=0;
+}
+window.vxSelectedRating=0;
+function selectVxRating(value){
+ window.vxSelectedRating=value;
+ const labels=["","Muito ruim","Ruim","Regular","Bom","Excelente"];
+ const stars=document.querySelectorAll("#vxRatingStars button");
+ stars.forEach((b,i)=>{b.textContent=i<value?"★":"☆";b.style.color=i<value?"#ffc44d":"#777"});
+ const label=document.getElementById("vxRatingLabel");if(label)label.textContent=labels[value];
+}
+async function submitVxRating(conversationId){
+ const rating=Number(window.vxSelectedRating||0),comment=document.getElementById("vxRatingComment")?.value.trim()||"";
+ if(rating<1||rating>5){alert("Escolha uma nota de 1 a 5 estrelas.");return}
+ const r=await sb.from("support_ratings").insert({conversation_id:conversationId,user_id:currentUser.id,rating,comment});
+ if(r.error){alert("Não foi possível enviar a avaliação: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function closeVxAdminConversation(id){
+ if(!confirm("Deseja encerrar este atendimento? O cliente poderá avaliar o suporte depois. O histórico será mantido."))return;
+ const r=await sb.from("support_conversations").update({status:"closed",closed_at:new Date().toISOString(),closed_by:currentUser.id}).eq("id",id).eq("status","open");
+ if(r.error){alert("Não foi possível encerrar: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function reopenVxAdminConversation(id){
+ if(!confirm("Deseja reabrir este atendimento?"))return;
+ const r=await sb.from("support_conversations").update({status:"open",closed_at:null,closed_by:null}).eq("id",id).eq("status","closed");
+ if(r.error){alert("Não foi possível reabrir: "+r.error.message);return}
+ await loadVxSupport();
+}
+async function loadVxThread(id){
+ if(!id)return;
+ const cr=await sb.from("support_conversations").select("*").eq("id",id).single();
+ if(cr.error){document.getElementById("vxThreadContent").textContent=cr.error.message;return}
+ const mr=await sb.from("support_messages").select("*").eq("conversation_id",id).order("created_at",{ascending:true});
+ if(mr.error){document.getElementById("vxThreadContent").textContent=mr.error.message;return}
+ const rr=await sb.from("support_ratings").select("*").eq("conversation_id",id).maybeSingle();
+ renderVxThread(mr.data||[],cr.data,true,rr.data||null);
+}
+async function sendVxMessage(e,conversationId,uid){
+ e.preventDefault();
+ const body=document.getElementById("vxBody").value.trim(),n=document.getElementById("vxSendNotice");
+ if(!body)return;
+ const r=await sb.from("support_messages").insert({conversation_id:conversationId,user_id:uid,sender_id:currentUser.id,body});
+ if(r.error){n.textContent="Erro ao enviar: "+r.error.message;return}
+ if(await vxIsAdmin())await loadVxThread(conversationId);else await loadVxSupport();
+}
+function loadVxNotifications(){const b=document.getElementById("dashContent");if(!sb||!currentUser){b.textContent="Entre para ver suas notificações.";return}const admin=await vxIsAdmin();const r=await sb.from("projects").select("id,user_id,project_name,status,created_at,updated_at").order("updated_at",{ascending:false});if(r.error){b.textContent=r.error.message;return}let rows=r.data||[];if(!admin)rows=rows.filter(x=>x.user_id===currentUser.id);b.innerHTML="<h3>Central de notificações</h3><p class='vx-muted'>Atualizações recentes dos projetos.</p>"+(rows.length?rows.map(x=>"<div class='vx-card'><b>"+escapeHtml(x.project_name||"Projeto")+"</b><p>"+escapeHtml(x.status||"Atualização")+"</p><small class='vx-muted'>"+new Date(x.updated_at||x.created_at).toLocaleString("pt-BR")+"</small></div>").join(""):"<div class='empty'>Nenhuma atualização ainda.</div>")}
 function loadVxTemplates(){const b=document.getElementById("dashContent");const a=[["Institucional","Apresentação de empresa e serviços","Sua empresa em destaque"],["Landing page","Página para uma oferta ou campanha","Uma oferta que merece atenção"],["Portfólio","Projetos e habilidades profissionais","Meu portfólio profissional"],["Catálogo","Vitrine de produtos e categorias","Conheça nossos produtos"],["Restaurante","Cardápio e contato pelo WhatsApp","Sabor e qualidade em cada detalhe"],["Agência","Serviços, cases e orçamento","Ideias que viram resultados"]];b.innerHTML="<h3>Galeria de modelos</h3><p class='vx-muted'>Bases editáveis para começar um projeto.</p><div class='vx-grid'>"+a.map((x,i)=>"<article class='vx-card'><small>MODELO 0"+(i+1)+"</small><h3>"+x[0]+"</h3><p>"+x[1]+"</p><button class='btn red' type='button' onclick='useVxTemplate("+i+")'>Usar modelo</button></article>").join("")+"</div>"}
 function useVxTemplate(i){const a=["Sua empresa em destaque","Uma oferta que merece atenção","Meu portfólio profissional","Conheça nossos produtos","Sabor e qualidade em cada detalhe","Ideias que viram resultados"];dashTab("development",document.getElementById("devTab"));setTimeout(()=>{const n=document.getElementById("manualSiteName"),c=document.getElementById("manualSiteCode");if(n&&c){n.value=a[i]||"Novo site";c.value=manualStarterHtml(n.value);manualHistory=[];manualHistoryIndex=-1;manualRemember(true);manualSitePreview()}},350)}
 
