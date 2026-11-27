@@ -494,7 +494,7 @@ function closeAuth(){document.getElementById("authModal").classList.remove("open
 let vxPendingSupportEntry=false;
 (function initVxHeaderLogo(){const img=document.getElementById("brandLogoImage");if(img){img.removeAttribute("src");img.classList.add("hidden")}document.documentElement.classList.remove("vx-logo-ready")})();
 function setVxChatLauncher(minimized){const launcher=document.querySelector(".versat-whatsapp-float");if(!launcher)return;launcher.classList.toggle("chat-minimized",!!minimized);launcher.classList.remove("chat-open");const icon=launcher.querySelector(".wa-icon");if(icon)icon.textContent=minimized?"V":"💬";launcher.setAttribute("aria-label",minimized?"Restaurar atendimento VERSAT":"Abrir atendimento VERSAT");launcher.setAttribute("aria-expanded",minimized?"false":"true")}
-async function openVxSupportEntry(){initVxChatDrag();const panel=document.getElementById("vxChatWindow");if(!panel)return;if(currentUser&&sb&&await vxIsAdmin()){closeVxFloatingChat();await openDashboard();const tab=document.getElementById("supportTab");if(tab){tab.textContent="Conversas";tab.classList.remove("hidden")}const help=document.querySelector(".vx-helpbar");if(help)help.classList.add("hidden");dashTab("support",tab);return}if(panel.classList.contains("minimized")){panel.classList.remove("minimized");panel.classList.add("open");setVxChatLauncher(false);return}const opening=!panel.classList.contains("open");panel.classList.toggle("open",opening);if(opening){panel.classList.remove("minimized");setVxChatLauncher(false);loadVxFloatingChat()}else setVxChatLauncher(false)}
+async function openVxSupportEntry(){initVxChatDrag();const panel=document.getElementById("vxChatWindow");if(!panel)return;if(panel.classList.contains("minimized")){panel.classList.remove("minimized");panel.classList.add("open");setVxChatLauncher(false);if(currentUser&&sb&&await vxIsAdmin())await loadVxAdminFloatingInbox();return}const opening=!panel.classList.contains("open");panel.classList.toggle("open",opening);if(opening){panel.classList.remove("minimized");setVxChatLauncher(false);await loadVxFloatingChat()}else setVxChatLauncher(false)}
 function toggleVxChatMinimize(){const panel=document.getElementById("vxChatWindow");if(!panel)return;panel.classList.remove("open");panel.classList.add("minimized");setVxChatLauncher(true)}
 function initVxChatDrag(){const panel=document.getElementById("vxChatWindow"),handle=document.getElementById("vxChatDragHandle");if(!panel||!handle||panel.dataset.dragReady)return;panel.dataset.dragReady="1";try{const saved=JSON.parse(localStorage.getItem("vxChatPosition")||"null");if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)){panel.style.left=saved.left+"px";panel.style.top=saved.top+"px";panel.style.right="auto";panel.style.bottom="auto"}}catch(e){}
 let drag=null;handle.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;const rect=panel.getBoundingClientRect();drag={x:e.clientX,y:e.clientY,left:rect.left,top:rect.top};handle.setPointerCapture?.(e.pointerId);e.preventDefault()});handle.addEventListener("pointermove",e=>{if(!drag)return;const w=panel.offsetWidth,h=panel.offsetHeight;const left=Math.max(4,Math.min(window.innerWidth-w,drag.left+e.clientX-drag.x));const top=Math.max(4,Math.min(window.innerHeight-h,drag.top+e.clientY-drag.y));panel.style.left=left+"px";panel.style.top=top+"px";panel.style.right="auto";panel.style.bottom="auto"});const stop=()=>{if(!drag)return;drag=null;const rect=panel.getBoundingClientRect();try{localStorage.setItem("vxChatPosition",JSON.stringify({left:Math.round(rect.left),top:Math.round(rect.top)}))}catch(e){}};handle.addEventListener("pointerup",stop);handle.addEventListener("pointercancel",stop);window.addEventListener("resize",()=>{if(panel.style.left){const left=Math.max(4,Math.min(window.innerWidth-panel.offsetWidth,panel.getBoundingClientRect().left));const top=Math.max(4,Math.min(window.innerHeight-panel.offsetHeight,panel.getBoundingClientRect().top));panel.style.left=left+"px";panel.style.top=top+"px"}})}
@@ -503,7 +503,7 @@ async function loadVxFloatingChat(){
  const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
  if(!messages)return;
  if(!currentUser||!sb){messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Entre na sua conta para iniciar uma conversa e acompanhar suas mensagens por aqui.</div>";compose.classList.add("hidden");login.classList.remove("hidden");return}
- if(await vxIsAdmin()){closeVxFloatingChat();await openDashboard();dashTab("support",document.getElementById("supportTab"));return}
+ if(await vxIsAdmin()){await loadVxAdminFloatingInbox();return}
  compose.classList.add("hidden");login.classList.add("hidden");
  messages.innerHTML="<div class='vx-chat-welcome'>Carregando seu atendimento...</div>";
  const cr=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
@@ -528,6 +528,43 @@ async function loadVxFloatingChat(){
  compose.classList.remove("hidden");
  renderVxFloatingMessages(mr.data||[]);
 }
+let vxAdminFloatingMode=false;
+let vxAdminFloatingConversation=null;
+async function loadVxAdminFloatingInbox(){
+ vxAdminFloatingMode=true;vxAdminFloatingConversation=null;
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
+ if(!messages)return;compose.classList.add("hidden");login.classList.add("hidden");
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent="Conversas dos clientes";
+ messages.innerHTML="<div class='vx-chat-welcome'>Carregando conversas...</div>";
+ const r=await sb.from("support_conversations").select("*").order("created_at",{ascending:false});
+ if(r.error){messages.innerHTML="<div class='vx-chat-welcome'>Erro ao carregar: "+escapeHtml(r.error.message)+"</div>";return}
+ const convs=r.data||[];if(!convs.length){messages.innerHTML="<div class='vx-chat-welcome'>Nenhuma conversa recebida ainda.</div>";return}
+ const ids=[...new Set(convs.map(c=>c.user_id))],pr=await sb.from("profiles").select("*").in("id",ids);
+ const pm=Object.fromEntries((pr.data||[]).map(p=>[p.id,p]));
+ messages.innerHTML=convs.map(c=>{const p=pm[c.user_id]||{},name=p.full_name||p.name||p.nome||p.display_name||p.email||"Cliente";return "<button type='button' class='vx-card' style='display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;text-align:left;margin:7px 0;padding:11px;cursor:pointer' onclick=\"loadVxAdminFloatingThread('"+c.id+"')\"><span style='min-width:0'><b style='display:block;color:#fff'>"+escapeHtml(name)+"</b><small style='color:#aaa'>"+new Date(c.created_at).toLocaleString("pt-BR")+"</small></span><small style='color:"+(c.status==="open"?"#55cf83":"#aaa")+"'>"+(c.status==="open"?"Em atendimento":"Encerrada")+"</small></button>"}).join("");
+}
+async function loadVxAdminFloatingThread(id){
+ const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose");
+ const cr=await sb.from("support_conversations").select("*").eq("id",id).single();if(cr.error){messages.textContent=cr.error.message;return}
+ const conv=cr.data;vxAdminFloatingConversation=conv;vxCurrentConversationId=conv.id;vxCurrentConversationStatus=conv.status;
+ const [mr,rr,pr]=await Promise.all([sb.from("support_messages").select("*").eq("conversation_id",id).order("created_at",{ascending:true}),sb.from("support_ratings").select("*").eq("conversation_id",id).maybeSingle(),sb.from("profiles").select("*").eq("id",conv.user_id).maybeSingle()]);
+ const p=pr.data||{},name=p.full_name||p.name||p.nome||p.display_name||p.email||"Cliente";
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent=name;
+ const back="<button type='button' onclick='loadVxAdminFloatingInbox()' style='border:0;background:#292932;color:#fff;border-radius:7px;padding:6px 9px;margin-bottom:8px'>← Conversas</button>";
+ const status="<div class='vx-chat-welcome'>"+(conv.status==="open"?"Atendimento em andamento":"Atendimento encerrado")+"</div>";
+ const bubbles=(mr.data||[]).map(m=>{const mine=m.sender_id===currentUser.id;return "<div class='vx-chat-bubble "+(mine?"mine":"")+"'>"+escapeHtml(m.body)+"<small>"+(mine?"Você":"Cliente")+" · "+new Date(m.created_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+"</small></div>"}).join("");
+ let footer="";
+ if(conv.status==="open"){footer="<button type='button' class='btn red wide' style='margin-top:10px' onclick=\"closeVxAdminFloatingConversation('"+id+"')\">Encerrar atendimento</button>";compose.classList.remove("hidden");}
+ else{compose.classList.add("hidden");footer=rr.data?"<div class='vx-chat-welcome'>Avaliação do cliente: <b style='color:#ffc44d'>"+("★".repeat(rr.data.rating))+"</b><p>"+escapeHtml(rr.data.comment||"Sem comentário.")+"</p></div>":"<div class='vx-chat-welcome'>Aguardando avaliação do cliente.</div>"}
+ messages.innerHTML=back+status+(bubbles||"<div class='vx-chat-welcome'>Ainda não há mensagens.</div>")+footer;
+ messages.scrollTop=messages.scrollHeight;
+}
+async function closeVxAdminFloatingConversation(id){
+ if(!confirm("Encerrar este atendimento? O cliente poderá avaliar pelo chat."))return;
+ const r=await sb.from("support_conversations").update({status:"closed",closed_at:new Date().toISOString(),closed_by:currentUser.id}).eq("id",id).eq("status","open");
+ if(r.error){alert("Não foi possível encerrar: "+r.error.message);return}
+ await loadVxAdminFloatingThread(id);
+}
 function renderVxFloatingMessages(rows){
  const messages=document.getElementById("vxChatMessages");if(!messages)return;
  const greeting="<div class='vx-chat-welcome'>Olá! 👋 Você está falando com o atendimento VERSAT. Como podemos ajudar?</div>";
@@ -548,13 +585,13 @@ async function startNewVxFloatingConversation(){
 }
 async function sendVxFloatingMessage(event){
  event.preventDefault();if(!currentUser||!sb||!vxCurrentConversationId)return;
- const field=document.getElementById("vxChatInput"),button=document.getElementById("vxChatSend"),status=document.getElementById("vxChatStatus"),body=field.value.trim();
- if(!body)return;
+ const field=document.getElementById("vxChatInput"),button=document.getElementById("vxChatSend"),status=document.getElementById("vxChatStatus"),body=field.value.trim();if(!body)return;
  button.disabled=true;status.textContent="Enviando...";
- const r=await sb.from("support_messages").insert({conversation_id:vxCurrentConversationId,user_id:currentUser.id,sender_id:currentUser.id,body});
- button.disabled=false;
- if(r.error){status.textContent="Não foi possível enviar. Tente novamente.";return}
- field.value="";status.textContent="Mensagem enviada.";await loadVxFloatingChat();
+ const uid=vxAdminFloatingMode&&vxAdminFloatingConversation?vxAdminFloatingConversation.user_id:currentUser.id;
+ const r=await sb.from("support_messages").insert({conversation_id:vxCurrentConversationId,user_id:uid,sender_id:currentUser.id,body});button.disabled=false;
+ if(r.error){status.textContent="Não foi possível enviar: "+r.error.message;return}
+ field.value="";status.textContent="Mensagem enviada.";
+ if(vxAdminFloatingMode)await loadVxAdminFloatingThread(vxCurrentConversationId);else await loadVxFloatingChat();
 }
 function openVxChatLogin(){vxPendingSupportEntry=true;closeAuth();openAuth("login");showNotice("authNotice","Entre ou crie sua conta para conversar com a equipe VERSAT.")}
 async function continueAfterAuth(){if(pendingPlan){openRequest();document.getElementById("reqType").value=pendingPlan==="Essencial"?"Landing page":pendingPlan==="Profissional"?"Site institucional":"Sistema web";document.getElementById("reqDetails").value="Tenho interesse no plano "+pendingPlan+". ";return}if(vxPendingSupportEntry){vxPendingSupportEntry=false;showHome();closeAuth();document.getElementById("vxChatWindow")?.classList.add("open");await loadVxFloatingChat();return}await openDashboard()}
