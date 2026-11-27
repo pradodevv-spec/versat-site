@@ -1,78 +1,83 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#09090c"><title>Meu site | VERSAT</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#09090c">
+<title>Meu site | VERSAT</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script>
 <style>
 :root{color-scheme:dark;--bg:#09090c;--panel:#14141b;--line:#30303a;--text:#f6f6f8;--muted:#a4a4af;--red:#ed2638}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}.wrap{width:min(1050px,calc(100% - 32px));margin:auto}
-header{border-bottom:1px solid var(--line);padding:18px 0}.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:900;letter-spacing:2px}.logo span{color:var(--red)}button,a.btn{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:#1b1b23;color:white;font-weight:700;text-decoration:none;cursor:pointer}
-main{padding:38px 0 70px}.eyebrow{color:#ff6574;font-size:11px;font-weight:800;letter-spacing:2px}.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin:8px 0 24px}.heading h1{font-size:clamp(27px,5vw,38px);margin:0}.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:13px;font-weight:700}.field input,.field textarea{width:100%;border:1px solid #3b3b46;background:#0b0b10;color:white;padding:12px;border-radius:9px;font:inherit}.field textarea{min-height:95px;resize:vertical}.wide{grid-column:1/-1}.primary{background:var(--red);border-color:var(--red)}.status{display:inline-block;padding:6px 10px;border-radius:30px;background:#272731;color:#ddd;font-size:12px}.notice{padding:14px;border:1px solid #7a4f18;background:#30230e;color:#ffe0a1;border-radius:10px;margin:14px 0}.hidden{display:none!important}#auth{max-width:430px;margin:45px auto}#auth input{width:100%;margin:7px 0 14px;padding:13px;border-radius:9px;border:1px solid var(--line);background:#09090d;color:white}#message{margin-top:12px;color:#ff9aa3;white-space:pre-wrap}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}@media(max-width:650px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.panel{padding:17px}}
-</style></head>
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,sans-serif}.wrap{width:min(980px,calc(100% - 32px));margin:auto}
+header{border-bottom:1px solid var(--line);padding:17px 0}.bar{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:900;letter-spacing:2px;color:white;text-decoration:none}.logo span{color:var(--red)}
+button,a.btn{border:1px solid var(--line);border-radius:10px;padding:11px 15px;background:#1b1b23;color:white;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}button:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--red)!important;border-color:var(--red)!important}
+main{padding:38px 0 70px}.eyebrow{color:#ff6574;font-size:11px;font-weight:800;letter-spacing:2px}.heading{margin:8px 0 24px}.heading h1{font-size:clamp(27px,5vw,38px);margin:0}.muted{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0}.hidden{display:none!important}#auth{max-width:430px;margin:45px auto}#auth input{width:100%;margin:7px 0 14px;padding:13px;border-radius:9px;border:1px solid var(--line);background:#09090d;color:white;font:inherit}#message{margin-top:12px;color:#ff9aa3;white-space:pre-wrap}.site-card{background:#101016;border:1px solid var(--line);border-radius:13px;padding:18px;margin:14px 0}.site-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.site-title{font-size:18px;font-weight:800;overflow-wrap:anywhere}.status{display:inline-block;padding:6px 10px;border-radius:30px;background:#272731;color:#ddd;font-size:12px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}.notice{padding:14px;border:1px solid #454550;background:#111116;color:#d8d8df;border-radius:10px;margin:14px 0}.history{border-top:1px solid var(--line);margin-top:15px;padding-top:12px}.history p{margin:6px 0;color:var(--muted);font-size:13px}@media(max-width:600px){.panel{padding:17px}.actions>*{width:100%}}
+</style>
+</head>
 <body>
-<header><div class="wrap bar"><a class="logo" href="index.html" style="color:white;text-decoration:none">VER<span>SAT</span></a><button id="logout" class="hidden" type="button">Sair</button></div></header>
+<header><div class="wrap bar"><a class="logo" href="index.html">VER<span>SAT</span></a><button id="logout" class="hidden" type="button">Sair</button></div></header>
 <main class="wrap">
 <section id="auth" class="panel">
-<div class="eyebrow">ÁREA EXCLUSIVA DO CLIENTE</div><h1>Entre para gerenciar seu site</h1><p class="muted">Use a mesma conta que você utiliza na VERSAT.</p>
-<form id="loginForm"><label for="email">E-mail</label><input id="email" type="email" required autocomplete="email"><label for="password">Senha</label><input id="password" type="password" required autocomplete="current-password"><button class="primary" type="submit">Entrar</button></form><div id="message"></div>
+<div class="eyebrow">ÁREA EXCLUSIVA DO CLIENTE</div>
+<h1>Acompanhe seu site</h1>
+<p class="muted">Entre com a mesma conta que você utiliza na VERSAT para consultar o andamento e acessar seu site publicado.</p>
+<form id="loginForm">
+<label for="email">E-mail</label><input id="email" type="email" required autocomplete="email">
+<label for="password">Senha</label><input id="password" type="password" required autocomplete="current-password">
+<button class="primary" type="submit">Entrar</button>
+</form>
+<div id="message" role="status" aria-live="polite"></div>
 </section>
 <section id="app" class="hidden">
-<div class="eyebrow">PAINEL DO SEU SITE</div><div class="heading"><div><h1 id="siteTitle">Meu site</h1><p class="muted">Altere os conteúdos do seu site sem precisar pedir cada ajuste à VERSAT.</p></div><span id="siteStatus" class="status">Carregando</span></div>
-<div id="empty" class="panel hidden"><h2>Seu painel está quase pronto</h2><p class="muted">Ainda não existe um site vinculado à sua conta. Assim que a equipe VERSAT vincular o projeto aprovado, ele aparecerá aqui.</p><a class="btn" href="index.html">Voltar à VERSAT</a></div>
-<div id="editor" class="panel hidden">
-<h2>Conteúdo do site</h2><p class="muted">Estas alterações ficam como rascunho. Elas não publicam nem alteram o site que está no ar sem aprovação e publicação pela VERSAT.</p>
-<form id="contentForm" class="grid">
-<div class="field"><label for="brand_name">Nome da marca</label><input id="brand_name" maxlength="100"></div>
-<div class="field"><label for="logo_url">Link da logo</label><input id="logo_url" type="url" placeholder="https://..."></div>
-<div class="field wide"><label for="hero_title">Título principal</label><input id="hero_title" maxlength="180"></div>
-<div class="field wide"><label for="hero_text">Texto de apresentação</label><textarea id="hero_text" maxlength="1500"></textarea></div>
-<div class="field wide"><label for="about_text">Sobre a empresa</label><textarea id="about_text" maxlength="3000"></textarea></div>
-<div class="field"><label for="phone">Telefone / WhatsApp</label><input id="phone" maxlength="40"></div>
-<div class="field"><label for="email_contact">E-mail de contato</label><input id="email_contact" type="email" maxlength="180"></div>
-<div class="field"><label for="primary_color">Cor principal (HEX)</label><input id="primary_color" type="text" pattern="#[0-9a-fA-F]{6}" placeholder="#ed2638"></div>
-<div class="field"><label for="social_url">Link de rede social</label><input id="social_url" type="url" placeholder="https://..."></div>
-<div class="field wide"><label for="extra_notes">Outras alterações desejadas</label><textarea id="extra_notes" maxlength="3000"></textarea></div>
-</form>
-<div class="actions"><button id="save" class="primary" type="button">Salvar rascunho</button><span id="saveMessage" class="muted"></span></div>
-</div>
-<div id="history" class="panel hidden"><h2>Publicações</h2><div id="historyList" class="muted">Nenhuma publicação registrada.</div></div>
+<div class="eyebrow">PAINEL DO CLIENTE</div>
+<div class="heading"><h1>Seus projetos VERSAT</h1><p class="muted">Acompanhe o status, abra o site publicado e fale com nossa equipe se precisar de ajustes.</p></div>
+<div id="siteList"><div class="notice">Carregando seus projetos...</div></div>
 </section>
 </main>
 <script>
 const SUPABASE_URL="https://pmnpifvdypmbtoirdugp.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable__EPP_PrOB_fqnJcCfhHCKQ_vWf47com";
+const WHATSAPP_NUMBER="5511984681861";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let site=null;
 const $=id=>document.getElementById(id);
-const fields=["brand_name","logo_url","hero_title","hero_text","about_text","phone","email_contact","primary_color","social_url","extra_notes"];
-function msg(text){$("message").textContent=text}
-function showAuth(){ $("auth").classList.remove("hidden");$("app").classList.add("hidden");$("logout").classList.add("hidden")}
+const statusLabels={draft:"Em preparação",in_review:"Em revisão",approved:"Aprovado",published:"Publicado",suspended:"Suspenso"};
+function showAuth(){ $("auth").classList.remove("hidden");$("app").classList.add("hidden");$("logout").classList.add("hidden"); }
+function requestChanges(site){
+ const message="Olá, VERSAT! Gostaria de solicitar um ajuste no meu site. Projeto: "+site.site_slug+". Link: "+(site.published_url||"Ainda não publicado")+".";
+ window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
+}
+function siteCard(site,history){
+ const card=document.createElement("article");card.className="site-card";
+ const top=document.createElement("div");top.className="site-top";
+ const title=document.createElement("div");title.className="site-title";title.textContent=String(site.site_slug||"Meu site").replace(/-/g," ");
+ const status=document.createElement("span");status.className="status";status.textContent=statusLabels[site.status]||site.status||"Em andamento";
+ top.append(title,status);card.append(top);
+ const info=document.createElement("p");info.className="muted";info.textContent=site.status==="published"?"Seu site está publicado. Você pode abrir o endereço abaixo.":"Nossa equipe está trabalhando no projeto ou aguardando a próxima etapa. O link ficará disponível quando a publicação for concluída.";card.append(info);
+ const actions=document.createElement("div");actions.className="actions";
+ if(site.published_url&&/^https:\/\//i.test(site.published_url)){
+  const link=document.createElement("a");link.className="btn primary";link.href=site.published_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Abrir meu site ↗";actions.append(link);
+ }
+ const contact=document.createElement("button");contact.type="button";contact.textContent="Solicitar ajuste pelo WhatsApp";contact.addEventListener("click",()=>requestChanges(site));actions.append(contact);card.append(actions);
+ if(history.length){const section=document.createElement("div");section.className="history";const heading=document.createElement("strong");heading.textContent="Histórico de publicações";section.append(heading);history.forEach(item=>{const p=document.createElement("p");p.textContent="Versão "+item.version+" — "+new Date(item.created_at).toLocaleString("pt-BR");section.append(p)});card.append(section)}
+ return card;
+}
 async function boot(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){showAuth();return}
  $("auth").classList.add("hidden");$("app").classList.remove("hidden");$("logout").classList.remove("hidden");
- const {data,error}=await db.from("customer_sites").select("id,project_id,site_slug,status,published_url").eq("owner_id",session.user.id).order("created_at",{ascending:false}).limit(1);
- if(error){$("empty").classList.remove("hidden");$("empty").innerHTML="<h2>Não foi possível carregar</h2><p class='muted'></p>";$("empty").querySelector("p").textContent=error.message;return}
- if(!data||!data.length){$("empty").classList.remove("hidden");$("siteStatus").textContent="Aguardando vínculo";return}
- site=data[0];$("siteTitle").textContent=site.site_slug.replace(/-/g," ");$("siteStatus").textContent=({draft:"Em preparação",in_review:"Em revisão",approved:"Aprovado",published:"Publicado",suspended:"Suspenso"})[site.status]||site.status;const existingLink=$("publishedSiteLink");if(existingLink)existingLink.remove();if(site.published_url&&/^https:\/\//i.test(site.published_url)){const link=document.createElement("a");link.id="publishedSiteLink";link.href=site.published_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Abrir meu site publicado ↗";link.className="primary";link.style.cssText="display:inline-block;margin:12px 0;padding:10px 14px;border-radius:10px;text-decoration:none";$("siteStatus").after(link)}
- $("editor").classList.remove("hidden");$("history").classList.remove("hidden");
- const {data:draft,error:draftError}=await db.from("customer_site_drafts").select("content").eq("site_id",site.id).maybeSingle();
- if(draftError){$("saveMessage").textContent="Erro ao carregar rascunho: "+draftError.message;return}
- const content=draft?.content||{};for(const key of fields)$(key).value=content[key]||"";
- const {data:pubs,error:pubError}=await db.from("customer_site_publications").select("version,created_at").eq("site_id",site.id).order("version",{ascending:false}).limit(10);
- if(!pubError&&pubs?.length)$("historyList").innerHTML=pubs.map(p=>"<p>Versão "+p.version+" — "+new Date(p.created_at).toLocaleString("pt-BR")+"</p>").join("");
+ const list=$("siteList");list.replaceChildren();
+ const {data:sites,error}=await db.from("customer_sites").select("id,project_id,site_slug,status,published_url,created_at").eq("owner_id",session.user.id).order("created_at",{ascending:false});
+ if(error){const p=document.createElement("div");p.className="notice";p.textContent="Não foi possível carregar seus projetos agora. Tente novamente em instantes.";list.append(p);return}
+ if(!sites||!sites.length){const empty=document.createElement("div");empty.className="notice";empty.textContent="Ainda não há um site vinculado à sua conta. Quando a equipe VERSAT concluir e aprovar a publicação, ela aparecerá aqui.";list.append(empty);return}
+ const ids=sites.map(site=>site.id);
+ const {data:publications}=await db.from("customer_site_publications").select("site_id,version,created_at").in("site_id",ids).order("version",{ascending:false});
+ sites.forEach(site=>list.append(siteCard(site,(publications||[]).filter(item=>item.site_id===site.id))));
 }
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();msg("Entrando...");const {error}=await db.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){msg(error.message);return}msg("");await boot()});
-$("logout").addEventListener("click",async()=>{await db.auth.signOut();site=null;showAuth()});
-$("save").addEventListener("click",async()=>{
- if(!site)return;const {data:{user}}=await db.auth.getUser();if(!user)return;
- const content={};for(const key of fields)content[key]=$(key).value.trim();
- if(content.primary_color&&!/^#[0-9a-fA-F]{6}$/.test(content.primary_color)){$("saveMessage").textContent="Use uma cor HEX válida, como #ed2638.";return}
- $("save").disabled=true;$("saveMessage").textContent="Salvando...";
- const {error}=await db.from("customer_site_drafts").upsert({site_id:site.id,owner_id:user.id,content,updated_at:new Date().toISOString()},{onConflict:"site_id"});
- $("save").disabled=false;$("saveMessage").textContent=error?"Não foi possível salvar: "+error.message:"Rascunho salvo. Ele ainda não foi publicado.";
-});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("message").textContent="Entrando...";const {error}=await db.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){$("message").textContent=error.message;return}$("message").textContent="";await boot()});
+$("logout").addEventListener("click",async()=>{await db.auth.signOut();showAuth()});
 db.auth.onAuthStateChange((_event)=>{setTimeout(boot,0)});
 boot();
-</script></body></html>
+</script>
+</body>
+</html>
