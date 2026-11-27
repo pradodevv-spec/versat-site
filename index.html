@@ -722,11 +722,13 @@ async function loadAdmin(){
  if(projectError){document.getElementById("adminProjects").innerHTML='<div class="notice">'+escapeHtml(projectError.message)+'</div>';return}
  const {data:devRows}=await sb.from("project_development").select("project_id,github_repo_url,preview_url,dev_notes");
  const devMap={};(devRows||[]).forEach(row=>devMap[row.project_id]=row);
- const all=(projects||[]).map(p=>({...p,...(devMap[p.id]||{})}));
- document.getElementById("metricReceived").textContent=all.filter(p=>p.status==="Recebido").length;
- document.getElementById("metricProgress").textContent=all.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length;
- document.getElementById("metricDone").textContent=all.filter(p=>p.status==="Concluído").length;
- const pending=all.filter(p=>String(p.status||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()!=="concluido");
+ const {data:payments}=await sb.from("project_payments").select("project_id,status,amount_cents,checkout_url,created_at").order("created_at",{ascending:false});
+ const latestPayments={};(payments||[]).forEach(pay=>{if(!latestPayments[pay.project_id])latestPayments[pay.project_id]=pay});
+ const all=(projects||[]).map(p=>({...p,...(devMap[p.id]||{}),payment_status:latestPayments[p.id]?.status||null,payment_amount:latestPayments[p.id]?.amount_cents||0,payment_checkout_url:latestPayments[p.id]?.checkout_url||""}));
+ document.getElementById("metricReceived").textContent=all.filter(p=>p.status==="Recebido"||p.payment_status==="pending").length;
+ document.getElementById("metricProgress").textContent=all.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)&&p.payment_status!=="pending").length;
+ document.getElementById("metricDone").textContent=all.filter(p=>p.status==="Concluído"&&p.payment_status!=="pending").length;
+ const pending=all.filter(p=>String(p.status||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase()!=="concluido"||p.payment_status==="pending");
  document.getElementById("adminProjects").innerHTML=pending.length?pending.map(p=>projectCard(p,true)).join(""):'<div class="empty">Não há pedidos pendentes.</div>';
  const {data:responses,error:responsesError}=await sb.from("project_client_responses").select("*").order("created_at",{ascending:false});
  if(responsesError){document.getElementById("adminResponses").innerHTML='<div class="notice">'+escapeHtml(responsesError.message)+'</div>'}else{document.getElementById("adminResponses").innerHTML=(responses||[]).length?responses.map(r=>'<div class="project"><b>'+escapeHtml(all.find(p=>p.id===r.project_id)?.project_name||"Projeto")+'</b><div class="small">'+(r.decision==="approved"?"Cliente aprovou o layout":"Cliente solicitou alterações")+' • '+new Date(r.created_at).toLocaleDateString("pt-BR")+'</div><p>'+escapeHtml(r.message||"Sem observações.")+'</p></div>').join(""):'<div class="empty">Ainda não há retornos dos clientes.</div>'}
