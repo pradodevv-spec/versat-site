@@ -452,7 +452,7 @@ async function loadDevelopment(){
  const paymentMap={};(paymentRows||[]).forEach(row=>{if(!paymentMap[row.project_id])paymentMap[row.project_id]=row});
  const rows=(projects||[]).map(p=>({...p,...(devMap[p.id]||{}),payment_status:paymentMap[p.id]?.status||"",payment_amount:paymentMap[p.id]?.amount_cents||0,payment_checkout_url:paymentMap[p.id]?.checkout_url||""})),active=rows.filter(p=>p.status!=="Concluído"||p.payment_status==="pending"),done=rows.filter(p=>p.status==="Concluído"&&p.payment_status!=="pending");
  const card=p=>'<article class="project" data-project="'+p.id+'" style="margin:14px 0"><div class="projecttop"><div><b>'+escapeHtml(p.project_name||"Projeto")+'</b><div class="small">'+escapeHtml(p.project_type||"")+' • '+new Date(p.created_at).toLocaleDateString("pt-BR")+'</div></div><span class="status">'+escapeHtml(p.payment_status==="pending"&&p.status==="Concluído"?"Aguardando pagamento":p.status||"Recebido")+'</span></div><div class="small" style="margin-top:6px">Pagamento: '+escapeHtml(p.payment_status||"Sem cobrança")+(p.payment_amount?' • '+(Number(p.payment_amount)/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}):"")+'</div><details style="margin:12px 0"><summary style="cursor:pointer">Ver briefing do cliente</summary><div class="client-brief-details">'+renderClientBrief(p)+'</div></details><details style="margin:10px 0"><summary style="cursor:pointer">Arquivos enviados pelo cliente</summary><div id="project-files-'+p.id+'" class="small">Carregando arquivos...</div></details><div class="payment-admin" style="margin:14px 0;padding:12px;border:1px solid #444;border-radius:12px"><b>Cobrança do projeto</b><p class="small">Defina o valor e gere um link seguro da InfinitePay para o cliente.</p><label class="field"><span>Valor em reais (R$)</span><input class="payment-amount" type="number" min="1" max="1000000" step="0.01" placeholder="Ex.: 850,00"></label><button class="btn red" type="button" onclick="createProjectCharge(this)">Gerar cobrança InfinitePay</button><div class="payment-notice small" style="margin-top:8px"></div></div><label class="field"><span>Etapa do projeto</span><select class="dev-status"><option value="Recebido" '+(p.status==="Recebido"?"selected":"")+'>Recebido</option><option value="Em desenvolvimento" '+(p.status==="Em desenvolvimento"?"selected":"")+'>Em desenvolvimento</option><option value="Em revisão" '+(p.status==="Em revisão"?"selected":"")+'>Em revisão</option><option value="Aguardando cliente" '+(p.status==="Aguardando cliente"?"selected":"")+'>Aguardando cliente</option><option value="Concluído" '+(p.status==="Concluído"?"selected":"")+'>Concluído</option></select></label><label class="field"><span>Repositório GitHub</span><input class="dev-repo" type="url" value="'+escapeHtml(p.github_repo_url||"")+'" placeholder="https://github.com/..."></label><label class="field"><span>Link de prévia</span><input class="dev-preview" type="url" value="'+escapeHtml(p.preview_url||p.layout_url||"")+'" placeholder="https://..."></label><label class="field"><span>Notas internas</span><textarea class="dev-notes" rows="3" maxlength="5000" placeholder="Tarefas e decisões técnicas...">'+escapeHtml(p.dev_notes||"")+'</textarea></label><button class="btn red" type="button" onclick="saveDevelopmentProject(this)">Salvar andamento</button><div class="dev-notice small"></div><div class="small">Atualizado: '+(p.dev_updated_at?new Date(p.dev_updated_at).toLocaleString("pt-BR"):"Ainda não")+'</div></article>';
- box.innerHTML='<h3>Central de Desenvolvimento</h3><p class="small">Organize os pedidos, acompanhe etapas e registre repositórios, prévias e notas internas. Somente a administração acessa esta área.</p><section class="admin-settings-card" style="margin:20px 0"><div class="admin-settings-heading"><div><span class="admin-settings-kicker">GERAÇÃO COM IA • TESTE PRIVADO</span><h3>Central de Desenvolvimento com IA VERSAT</h3><p>A IA VERSAT cria o site e abre uma prévia de teste que não é publicada no domínio principal. Se encontrar erros, descreva-os em “Revisar e corrigir site”. A nova versão aparece para você conferir; nada é publicado sem sua aprovação.</p></div></div><label class="admin-setting-field admin-setting-wide"><span>O que a IA deve criar?</span><textarea id="versatAiTestPrompt" maxlength="3000" rows="5" placeholder="Ex.: Crie um site moderno para uma barbearia com serviços, preços, galeria e botão de WhatsApp."></textarea></label><div class="admin-settings-footer"><div id="versatAiTestResult" class="admin-settings-notice" role="status" aria-live="polite">Uso exclusivo do administrador. A prévia é privada e não cria pedidos nem cobranças.</div><button class="btn red admin-settings-save" type="button" onclick="runVersatFreeAITest(this)">✦ Criar site com IA VERSAT</button></div></section><div class="admin-metrics"><div class="metric"><span>Na fila</span><strong>'+active.filter(p=>p.status==="Recebido").length+'</strong></div><div class="metric"><span>Em andamento</span><strong>'+active.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length+'</strong></div><div class="metric"><span>Entregues</span><strong>'+done.length+'</strong></div></div><h3>Projetos ativos</h3>'+(active.length?active.map(card).join(""):'<div class="empty">Nenhum projeto ativo.</div>')+'';
+ box.innerHTML='<h3>Central de Desenvolvimento</h3><p class="small">Organize os pedidos, acompanhe etapas e registre repositórios, prévias e notas internas. Somente a administração acessa esta área.</p><section class="admin-settings-card" style="margin:20px 0"><div class="admin-settings-heading"><div><span class="admin-settings-kicker">GERAÇÃO COM IA • TESTE PRIVADO</span><h3>Central de Desenvolvimento com IA VERSAT</h3><p>A IA VERSAT cria o site e abre uma prévia de teste que não é publicada no domínio principal. Se encontrar erros, descreva-os em “Revisar e corrigir site”. A nova versão aparece para você conferir; nada é publicado sem sua aprovação.</p></div></div><label class="admin-setting-field admin-setting-wide"><span>O que a IA deve criar?</span><textarea id="versatAiTestPrompt" maxlength="6000" rows="5" placeholder="Descreva o site completo: páginas, seções, identidade visual, recursos, formulários, catálogo e integrações desejadas."></textarea></label><div class="admin-settings-footer"><div id="versatAiTestResult" class="admin-settings-notice" role="status" aria-live="polite">Uso exclusivo do administrador. A prévia é privada e não cria pedidos nem cobranças.</div><button class="btn red admin-settings-save" type="button" onclick="runVersatFreeAITest(this)">✦ Criar site com IA VERSAT</button></div></section><div class="admin-metrics"><div class="metric"><span>Na fila</span><strong>'+active.filter(p=>p.status==="Recebido").length+'</strong></div><div class="metric"><span>Em andamento</span><strong>'+active.filter(p=>["Em desenvolvimento","Em revisão","Aguardando cliente"].includes(p.status)).length+'</strong></div><div class="metric"><span>Entregues</span><strong>'+done.length+'</strong></div></div><h3>Projetos ativos</h3>'+(active.length?active.map(card).join(""):'<div class="empty">Nenhum projeto ativo.</div>')+'';
 
  const doneWithPending=done.filter(p=>p.payment_status==="pending");
  if(doneWithPending.length){
@@ -461,6 +461,7 @@ async function loadDevelopment(){
   box.appendChild(pendingSection);
  }
  rows.forEach(p=>loadProjectFiles(p.id,p.user_id));
+ await loadVersatAiSavedProjects();
 }
 async function createProjectCharge(button){
  const card=button.closest("[data-project]");if(!card||!sb||!currentUser)return;
@@ -683,6 +684,62 @@ async function submitProjectReview(event,projectId){
  if(error){notice.textContent=error.code==="23505"?"Este projeto já recebeu uma avaliação.":"Não foi possível enviar: "+error.message;return}
  await loadProjects();
 }
+async function loadVersatAiSavedProjects(){
+ const old=document.getElementById("versatAiSavedProjects");
+ if(old)old.remove();
+ const box=document.getElementById("dashContent");
+ const anchor=box?.querySelector(".admin-settings-card");
+ if(!box||!anchor)return;
+ const panel=document.createElement("section");
+ panel.id="versatAiSavedProjects";
+ panel.className="admin-settings-card";
+ panel.style.margin="18px 0 26px";
+ panel.innerHTML='<div class="admin-settings-heading"><div><span class="admin-settings-kicker">BIBLIOTECA VERSAT</span><h3>Meus sites gerados</h3><p>Projetos salvos automaticamente. Você pode abrir a prévia ou continuar a edição mesmo depois de sair desta tela.</p></div></div><div id="versatAiSavedList" class="small">Carregando sites salvos...</div>';
+ anchor.insertAdjacentElement("afterend",panel);
+ const list=panel.querySelector("#versatAiSavedList");
+ const {data,error}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"list"}});
+ if(error||!data?.success){list.textContent="Não foi possível carregar os sites salvos: "+(error?.message||data?.error||"erro desconhecido");return}
+ const jobs=Array.isArray(data.jobs)?data.jobs:[];
+ if(!jobs.length){list.textContent="Nenhum site gerado ainda. Quando a IA concluir um projeto, ele aparecerá aqui.";return}
+ list.replaceChildren();
+ jobs.forEach(job=>{
+  const card=document.createElement("article");
+  card.className="project";
+  card.style.margin="12px 0";
+  const title=document.createElement("b");
+  title.textContent=(String(job.prompt||"Novo site").trim().slice(0,90)||"Novo site")+(String(job.prompt||"").length>90?"…":"");
+  const meta=document.createElement("div");
+  meta.className="small";
+  meta.style.margin="6px 0 10px";
+  meta.textContent=(job.status==="completed"?"Concluído":job.status==="processing"?"Em criação":job.status==="queued"?"Na fila":"Falhou")+" • "+new Date(job.created_at).toLocaleString("pt-BR");
+  card.append(title,meta);
+  const url=job.result?.preview_url;
+  if(job.status==="completed"&&typeof url==="string"&&url.startsWith("https://")){
+   const open=document.createElement("a");
+   open.href=url;open.target="_blank";open.rel="noopener noreferrer";open.className="btn red";
+   open.textContent="Abrir prévia do site";
+   open.style.display="inline-flex";
+   card.append(open);
+   if(job.storage_path){
+    const edit=document.createElement("button");
+    edit.type="button";edit.className="btn";edit.style.marginLeft="8px";edit.textContent="Continuar edição";
+    edit.addEventListener("click",()=>{
+     if(card.querySelector(".saved-revision")){card.querySelector(".saved-revision").remove();return}
+     const area=document.createElement("div");area.className="saved-revision";area.style.marginTop="14px";
+     const field=document.createElement("textarea");field.rows=3;field.maxLength=6000;field.placeholder="Descreva o que deseja melhorar neste site...";field.style.cssText="display:block;width:100%;padding:12px;border:1px solid #454550;border-radius:10px;background:#09090d;color:#fff;resize:vertical";
+     const run=document.createElement("button");run.type="button";run.className="btn red";run.style.marginTop="10px";run.textContent="Revisar este site com IA";
+     run.addEventListener("click",()=>{window.versatAiStoragePath=job.storage_path;field.id="versatAiRevisionPrompt";runVersatFreeAITest(run,true)});
+     area.append(field,run);card.append(area);field.focus();
+    });
+    card.append(edit);
+   }
+  }else if(job.error){
+   const err=document.createElement("p");err.className="small";err.style.color="#ff8992";err.textContent="Detalhe: "+job.error;card.append(err);
+  }
+  list.append(card);
+ });
+}
+
 let versatAiActiveController=null;
 let versatAiActiveButton=null;
 async function runVersatFreeAITest(button,isRevision=false){
@@ -696,7 +753,7 @@ async function runVersatFreeAITest(button,isRevision=false){
  const input=document.getElementById(isRevision?"versatAiRevisionPrompt":"versatAiTestPrompt"),result=document.getElementById("versatAiTestResult");
  const prompt=(input?.value||"").trim();
  if(prompt.length<15){result.textContent=isRevision?"Descreva o que precisa ser corrigido com pelo menos 15 caracteres.":"Descreva o site com pelo menos 15 caracteres.";return}
- if(prompt.length>3000){result.textContent="O briefing deve ter no máximo 3.000 caracteres.";return}
+ if(prompt.length>6000){result.textContent="O briefing deve ter no máximo 6.000 caracteres.";return}
  if(!sb||!currentUser){result.textContent="Entre na conta de administrador para usar o teste.";return}
  const old=button.textContent;
  const controller=new AbortController();
@@ -704,7 +761,7 @@ async function runVersatFreeAITest(button,isRevision=false){
  button.disabled=false;button.textContent="Cancelar criação";
  result.textContent="Enviando seu briefing para a IA. Aguarde...";
  try{
-  const generationRules = "\n\nREGRAS DE ENTREGA OBRIGATÓRIAS: Gere um único index.html completo, responsivo e funcional. Para concluir rápido sem perder qualidade, use no máximo 4 seções essenciais e limite o HTML inteiro a 14.000 caracteres. Se estiver chegando ao limite, simplifique o visual e o texto; nunca ultrapasse o limite nem deixe o HTML incompleto. Use CSS/JS curtos, sem bibliotecas pesadas, grandes blocos de dados, animações excessivas ou componentes duplicados. LINKS: todo <a> precisa de destino real e válido; proibido href vazio, href=\"#\", javascript:void(0), URLs inventadas ou links decorativos. Navegação interna usa href=\"#id-existente\" com destino existente; a logo volta ao início. REDES SOCIAIS: crie links somente com URL exata fornecida; sem URL, ícones não clicáveis. BOTÕES: cada botão executa ação real. FORMULÁRIOS sem backend informam que são demonstrativos e nunca fingem envio. Não invente endereços, preços, avaliações, depoimentos, contatos ou certificações. Não crie links para a VERSAT, salvo pedido expresso. Antes de finalizar, confira todos os links, IDs, botões, formulários e fechamento do HTML.";
+  const generationRules = "\n\nREGRAS DE ENTREGA OBRIGATÓRIAS: Gere um site completo, profissional, responsivo e funcional. Não reduza artificialmente o projeto a poucas seções: inclua todas as páginas/seções e recursos necessários ao briefing. Desenvolva com cuidado e prefira concluir o projeto corretamente a encurtar a entrega. Se estiver chegando ao limite, simplifique o visual e o texto; nunca ultrapasse o limite nem deixe o HTML incompleto. Use CSS/JS curtos, sem bibliotecas pesadas, grandes blocos de dados, animações excessivas ou componentes duplicados. LINKS: todo <a> precisa de destino real e válido; proibido href vazio, href=\"#\", javascript:void(0), URLs inventadas ou links decorativos. Navegação interna usa href=\"#id-existente\" com destino existente; a logo volta ao início. REDES SOCIAIS: crie links somente com URL exata fornecida; sem URL, ícones não clicáveis. BOTÕES: cada botão executa ação real. FORMULÁRIOS sem backend informam que são demonstrativos e nunca fingem envio. Não invente endereços, preços, avaliações, depoimentos, contatos ou certificações. Não crie links para a VERSAT, salvo pedido expresso. Antes de finalizar, confira todos os links, IDs, botões, formulários e fechamento do HTML.";
   const finalPrompt = prompt + generationRules;
   const {data:started,error:startError}=await sb.functions.invoke("versat-ai-test-v2",{body:{prompt:finalPrompt,...(isRevision&&window.versatAiStoragePath?{storage_path:window.versatAiStoragePath}:{})},signal:controller.signal});
   if(startError)throw startError;
@@ -743,6 +800,7 @@ async function runVersatFreeAITest(button,isRevision=false){
   const address=document.createElement("div");address.className="small";address.style.cssText="margin-top:8px;overflow-wrap:anywhere";
   address.textContent=url;
   result.append(heading,message,link,address);
+  await loadVersatAiSavedProjects();
   if(window.versatAiStoragePath){const revise=document.createElement("section");revise.style.cssText="margin-top:18px;padding:18px;border:1px solid #454550;border-radius:14px;background:#111116";const reviseTitle=document.createElement("b");reviseTitle.textContent="Encontrou algum erro ou algo que não funciona?";const reviseHelp=document.createElement("p");reviseHelp.className="small";reviseHelp.style.margin="7px 0 12px";reviseHelp.textContent="Descreva o problema ou a mudança desejada. A IA VERSAT vai revisar o site atual e gerar outra prévia para você conferir.";const reviseInput=document.createElement("textarea");reviseInput.id="versatAiRevisionPrompt";reviseInput.rows=3;reviseInput.maxLength=3000;reviseInput.placeholder="Ex.: O menu não abre no celular, o botão de contato não funciona e a página de serviços está vazia.";reviseInput.style.cssText="display:block;width:100%;padding:12px;border:1px solid #454550;border-radius:10px;background:#09090d;color:#fff;resize:vertical";const reviseBtn=document.createElement("button");reviseBtn.type="button";reviseBtn.className="btn red";reviseBtn.style.marginTop="12px";reviseBtn.textContent="↻ Revisar e corrigir site com IA VERSAT";reviseBtn.onclick=()=>runVersatFreeAITest(reviseBtn,true);revise.append(reviseTitle,reviseHelp,reviseInput,reviseBtn);result.append(revise);}
  }catch(error){console.error("Teste grátis da IA:",error);if(controller.signal.aborted){result.textContent="Criação cancelada. Nenhuma prévia nova foi aberta.";return}let detail=error?.message||"erro inesperado";let status=error?.context?.status||error?.status||0;let code="";try{code=error?.context?.headers?.get?.("sb-error-code")||error?.context?.headers?.get?.("sb_error_code")||""}catch(_){}try{const payload=await error?.context?.json();if(payload?.error)detail=payload.error}catch(_){}if(status===546||code==="WORKER_RESOURCE_LIMIT"||/WORKER_RESOURCE_LIMIT|wall.?clock|546/i.test(detail)){detail="A geração ultrapassou o limite de tempo do servidor (erro 546). O pedido foi interrompido antes de terminar. O briefing agora pede uma entrega mais enxuta; se continuar acontecendo, será necessário dividir a geração em etapas no backend."}result.textContent="Não foi possível gerar: "+detail}
  finally{if(versatAiActiveController===controller){versatAiActiveController=null;versatAiActiveButton=null;button.disabled=false;button.textContent=old}}
