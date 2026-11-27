@@ -706,9 +706,23 @@ async function runVersatFreeAITest(button,isRevision=false){
  try{
   const generationRules = "\n\nREGRAS DE ENTREGA OBRIGATÓRIAS: Gere um único index.html completo, responsivo e funcional. Para concluir rápido sem perder qualidade, use no máximo 4 seções essenciais e limite o HTML inteiro a 14.000 caracteres. Se estiver chegando ao limite, simplifique o visual e o texto; nunca ultrapasse o limite nem deixe o HTML incompleto. Use CSS/JS curtos, sem bibliotecas pesadas, grandes blocos de dados, animações excessivas ou componentes duplicados. LINKS: todo <a> precisa de destino real e válido; proibido href vazio, href=\"#\", javascript:void(0), URLs inventadas ou links decorativos. Navegação interna usa href=\"#id-existente\" com destino existente; a logo volta ao início. REDES SOCIAIS: crie links somente com URL exata fornecida; sem URL, ícones não clicáveis. BOTÕES: cada botão executa ação real. FORMULÁRIOS sem backend informam que são demonstrativos e nunca fingem envio. Não invente endereços, preços, avaliações, depoimentos, contatos ou certificações. Não crie links para a VERSAT, salvo pedido expresso. Antes de finalizar, confira todos os links, IDs, botões, formulários e fechamento do HTML.";
   const finalPrompt = prompt + generationRules;
-  const {data,error}=await sb.functions.invoke("versat-ai-test-v2",{body:{prompt:finalPrompt,...(isRevision&&window.versatAiStoragePath?{storage_path:window.versatAiStoragePath}:{})},signal:controller.signal});
-  if(error)throw error;
-  if(!data?.success||!data?.preview_url)throw new Error(data?.error||"A IA não retornou uma prévia.");
+  const {data:started,error:startError}=await sb.functions.invoke("versat-ai-test-v2",{body:{prompt:finalPrompt,...(isRevision&&window.versatAiStoragePath?{storage_path:window.versatAiStoragePath}:{})},signal:controller.signal});
+  if(startError)throw startError;
+  if(!started?.success||!started?.job_id)throw new Error(started?.error||"Não foi possível iniciar a geração.");
+  result.textContent="Geração iniciada. A IA está trabalhando em segundo plano; você pode aguardar nesta tela...";
+  let data=null;
+  for(let attempt=0;attempt<100;attempt++){
+   if(controller.signal.aborted)throw new DOMException("Geração cancelada pelo usuário.","AbortError");
+   await new Promise(resolve=>setTimeout(resolve,1800));
+   const {data:statusData,error:statusError}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"status",job_id:started.job_id},signal:controller.signal});
+   if(statusError)throw statusError;
+   if(statusData?.status==="completed"){data={...statusData.result,success:true};break;}
+   if(statusData?.status==="failed")throw new Error(statusData.error||"A IA não conseguiu concluir a geração.");
+   if(statusData?.status==="cancelled")throw new Error("Geração cancelada.");
+   result.textContent="IA trabalhando... etapa "+Math.min(attempt+1,100)+"/100. O resultado será carregado automaticamente.";
+  }
+  if(!data)throw new Error("A geração continua em processamento. Atualize a tela e consulte o trabalho novamente.");
+  if(!data?.success||!data?.preview_url)throw new Error("A IA não retornou uma prévia válida.");
   const url=String(data.preview_url);
   if(!url.startsWith("https://"))throw new Error("O link de prévia retornado não é válido.");
   window.versatAiStoragePath=data.storage_path||window.versatAiStoragePath||"";
