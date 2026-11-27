@@ -774,13 +774,36 @@ async function loadVersatAiSavedProjects(){
   const card=document.createElement("article");
   card.className="project";
   card.style.margin="12px 0";
+  const header=document.createElement("div");
+  header.style.cssText="display:flex;align-items:flex-start;justify-content:space-between;gap:12px";
   const title=document.createElement("b");
   title.textContent=(String(job.prompt||"Novo site").trim().slice(0,90)||"Novo site")+(String(job.prompt||"").length>90?"…":"");
+  title.style.cssText="min-width:0;overflow-wrap:anywhere";
+  const menuWrap=document.createElement("details");
+  menuWrap.style.cssText="position:relative;flex-shrink:0";
+  const menuTrigger=document.createElement("summary");
+  menuTrigger.textContent="•••";menuTrigger.setAttribute("aria-label","Ações do projeto");menuTrigger.title="Ações do projeto";
+  menuTrigger.style.cssText="list-style:none;cursor:pointer;border:1px solid #44444f;border-radius:999px;width:42px;height:36px;display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:2px;background:#17171d";
+  const menu=document.createElement("div");
+  menu.style.cssText="position:absolute;right:0;top:42px;z-index:20;min-width:190px;padding:7px;background:#202027;border:1px solid #454550;border-radius:12px;box-shadow:0 12px 30px #0009";
+  const remove=document.createElement("button");
+  remove.type="button";remove.textContent="Remover da biblioteca";
+  remove.style.cssText="display:block;width:100%;text-align:left;padding:11px;border:0;border-radius:8px;background:transparent;color:#ff8992;font:inherit;cursor:pointer";
+  remove.addEventListener("click",async()=>{
+   menuWrap.open=false;
+   if(!confirm("Remover este registro da biblioteca? Esta ação não pode ser desfeita."))return;
+   remove.disabled=true;remove.textContent="Removendo...";
+   const {data:deleted,error:deleteError}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"delete",job_id:job.id}});
+   if(deleteError||!deleted?.success){remove.disabled=false;remove.textContent="Remover da biblioteca";alert("Não foi possível remover: "+(deleteError?.message||deleted?.error||"erro desconhecido"));return}
+   card.remove();
+   if(!list.querySelector(".project"))list.textContent="Nenhum site salvo nesta biblioteca.";
+  });
+  menu.append(remove);menuWrap.append(menuTrigger,menu);
+  header.append(title,menuWrap);
   const meta=document.createElement("div");
-  meta.className="small";
-  meta.style.margin="6px 0 10px";
+  meta.className="small";meta.style.margin="6px 0 10px";
   meta.textContent=(job.status==="completed"?"Concluído":job.status==="processing"?"Em criação":job.status==="queued"?"Na fila":"Falhou")+" • "+new Date(job.created_at).toLocaleString("pt-BR");
-  card.append(title,meta);
+  card.append(header,meta);
   const url=job.result?.preview_url;
   if(job.status==="completed"&&typeof url==="string"&&url.startsWith("https://")){
    const open=document.createElement("a");
