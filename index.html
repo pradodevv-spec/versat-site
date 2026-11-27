@@ -719,7 +719,7 @@ async function runVersatFreeAITest(button,isRevision=false){
    if(statusData?.status==="completed"){data={...statusData.result,success:true};break;}
    if(statusData?.status==="failed")throw new Error(statusData.error||"A IA não conseguiu concluir a geração.");
    if(statusData?.status==="cancelled")throw new Error("Geração cancelada.");
-   result.textContent="IA trabalhando... etapa "+Math.min(attempt+1,100)+"/100. O resultado será carregado automaticamente.";
+   result.textContent="IA trabalhando... etapa "+Math.min(attempt+1,90)+"/90. O resultado será carregado automaticamente.";
   }
   if(!data)throw new Error("A geração continua em processamento. Atualize a tela e consulte o trabalho novamente.");
   if(!data?.success||!data?.preview_url)throw new Error("A IA não retornou uma prévia válida.");
