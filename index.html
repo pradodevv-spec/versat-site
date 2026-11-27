@@ -769,7 +769,7 @@ async function loadVersatAiSavedProjects(){
  panel.id="versatAiSavedProjects";
  panel.className="admin-settings-card";
  panel.style.margin="18px 0 26px";
- panel.innerHTML='<div class="admin-settings-heading"><div><span class="admin-settings-kicker">BIBLIOTECA VERSAT</span><h3>Meus sites gerados</h3><p>Projetos salvos automaticamente. Você pode abrir a prévia ou continuar a edição mesmo depois de sair desta tela.</p></div></div><div id="versatAiSavedList" class="small">Carregando sites salvos...</div>';
+ panel.innerHTML='<div class="admin-settings-heading"><div><span class="admin-settings-kicker">BIBLIOTECA VERSAT</span><h3>Meus sites gerados</h3><p>Projetos salvos automaticamente. Você pode abrir a prévia ou continuar a edição mesmo depois de sair desta tela.</p></div></div><div class="admin-settings-grid" style="margin-bottom:14px"><label class="admin-setting-field"><span>Buscar site</span><input id="versatLibrarySearch" type="search" placeholder="Digite parte do briefing..."></label><label class="admin-setting-field"><span>Filtrar status</span><select id="versatLibraryFilter"><option value="">Todos</option><option value="completed">Concluídos</option><option value="processing">Em criação</option><option value="queued">Na fila</option><option value="failed">Com erro</option></select></label></div><div id="versatAiSavedList" class="small">Carregando sites salvos...</div>';
  anchor.insertAdjacentElement("afterend",panel);
  const list=panel.querySelector("#versatAiSavedList");
  const {data,error}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"list"}});
@@ -777,11 +777,14 @@ async function loadVersatAiSavedProjects(){
  const jobs=Array.isArray(data.jobs)?data.jobs:[];
  if(!jobs.length){list.textContent="Nenhum site gerado ainda. Quando a IA concluir um projeto, ele aparecerá aqui.";return}
  list.replaceChildren();
- jobs.forEach(job=>{
+ const search=document.getElementById("versatLibrarySearch"),filter=document.getElementById("versatLibraryFilter");
+  const applyLibraryFilters=()=>{const term=search.value.trim().toLowerCase(),status=filter.value;[...list.querySelectorAll(".project")].forEach(c=>{c.hidden=!!((term&&!c.dataset.search.includes(term))||(status&&c.dataset.status!==status))})};search.addEventListener("input",applyLibraryFilters);filter.addEventListener("change",applyLibraryFilters);
+  jobs.forEach(job=>{
   const card=document.createElement("article");
   card.className="project";
   card.style.margin="12px 0";
-  const header=document.createElement("div");
+  card.dataset.status=job.status||"unknown";card.dataset.search=String(job.prompt||"").toLowerCase();
+   const header=document.createElement("div");
   header.style.cssText="display:flex;align-items:flex-start;justify-content:space-between;gap:12px";
   const title=document.createElement("b");
   title.textContent=(String(job.prompt||"Novo site").trim().slice(0,90)||"Novo site")+(String(job.prompt||"").length>90?"…":"");
@@ -793,7 +796,8 @@ async function loadVersatAiSavedProjects(){
   menuTrigger.style.cssText="list-style:none;cursor:pointer;border:1px solid #44444f;border-radius:999px;width:42px;height:36px;display:grid;place-items:center;color:#fff;font-weight:800;letter-spacing:2px;background:#17171d";
   const menu=document.createElement("div");
   menu.style.cssText="position:absolute;right:0;top:42px;z-index:20;min-width:190px;padding:7px;background:#202027;border:1px solid #454550;border-radius:12px;box-shadow:0 12px 30px #0009";
-  const remove=document.createElement("button");
+  const rename=document.createElement("button");rename.type="button";rename.textContent="Renomear projeto";rename.style.cssText="display:block;width:100%;text-align:left;padding:11px;border:0;border-radius:8px;background:transparent;color:#eee;font:inherit;cursor:pointer";rename.addEventListener("click",async()=>{menuWrap.open=false;const value=prompt("Novo nome do projeto:",String(job.prompt||"").slice(0,100));if(value===null)return;const next=value.trim();if(next.length<3){alert("Digite pelo menos 3 caracteres.");return}rename.disabled=true;const {data:renamed,error:renameError}=await sb.functions.invoke("versat-ai-test-v2",{body:{action:"rename",job_id:job.id,prompt:next}});if(renameError||!renamed?.success){rename.disabled=false;alert("Não foi possível renomear: "+(renameError?.message||renamed?.error||"erro desconhecido"));return}title.textContent=next;card.dataset.search=next.toLowerCase()});
+   const remove=document.createElement("button");
   remove.type="button";remove.textContent="Remover da biblioteca";
   remove.style.cssText="display:block;width:100%;text-align:left;padding:11px;border:0;border-radius:8px;background:transparent;color:#ff8992;font:inherit;cursor:pointer";
   remove.addEventListener("click",async()=>{
@@ -805,7 +809,7 @@ async function loadVersatAiSavedProjects(){
    card.remove();
    if(!list.querySelector(".project"))list.textContent="Nenhum site salvo nesta biblioteca.";
   });
-  menu.append(remove);menuWrap.append(menuTrigger,menu);
+  menu.append(rename,remove);menuWrap.append(menuTrigger,menu);
   header.append(title,menuWrap);
   const meta=document.createElement("div");
   meta.className="small";meta.style.margin="6px 0 10px";
