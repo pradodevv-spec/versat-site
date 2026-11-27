@@ -453,7 +453,7 @@ function manualGetDrafts(){try{return JSON.parse(localStorage.getItem(VERSAT_MAN
 function manualSiteNew(){
  const name=document.getElementById("manualSiteName"),code=document.getElementById("manualSiteCode"),id=document.getElementById("manualSiteId");
  if(!name||!code)return;
- id.value="";name.value="Novo site";code.value=manualStarterHtml("Novo site");manualSitePreview();manualSiteRenderDrafts();
+ id.value="";name.value="Novo site";code.value=manualStarterHtml("Novo site");manualHistory=[];manualHistoryIndex=-1;manualRemember(true);manualSitePreview();manualSiteRenderDrafts();
 }
 function manualSiteRenderDrafts(){
  const select=document.getElementById("manualSiteDrafts");if(!select)return;
@@ -471,7 +471,7 @@ function manualSiteSave(){
 }
 function manualSiteOpenDraft(id){
  const draft=manualGetDrafts().find(d=>d.id===id);if(!draft)return;
- document.getElementById("manualSiteId").value=draft.id;document.getElementById("manualSiteName").value=draft.name;document.getElementById("manualSiteCode").value=draft.code;document.getElementById("manualSiteNotice").textContent="Rascunho carregado.";manualSitePreview();manualSiteRenderDrafts();
+ document.getElementById("manualSiteId").value=draft.id;document.getElementById("manualSiteName").value=draft.name;document.getElementById("manualSiteCode").value=draft.code;manualHistory=[];manualHistoryIndex=-1;manualRemember(true);document.getElementById("manualSiteNotice").textContent="Rascunho carregado.";manualSitePreview();manualSiteRenderDrafts();
 }
 function manualSiteDelete(){
  const id=document.getElementById("manualSiteId")?.value,notice=document.getElementById("manualSiteNotice");
