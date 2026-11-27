@@ -188,6 +188,8 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 
 
 /* Chat flutuante compacto: não bloqueia o restante do site */
+.vx-chat-window.vx-admin-expanded{width:min(520px,calc(100vw - 24px));height:min(680px,calc(100dvh - 104px));border-radius:18px}
+@media(max-width:600px){.vx-chat-window.vx-admin-expanded{width:calc(100vw - 20px);height:min(76dvh,720px);right:10px;bottom:78px}}
 .vx-chat-window{position:fixed;right:18px;bottom:88px;z-index:10049;width:min(330px,calc(100vw - 24px));height:min(445px,calc(100dvh - 112px));display:none;flex-direction:column;overflow:hidden;border:0;border-radius:15px;background:transparent;box-shadow:0 8px 22px #0005;font-family:"DM Sans",sans-serif}
 .vx-chat-window.open{display:flex;animation:vxChatIn .16s ease-out}
 @keyframes vxChatIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -504,6 +506,8 @@ async function loadVxFloatingChat(){
  if(!messages)return;
  if(!currentUser||!sb){messages.innerHTML="<div class='vx-chat-welcome'>Olá! 👋 Entre na sua conta para iniciar uma conversa e acompanhar suas mensagens por aqui.</div>";compose.classList.add("hidden");login.classList.remove("hidden");return}
  if(await vxIsAdmin()){await loadVxAdminFloatingInbox();return}
+ document.getElementById("vxChatWindow")?.classList.remove("vx-admin-expanded");vxAdminFloatingMode=false;vxAdminFloatingConversation=null;
+ const head=document.querySelector("#vxChatWindow .vx-chat-head-copy strong");if(head)head.textContent="Atendimento VERSAT";
  compose.classList.add("hidden");login.classList.add("hidden");
  messages.innerHTML="<div class='vx-chat-welcome'>Carregando seu atendimento...</div>";
  const cr=await sb.from("support_conversations").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(1);
@@ -531,6 +535,7 @@ async function loadVxFloatingChat(){
 let vxAdminFloatingMode=false;
 let vxAdminFloatingConversation=null;
 async function loadVxAdminFloatingInbox(){
+ const panel=document.getElementById("vxChatWindow");panel?.classList.add("vx-admin-expanded");
  vxAdminFloatingMode=true;vxAdminFloatingConversation=null;
  const messages=document.getElementById("vxChatMessages"),compose=document.getElementById("vxChatCompose"),login=document.getElementById("vxChatLogin");
  if(!messages)return;compose.classList.add("hidden");login.classList.add("hidden");
