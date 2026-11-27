@@ -398,8 +398,7 @@ function updateAccountHeader(user){
   else{img.removeAttribute("src");img.classList.add("hidden");document.getElementById("profileAvatarInitial").classList.remove("hidden")}
 }
 function goToCustomerPortal(){
-  const target=new URL("/customer-admin.html",window.location.origin);
-  window.location.assign(target.href);
+  window.location.href="customer-admin.html";
 }
 function toggleProfileMenu(){
   const menu=document.getElementById("profileMenu"),button=document.getElementById("profileButton");
