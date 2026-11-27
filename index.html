@@ -242,7 +242,7 @@ body.versat-light-theme .profile-avatar{background:#f1f1f5;color:#333}
 .mockcards div:nth-child(3){animation-delay:1s}
 @media(prefers-reduced-motion:reduce){.showcase,.dot,.hero:before,.mockcards div,.btn.red:hover{animation:none!important}}
 
-</style>
+.vx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}.vx-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}.vx-card label{display:block;margin:10px 0;color:var(--muted)}.vx-card input,.vx-card textarea{display:block;width:100%;margin-top:6px;background:#09090d;border:1px solid var(--line);border-radius:9px;padding:11px;color:var(--text);font:inherit}.vx-bar{height:9px;background:#292932;border-radius:20px;overflow:hidden}.vx-bar i{display:block;height:100%;background:var(--red)}.vx-muted{color:var(--muted);font-size:13px}</style>
 </head>
 <body>
 <header><div class="wrap nav">
@@ -985,6 +985,7 @@ async function deleteFinanceEntry(id){
 }
 
 function applySiteSettings(content){
+ const vh=content?.visual_home||{};const heroTitle=document.querySelector("#home .hero h1"),heroLead=document.querySelector("#home .hero .lead");if(heroTitle&&vh.title)heroTitle.textContent=vh.title;if(heroLead&&vh.description)heroLead.textContent=vh.description;
  if(!content)return;
  const title=String(content.title||"").trim();
  const description=String(content.description||"").trim();
